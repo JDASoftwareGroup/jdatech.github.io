@@ -103,7 +103,6 @@ analytics:
     anonymize_ip         : # true, false (default)
 
 head_scripts:
-  - /assets/js/google_tag_manager.js
 
 # Site Author
 # author:

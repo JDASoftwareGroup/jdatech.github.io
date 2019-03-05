@@ -12,6 +12,10 @@ Stephan Erb:
       icon: "fab fa-fw fa-twitter-square"
       url: "https://twitter.com/erbstephan"
 
+Jan Karstens:
+  name        : "Jan Karstens"
+  avatar      : "assets/images/authors/jan_karstens.png"
+
 Markus Klein:
   name        : "Markus Klein"
   bio         : "I trust in Rust"

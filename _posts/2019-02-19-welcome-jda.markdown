@@ -7,6 +7,8 @@ header:
   overlay_image: assets/images/dataStorm_72DPI.jpg
   overlay_filter: 0.2
   show_overlay_excerpt: false
+author: Jan Karstens
+author_profile: true  
 ---
 In the month of July 2018, JDA announced the acquisition of Blue Yonder. As part of
 the integration we are happy to announce that the Blue Yonder Tech blog
