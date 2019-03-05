@@ -1,0 +1,23 @@
+# header menue
+main:
+  - title: "Posts by Tags"
+    url: /tags
+  - title: "About"
+    url: /about
+  - title: "Privacy"
+    url: "https://jda.com/privacy-policy"
+
+# side menu
+docs:
+  - title: Career
+    children:
+      - title: "Blue Yonder"
+        url: https://www.blueyonder.ai/en/careers
+      - title: "JDA"
+        url: https://jda.com/careers
+  - title: GitHub
+    children:
+      - title: "Blue Yonder"
+        url: https://github.com/blue-yonder        
+      - title: "JDA"
+        url: https://github.com/JDASoftwareGroup

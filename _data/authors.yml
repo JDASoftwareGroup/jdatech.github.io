@@ -1,0 +1,40 @@
+Manuel Baehr:
+  name        : "Manuel Bähr"
+
+Maximilian Christ:
+  name        : "Maximilian Christ"
+
+Stephan Erb:
+  name        : "Stephan Erb"
+  avatar      : "assets/images/authors/stephan_erb.jpg"
+  links:
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      url: "https://twitter.com/erbstephan"
+
+Markus Klein:
+  name        : "Markus Klein"
+  bio         : "I trust in Rust"
+
+Michael König:
+  name        : "Michael König"
+  bio         : "Give me all you data"
+  links:
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      url: "https://twitter.com/turbodbc"
+
+Uwe Korn:
+  name        : "Uwe Korn"
+
+Peter Hoffmann:
+  name        : "Peter Hoffmann"
+  bio         : "Coding - day in, day out"
+  avatar      : "assets/images/authors/peter_hoffmann.jpg"
+  links:
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      url: "https://twitter.com/peterhoffmann"
+
+Sebastian Neubauer:
+  name        : "Sebastian Neubauer"
