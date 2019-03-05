@@ -4,7 +4,7 @@ title: "PyCon.DE Part 1: Turbodbc - Turbocharged database access for data scient
 date:   2018-02-28 13:31:55
 tags: conference python
 header:
-  overlay_image: assets/images/data storm_72DPI.jpg
+  overlay_image: assets/images/dataStorm_72DPI.jpg
   overlay_filter: 0.2
   show_overlay_excerpt: false
 author: Michael König

@@ -4,7 +4,7 @@ title: "Blue Yonder at PyCon.DE 2017 and PyData Karlsruhe"
 date:   2017-06-20 09:53:31
 tags: conference
 header:
-  overlay_image: assets/images/data storm_72DPI.jpg
+  overlay_image: assets/images/dataStorm_72DPI.jpg
   overlay_filter: 0.2
   show_overlay_excerpt: false
 author: Peter Hoffmann

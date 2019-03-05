@@ -4,7 +4,7 @@ title: "PyCon.DE Part 5: Using Ansible properly"
 date:   2018-03-21 15:42:54
 tags: conference python
 header:
-  overlay_image: assets/images/data storm_72DPI.jpg
+  overlay_image: assets/images/dataStorm_72DPI.jpg
   overlay_filter: 0.2
   show_overlay_excerpt: false
 author: Peter Hoffmann

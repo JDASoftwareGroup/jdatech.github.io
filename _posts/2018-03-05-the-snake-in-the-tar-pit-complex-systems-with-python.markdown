@@ -4,7 +4,7 @@ title: "PyCon.DE Part 2: The Snake in the Tar Pit - Complex Systems with Python"
 date:   2018-03-05 08:43:21
 tags: conference python
 header:
-  overlay_image: assets/images/data storm_72DPI.jpg
+  overlay_image: assets/images/dataStorm_72DPI.jpg
   overlay_filter: 0.2
   show_overlay_excerpt: false
 author: Peter Hoffmann

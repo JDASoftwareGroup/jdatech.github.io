@@ -4,7 +4,7 @@ title: "PyCon.DE 2018 Part 3: Python with and without Pants"
 date:   2019-01-08 12:50:28
 tags: conference python
 header:
-  overlay_image: assets/images/data storm_72DPI.jpg
+  overlay_image: assets/images/dataStorm_72DPI.jpg
   overlay_filter: 0.2
   show_overlay_excerpt: false
 author: Peter Hoffmann

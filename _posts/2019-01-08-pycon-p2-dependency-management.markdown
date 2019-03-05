@@ -4,7 +4,7 @@ title: "PyCon.DE 2018 Part 2: Python Dependency Management"
 date:   2019-01-08 12:49:28
 tags: conference python
 header:
-  overlay_image: assets/images/data storm_72DPI.jpg
+  overlay_image: assets/images/dataStorm_72DPI.jpg
   overlay_filter: 0.2
   show_overlay_excerpt: false
 author: Peter Hoffmann

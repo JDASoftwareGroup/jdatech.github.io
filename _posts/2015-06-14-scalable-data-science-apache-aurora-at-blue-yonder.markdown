@@ -4,7 +4,7 @@ title:  "Scalable Data Science: Apache Aurora at Blue Yonder"
 date:   2015-06-14 12:09:38 +0100
 tags: technology
 header:
-  overlay_image: assets/images/data storm_72DPI.jpg
+  overlay_image: assets/images/dataStorm_72DPI.jpg
   overlay_filter: 0.2
   show_overlay_excerpt: false
 author: Stephan Erb
