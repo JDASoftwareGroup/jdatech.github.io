@@ -42,3 +42,13 @@ Peter Hoffmann:
 
 Sebastian Neubauer:
   name        : "Sebastian Neubauer"
+
+Florian Jetter:
+    name        : "Florian Jetter"
+    links:
+      - label: "Twitter"
+        icon: "fab fa-fw fa-twitter-square"
+        url: "https://twitter.com/FlorianJetter"
+      - label: "Github"
+        icon: "fab fa-fw fa-github-square"
+        url: "https://github.com/fjetter" 
