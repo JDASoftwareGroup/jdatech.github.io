@@ -14,7 +14,7 @@ author_profile: true
 # Getting started with _kartothek_
 This post will give an overview of how to start _using_ kartothek.
 For a description of what kartothek _is_ and what it attempts to accomplish,
-check out [this blog post]( https://tech.jda.com/introducing-kartothek).
+check out [the introducing kartothek blog post]( https://tech.jda.com/introducing-kartothek).
 
 For starters, we will need to have our data as pandas dataframes. For example,
 ```python
