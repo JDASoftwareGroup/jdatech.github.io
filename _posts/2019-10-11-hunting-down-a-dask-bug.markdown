@@ -115,7 +115,7 @@ new_partitions_boundaries = [int(new_partition_index * npartitions_ratio)
 
 To map the old partition boundaries to the new partition boundaries, division
 and multiplication are used. We are in Python 3 here, otherwise, the problem would have
-manifested itself much more prominently. It Python 3, the `/` operator does a float
+manifested itself much more prominently. In Python 3, the `/` operator does a float
 division. However, dividing and successive multiplication with the same value still
 does not necessarily result in the original values. There are edge cases for which
 the result is slightly different because of rounding errors, for instance, in case
