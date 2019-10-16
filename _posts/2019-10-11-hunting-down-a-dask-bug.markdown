@@ -134,7 +134,7 @@ The casting to int that happens then will result in a value that is off by one:
 
 This explains why the last partition got lost. For many other combinations of values,
 this edge case is not triggered. In hindsight, we found out that the customer had
-increased the number of stores for which to calculate data from 201 to 221, which
+increased the number of stores for which we calculate data from 201 to 221, which
 explains why we had not observed the error before.
 
 ## The fix
