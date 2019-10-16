@@ -32,8 +32,8 @@ A typical use case we have for Dask/Distributed is reading a collection of flat 
 which we call *dataset*, doing some calculation on the data and writing it again to
 another dataset.
 
-We had been gradually switching more and more of our data pipelines to Dask/Distributed
-in favor of a proprietary distributed computing framework that we want to phase out when
+We had been gradually switching more and more of our data pipelines from a proprietary
+framework to Dask/Distributed when
 things started to get a tad mysterious and data began to disappear in an unexpected way.
 
 ## The incident
@@ -56,11 +56,12 @@ A first investigation revealed that indeed, the store the customer complained ab
 was not contained in the ouptut dataset, whereas it was contained in the input dataset.
 Therefore, the data must be lost somewhere in between during the shuffling.
 
-We had a look ad the Distributed cluster and sure enough, we discovered it was in a
+We had a look at the Distributed cluster and sure enough, we discovered it was in a
 weird state. As it turned out, the day before, some of the hardware nodes hosting this
 cluster had been rebooted. This affected the scheduler and two of the workers, while
-the two other workers of the cluster were running on nodes that were not rebooted.
-As it looked like, after the reboot of the scheduler, these two workers were not able to
+the two other workers of the cluster had kept running without reboot.
+As it looked like, after the reboot of the scheduler, the two workers that had kept on
+running were not able to
 connect to the new scheduler, so we ended up with a cluster with only two workers,
 while the two old workers were running in an endless loop trying to connect.
 
@@ -77,20 +78,20 @@ had been resolved.
 Unfortunately, the customer got back to us, reporting that now a *different* store was
 missing. Indeed, we could verify that the problem persisted and each time, a different
 **random** store was missing. We also checked whether any changes had been done to the
-system recently, but besides the node reboots, nothing had been changed for weeks,
-in particular, we had been running exactly the same software versions.
+system recently, but besides the node reboots, nothing had been changed for weeks.
+In particular, we had been running exactly the same software versions.
 
 At this point in time, it became clear to us that we had to dig deeper into this.
 We began manually retracing each of the steps done during the data shuffling.
-The first step is reading in the data from the input dataset into a Dask distributed
+The first step is reading the data from the input dataset into a Dask distributed
 dataframe. A distributed dataframe can
 be seen as a large dataframe that is divided into several partitions that potentially
 live on different Distributed workers.
 We could verify that after this step, all of the stores were still contained
 in the data, so reading was not the problem. However, we made an interesting observation
-at this point. After reading in the data, we have one partition
+at this point. After reading the data, we have one partition
 for each customer store, 221 in our case. And the store that was missing in the end was
-contained in the 221st partition of the distributed dataframe. So for some reason, the
+contained in the 221st partition of the distributed dataframe! So for some reason, the
 last partition seemed to be lost later on. And we were quite eager to find out how this
 happened.
 
@@ -102,7 +103,7 @@ repartitioning, the last of the input partitions was not considered.
 
 ## Looking for the root cause
 
-Now we knew that the problem happened during repartitioning, we took a look at the
+Now that we knew that the problem happened during repartitioning, we took a look at the
 repartitioning code in Dask, and quickly enough found a piece of code that looked quite
 suspicious ([https://github.com/dask/dask/blob/1.2.0/dask/dataframe/core.py#L438](
 https://github.com/dask/dask/blob/1.2.0/dask/dataframe/core.py#L43866)):
@@ -134,15 +135,16 @@ The casting to int that happens then will result in a value that is off by one:
 
 This explains why the last partition got lost. For many other combinations of values,
 this edge case is not triggered. In hindsight, we found out that the customer had
-increased the number of stores for which we calculate data from 201 to 221, which
+increased the number of stores for which we calculate data from 201 to 221. This
 explains why we had not observed the error before.
 
 ## The fix
 
-We were running Dask version 1.2.0, which was already quite dated at the time, so we
+We were running Dask version 1.2.0, which was already quite dated at the time. So we
 decided to take a shot and just try the newest Dask version to see if the problem had
 been fixed in the meantime. While we did not find any bug report that went into the
-direction, the changelog mentioned refactoring of the repartitioning code, so it seemed
+direction, the changelog mentioned refactoring of the repartitioning code. Therefore
+it seemed
 worth a try. And indeed, with Dask 2.3.0, we did not observe the effect.
 
 Some `git bisect` later, we discovered the following piece of code that had been
