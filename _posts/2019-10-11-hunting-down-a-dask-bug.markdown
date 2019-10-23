@@ -1,6 +1,6 @@
 ---
 layout: single
-title:  "Hunting down a Dask Bug - or What to Do if You're Randomly Losing Data"
+title:  "Not All Problems Are of Your Own Making - a Case Study in Tracking down a Dask Data Loss Bug"
 date:   2019-05-28 20:00:00 +0100
 tags: technology python data-engineering
 header:
@@ -10,7 +10,7 @@ header:
 author: Andreas Merkel
 author_profile: true
 ---
-# Hunting down a Dask Bug - or What to Do if You're Randomly Losing Data
+# Not All Problems Are of Your Own Making - a Case Study in Tracking down a Dask Data Loss Bug
 
 When introducing a new technology into your stack, you have to be prepared to discover
 bugs. You are using someone else's work, and probably in a way that is, to some extent,
@@ -19,13 +19,13 @@ are done with your implementation and testing, but extends to the time when you
 finally put it in production.
 
 This is a story about how subtle bugs can manifest themselves after months of having
-a technology in production, and how tricky it can be to track them down.
+a software deployed in production, and how tricky it can be to track them down.
 
 ## The setup
 
 We are currently in the process of adopting
 [Dask/Distributed](https://distributed.dask.org) for distributed computing and are using
-it, among other things, to work with data in flat files on BLOB storage (cf.
+it, among other things, to work with data in flat files on BLOB storage (see
 [Introducing Kartothek - Consistent parquet table management powered by Apache Arrow and
 Dask](https://tech.jda.com/introducing-kartothek/).)
 A typical use case we have for Dask/Distributed is reading a collection of flat files,
@@ -34,7 +34,8 @@ another dataset.
 
 We have been gradually switching more and more of our data pipelines from a proprietary
 framework to Dask/Distributed when
-things started to get a tad mysterious and data began to disappear in an unexpected way.
+things started to get a tad mysterious and our calculation results suddenly lacked some
+of the data we expected.
 
 ## The incident
 
@@ -58,15 +59,15 @@ Therefore, the data must have gotten lost somewhere during the shuffling.
 
 We had a look at the Distributed cluster and sure enough, we discovered it was in a
 weird state. As it turned out, the day before, some of the hardware nodes hosting this
-cluster had been rebooted. This reboot affected the scheduler and two of the workers, while
-the other two workers of the cluster had kept running without reboot.
-It seemed that after the reboot of the scheduler, the non-rebooted two worker had kept
+cluster had been rebooted. This reboot affected the scheduler and workers 1 and 2, while
+workers 3 and 4 had kept running without reboot.
+It seemed that after the reboot of the scheduler, the non-rebooted workers 3 and 4 had kept
 running but were not able to
-connect to the new scheduler. So, we ended up with a cluster with only two workers,
-while the two old workers were running in an endless loop trying to connect.
+connect to the new scheduler. So, we ended up with a cluster with only workers 1 and 2,
+while workers 3 and 4 were running in an endless loop trying to connect.
 
 Our assumption was that somehow, parts of the computations got scheduled to the invalid
-workers which did not deliver a result and thus the data got lost.
+workers 3 and 4, which did not deliver a result and thus the data got lost.
 To resolve this, we restarted the scheduler and all workers once again to get a
 healthy cluster. We re-ran the data shuffling process from the input dataset
 to the output dataset and checked that the store that had previously been missing was
@@ -79,7 +80,7 @@ Unfortunately, the customer got back to us, reporting that now a *different* sto
 missing. Indeed, we could verify that the problem persisted and each time, a different
 **random** store was missing. We also checked whether any changes had been done to the
 system recently, but besides the node reboots, nothing had been changed for weeks.
-In particular, we had been running exactly the same software versions.
+In particular, we had been running the exact same software versions.
 
 At this point in time, it became clear to us that we had to dig deeper into this.
 We began manually retracing each of the steps done during the data shuffling.
@@ -101,6 +102,8 @@ later steps, we reduce the number of partitions, in this case to 23 partitions. 
 turned out to be the step during which the data was lost. So for some reason, while
 repartitioning, the last of the input partitions was not processed.
 
+> There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors. -- Jeff Atwood
+
 ## Looking for the root cause
 
 Now that we knew that the problem happened during repartitioning, we took a look at the
@@ -116,7 +119,7 @@ new_partitions_boundaries = [int(new_partition_index * npartitions_ratio)
 
 To map the old partition boundaries to the new partition boundaries, division
 and multiplication are used. We are in Python 3 here, otherwise, the problem would have
-manifested itself much more prominently. In Python 3, the `/` operator does a float
+manifested itself much more prominently. In Python 3, the Slash operator (`/`) does a float
 division. However, division and successive multiplication with the same value still
 does not necessarily result in the original values. There are edge cases for which
 the result is slightly different because of rounding errors, for instance, in case
@@ -138,12 +141,12 @@ this edge case is not triggered. In hindsight, we found out that the customer ha
 increased the number of stores for which we calculate data from 201 to 221. This
 explains why we had not observed the error before.
 
-## The fix
+## The solution
 
 We were running Dask version 1.2.0, which was already quite dated at the time. So we
-decided to take a shot and just try the newest Dask version to see if the problem had
-been fixed in the meantime. While we did not find any bug report that went into the
-direction, the changelog mentioned refactoring of the repartitioning code. Therefore
+decided to take a shot at trying the newest Dask version to see if the problem had
+been fixed in the meantime. While we did not find any bug report that touched on this
+specific issue, the changelog mentioned refactoring of the repartitioning code. Therefore
 it seemed
 worth a try. And indeed, with Dask 2.3.0, we did not observe the effect.
 
@@ -168,9 +171,20 @@ worried whether there were other instances of data loss. So we went over all the
 input datasets and counted the partitions and the repartition ratios to check whether
 we had run into the edge case, which was fortunately not the case.
 
-We also took the learning of not being too quick at accepting something that obviously
-is broken (in our case the cluster after the node reboots) as the cause for a problem.
-While we did verify that the formerly missing store was in the output dataset after
+## Lessons learnt
+
+Of course, we also took some learnings from this.
+For one, we had been much too quick at accepting something that was obviously
+broken (the cluster after the node reboots) as the cause for the problem. In the end,
+it turned out to be unrelated.
+
+Assuming we had found a cause and a fix for the problem, we also did not verify
+thoroughly enough that the problem had really been solved.
+While we did check that the formerly missing store was in the output dataset after
 fixing the cluster, we did not verify that **all** the expected stores were in the
 output dataset. We were not aware that the missing store was indeterministic (it
 depended on the ordering of the input partitions, which is not always the same).
+
+Another takeaway is that we should keep software versions up to date. The bug we ran
+into had been fixed months ago, and we would never have noticed it, had we
+upgraded Dask to the newest version.
