@@ -14,7 +14,7 @@ author_profile: true
 
 When introducing a new technology into your stack, you have to be prepared to discover
 bugs. You are using someone else's work, and probably in a way that is, to some extent,
-different to the way others have used it before you. And this does not finish when you
+different to how others have used it before you. And this does not finish when you
 are done with your implementation and testing, but extends to the time when you
 finally put it in production.
 
@@ -32,37 +32,37 @@ A typical use case we have for Dask/Distributed is reading a collection of flat 
 which we call *dataset*, doing some calculation on the data and writing it again to
 another dataset.
 
-We had been gradually switching more and more of our data pipelines from a proprietary
+We have been gradually switching more and more of our data pipelines from a proprietary
 framework to Dask/Distributed when
 things started to get a tad mysterious and data began to disappear in an unexpected way.
 
 ## The incident
 
 It started when one of our customers raised an incident complaining that we did not
-provide any data for one of their stores via our API one day. We provide data to them
-that is calculated on a daily basis, and so far, everything had been OK for months after
+provide any data for one of their retail stores via our API one day. We calculate data for them
+on a daily basis, and so far, everything had been OK for months after
 switching to Dask/Distributed for data processing.
 
-The API provides the data from a dataset (let's call it _output dataset_), which is
-filled from another dataset using Dask/Distributed (let's call this one _input dataset_)
-by shuffling around the data. The shuffling is done because the input dataset is
-organized in a way that reflects the customer's stores (basically one [Apache
+The API returns data from an output dataset, which is
+filled from an input dataset using Dask/Distributed
+to shuffle around the data. This shuffling is done because the input dataset is
+organized in a way that reflects the customer's retail stores (basically one [Apache
 Parquet](https://parquet.apache.org) file per store), while the output dataset is
 organized by time (one Parquet file per day, containing data for all the stores).
 
 ## The solution (as it seemed)
 
 A first investigation revealed that indeed, the store the customer complained about
-was not contained in the ouptut dataset, whereas it was contained in the input dataset.
-Therefore, the data must be lost somewhere in between during the shuffling.
+was not contained in the output dataset, whereas it was contained in the input dataset.
+Therefore, the data must have gotten lost somewhere during the shuffling.
 
 We had a look at the Distributed cluster and sure enough, we discovered it was in a
 weird state. As it turned out, the day before, some of the hardware nodes hosting this
-cluster had been rebooted. This affected the scheduler and two of the workers, while
-the two other workers of the cluster had kept running without reboot.
-As it looked like, after the reboot of the scheduler, the two workers that had kept on
-running were not able to
-connect to the new scheduler, so we ended up with a cluster with only two workers,
+cluster had been rebooted. This reboot affected the scheduler and two of the workers, while
+the other two workers of the cluster had kept running without reboot.
+It seemed that after the reboot of the scheduler, the non-rebooted two worker had kept
+running but were not able to
+connect to the new scheduler. So, we ended up with a cluster with only two workers,
 while the two old workers were running in an endless loop trying to connect.
 
 Our assumption was that somehow, parts of the computations got scheduled to the invalid
@@ -91,15 +91,15 @@ We could verify that after this step, all of the stores were still contained
 in the data, so reading was not the problem. However, we made an interesting observation
 at this point. After reading the data, we have one partition
 for each customer store, 221 in our case. And the store that was missing in the end was
-contained in the 221st partition of the distributed dataframe! So for some reason, the
-last partition seemed to be lost later on. And we were quite eager to find out how this
-happened.
+contained in the 221st partition of the distributed dataframe! So, for some reason, we
+seemed to lose the dada in the last partition. And we were quite eager to find out how
+this happened.
 
 The next step after reading the data is repartitioning the distributed dataframe.
 To be able to better handle the data during
 later steps, we reduce the number of partitions, in this case to 23 partitions. And this
 turned out to be the step during which the data was lost. So for some reason, while
-repartitioning, the last of the input partitions was not considered.
+repartitioning, the last of the input partitions was not processed.
 
 ## Looking for the root cause
 
@@ -127,7 +127,7 @@ of the last value of the list comprehension when mapping 221 to 23 partitions:
 220.99999999999997
 ```
 
-The casting to int that happens then will result in a value that is off by one:
+The casting to int will result in a value that is off by one:
 ```python
 >>> int((221/23)*23)
 220
@@ -163,7 +163,7 @@ While this confirmed to us we were safe with Dask > 2, some things were still le
 done. To prevent a regression, we submitted a [pull request](https://github.com/dask/dask/pull/5433) to Dask that adds a test
 making sure that repartitioning works correctly for the edge case.
 
-Also, we had been using Dask 1.2.0 and its repartitioning code for months and were a bit
+Also, as we had been using Dask 1.2.0 and its repartitioning code for months, we were a bit
 worried whether there were other instances of data loss. So we went over all the
 input datasets and counted the partitions and the repartition ratios to check whether
 we had run into the edge case, which was fortunately not the case.
@@ -172,5 +172,5 @@ We also took the learning of not being too quick at accepting something that obv
 is broken (in our case the cluster after the node reboots) as the cause for a problem.
 While we did verify that the formerly missing store was in the output dataset after
 fixing the cluster, we did not verify that **all** the expected stores were in the
-output dataset, so we get hit by the fact that the effect was indeterministic (it
+output dataset. We were not aware that the missing store was indeterministic (it
 depended on the ordering of the input partitions, which is not always the same).
