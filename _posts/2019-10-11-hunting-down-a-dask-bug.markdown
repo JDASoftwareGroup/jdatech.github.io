@@ -1,7 +1,7 @@
 ---
 layout: single
 title:  "Not All Problems Are of Your Own Making - a Case Study in Tracking down a Dask Data Loss Bug"
-date:   2019-05-28 20:00:00 +0100
+date:   2019-10-25 10:00:00 +0100
 tags: technology python data-engineering
 header:
   overlay_image: assets/images/tech_gear_banner.jpg
