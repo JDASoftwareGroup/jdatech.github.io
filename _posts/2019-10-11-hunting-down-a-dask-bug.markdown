@@ -93,7 +93,7 @@ in the data, so reading was not the problem. However, we made an interesting obs
 at this point. After reading the data, we have one partition
 for each customer store, 221 in our case. And the store that was missing in the end was
 contained in the 221st partition of the distributed dataframe! So, for some reason, we
-seemed to lose the dada in the last partition. And we were quite eager to find out how
+seemed to lose the data in the last partition. And we were quite eager to find out how
 this happened.
 
 The next step after reading the data is repartitioning the distributed dataframe.
