@@ -33,11 +33,13 @@ weather dataset:
 
 Especially attribute columns like `month`, `year`, `city`, and `country` contain loads of duplicated data, but are
 important to analyze and plot the data as well as as an input for machine learning models. For example, looking at the
-`city` column, we can see that the same entry is multiple times before a new city starts. Instead storing each entry, it
-would for sure be smarter to just store a city together with a number of times it is repeated, e.g. "Berlin - 1000
-times, Hamburg - 500 times, ...". This is what [Run-length encoding](https://en.wikipedia.org/wiki/Run-length_encoding)
-does. It can compress that data without precision-loss (in our benchmark **over 200x memory reduction**) while at the same
-time it can also be faster then uncompressed data, in our measurements **over 50 times faster**.
+`city` column, we can see that the same value `"Berlin"` stored consecutively multiple times before the entries for
+`"Hamburg"` occur. Instead of storing each entry, it would for sure be smarter to just store a city together with a
+number of times it is repeated, e.g. "Berlin - 1000 times, Hamburg - 500 times, ...". This is what
+[Run-length encoding](https://en.wikipedia.org/wiki/Run-length_encoding) does. It can compress that data without
+precision-loss while at the same time it can also faster to process then the uncompressed data. In our benchmark we see
+a **decrease in memory consumption by over 200x while being over 50 times faster**.
+
 
 [rle-array](https://github.com/JDASoftwareGroup/rle-array), which we now open source, implements this technique for the
 well-known [Pandas](https://pandas.pydata.org/) library by using the new but powerful
@@ -80,8 +82,8 @@ its value and length:
 
 ![run-length encoding, step 1](/assets/images/2019-12-01-rle-array/rle_array1.png)
 
-Since pandas requires us to be able to do quick [random access](https://en.wikipedia.org/wiki/Random_access), e.g. for
-sorting and group-by operation, instead of the actual run-lengths we store the end positions of each run (this is the
+Pandas requires us to be able to do quick [random access](https://en.wikipedia.org/wiki/Random_access), e.g. for
+sorting and group-by operations. Instead of the actual run-lengths we store the end positions of each run (this is the
 cumulative sum of the lengths):
 
 ![run-length encoding, step 2](/assets/images/2019-12-01-rle-array/rle_array2.png)
@@ -105,7 +107,7 @@ normalized database. The DataFrame looks similar to this (edge length is 2):
 | 1           | 3             | 1           | 3           | 0       | 1       | 1       |
 | 3           | 7             | 3           | 3           | 1       | 1       | 1       |
 
-This is very similar to the introduction example (which has the 2 dimensions "location" and "time"). The columns are
+This is very similar to the introduction example which has the 2 dimensions "location" and "time". The columns are
 created as followed:
 
 - `dim_{0,1,2}`: This symbolizes the dimensions of the cube. Think of attributes like "location" and "time". There are
@@ -140,20 +142,20 @@ the following 3:
 
 For very small cube sizes, rle-array does not provide any performance benefits, but quickly (at a edge length of 100) it
 starts to outperform the uncompressed baseline, providing over 50 times speedup. This is because many operations in
-rle-array are implemented using [Numba](https://numba.pydata.org/). For operations like group-by however the current
+rle-array are implemented using [Numba](https://numba.pydata.org/). However, for operations like group-by the current
 Pandas `0.25.x` has some performance issues (for the upcoming Pandas 1.0, it looks like we are at least on par with the
 baseline):
 
 ![edge length VS CPU time](/assets/images/2019-12-01-rle-array-perf1.svg)
 
-Summarizing this we can say, the performance depends on the length of the runs (longer runs give better compression and
-performance) and that rle-array works great simple operations but has issues with
+Summarizing this we can say, the performance depends on the length of the runs --- longer runs give better compression
+and performance; and that rle-array works great simple operations but has issues with
 [group-by operations like agg and transform](https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html).
 
 
 ## Related Techniques
 Run-length encoding is not the only way to compress data in a sensible way and sometimes other techniques may be better
-suited for the concrete use case. Here is a short illustration about a sub-selection of techniques and readers are
+suited for the concrete use case. Here is a short illustration about a selection of techniques and readers are
 encouraged to try these and others.
 
 ### Dictionary Encoding
@@ -171,8 +173,8 @@ Note that this is often combined with other techniques and then can also be effi
 since in many cases like accounting the actual number of unique values is small.
 
 ### Data Types
-Pandas lets you not only choose the semantics of a data type (e.g. integer, floats, booleans) but in some cases also the
-size of it:
+Pandas lets you not only choose the semantics of a data type (e.g. integer, floats, booleans), but in some cases also
+the size of it:
 
 | Semantics        | Types                                       |
 | ---------------- | ------------------------------------------- |
@@ -198,7 +200,7 @@ Bit-packing is similar to [Data Types](#data-types), but allows to create types 
 
 ![bit packing memory layout](/assets/images/2019-12-01-rle-array/bit_packing.png)
 
-The advantage is that you can safe even more memory, but in return you can pay with heavy performance penalties, since
+The advantage is that you can save even more memory, but it comes with heavy performance penalties, since
 CPUs cannot read unaligned data that efficiently. In some cases however, it can be even faster due to the saved memory
 bandwidth, especially for booleans that normally occupy 8 bits per element.
 
@@ -221,7 +223,7 @@ you can only have a single default value.
 For many operations (like
 [`fillna`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.api.extensions.ExtensionArray.fillna.html#pandas.api.extensions.ExtensionArray.fillna)),
 we are currently using the default provided by pandas. These implementations however
-decompress the run-length encoded data and perform the operation mostly on an NumPy array. While this is functional
+decompress the run-length encoded data and perform the operation mostly on an NumPy array. While this is functionally
 correct, we would like to stay in the compressed format and implement our own specialized version of it. This will be
 done step-by-step in future releases.
 
