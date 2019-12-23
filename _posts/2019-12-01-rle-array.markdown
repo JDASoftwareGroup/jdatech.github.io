@@ -223,9 +223,9 @@ you can only have a single default value.
 For many operations (like
 [`fillna`](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.api.extensions.ExtensionArray.fillna.html#pandas.api.extensions.ExtensionArray.fillna)),
 we are currently using the default provided by pandas. These implementations however
-decompress the run-length encoded data and perform the operation mostly on an NumPy array. While this is functionally
-correct, we would like to stay in the compressed format and implement our own specialized version of it. This will be
-done step-by-step in future releases.
+decompress the run-length encoded data and perform the operation mostly on an [NumPy](https://numpy.org/) array. While
+this is functionally correct, we would like to stay in the compressed format and implement our own specialized version
+of it. This will be done step-by-step in future releases.
 
 Since rle-array is (to my knowledge) apart from `SparseArray` the first compressed `ExtensionArray` in the pandas
 ecosystem, we will likely face some performance bugs and integration issues. We will collaborate with the pandas
