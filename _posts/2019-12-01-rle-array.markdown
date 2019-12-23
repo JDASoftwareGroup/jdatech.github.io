@@ -13,7 +13,7 @@ author_profile: true
 # Run-length Encoding for Pandas
 
 Pandas is a very powerful tool for data science. It allows data processing and inspection in a convenient manner. The
-dataframes in use often contain flat data produced from normalized data sources. Imagine the following (simulated)
+DataFrames in use often contain flat data produced from normalized data sources. Imagine the following (simulated)
 weather dataset:
 
 | date       | month | year | city    | country | avg temp | rain  | mood  |
@@ -208,7 +208,7 @@ Bit-packing is --- in combination with run-length-encoding --- even supported by
 [Apache Parquet](https://github.com/apache/parquet-format/blob/master/Encodings.md#run-length-encoding--bit-packing-hybrid-rle--3).
 
 ### Sparse Data
-Often we find columns in our dataframes where information only occurs for a very small amount of rows. In that case, it
+Often we find columns in our DataFrames where information only occurs for a very small amount of rows. In that case, it
 is often more efficient to explicitly store and look-up these few cases --- e.g. by using a
 [HashTable](https://en.wikipedia.org/wiki/Hash_table) --- than using a simple array:
 
