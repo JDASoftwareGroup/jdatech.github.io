@@ -114,7 +114,7 @@ created as followed:
   `length` unique values.
 - `const_X_Y`: This represents values that are a crossproduct of the mentioned 2 dimensions. Think of attributes like
   "weather" (which is a crossproduct of "location" and "time"). There are `length^2` unique values.
-- `const_0_1_2`: This are the inner cells of the cube. There are `length^3` unique values, as many as there are rows in
+- `const_0_1_2`: These are the inner cells of the cube. There are `length^3` unique values, as many as there are rows in
   the DataFrame.
 
 The whole setup can also be visualized:
