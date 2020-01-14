@@ -123,7 +123,7 @@ The whole setup can also be visualized:
 
 You can generate the same data using
 [`rle_array.testing.generate_test_dataframe`](https://jdasoftwaregroup.github.io/rle-array/_rst/rle_array.testing.html#rle_array.testing.generate_test_dataframe).
-With growing edge size of the cube, the number of rows grows exponentially:
+With growing edge size of the cube, the number of rows grows polynomial:
 
 ![edge length VS number of rows](/assets/images/2019-12-01-rle-array-perf2.svg)
 
