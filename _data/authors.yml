@@ -51,7 +51,19 @@ Florian Jetter:
         url: "https://twitter.com/FlorianJetter"
       - label: "Github"
         icon: "fab fa-fw fa-github-square"
-        url: "https://github.com/fjetter" 
+        url: "https://github.com/fjetter"
 
 Andreas Merkel:
   name: "Andreas Merkel"
+
+
+Marco Neumann:
+  name: "Marco Neumann"
+  avatar: "assets/images/authors/marco_neumann.jpg"
+  links:
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      url: "https://twitter.com/crepererum"
+    - label: "Github"
+      icon: "fab fa-fw fa-github-square"
+      url: "https://github.com/crepererum"
