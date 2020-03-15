@@ -12,8 +12,6 @@ author_profile: true
 ---
 # Write-Up of the PyConDE & PyData Berlin 2019 conference
 
-* This will become a table of contents (this text will be scraped).
-{:toc}
 
 The CfP for the 2020 PyCon.DE & PyData Berlin conference is now open (submit your proposal 
 [here](https://de.pycon.org/)). This is a great time to share our experiences from the 2019 conference and compile a 
