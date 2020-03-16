@@ -42,7 +42,7 @@ associates gave a talk themselves:
     Link: [https://www.youtube.com/watch?v=Ght8AVFxBwk](https://www.youtube.com/watch?v=Ght8AVFxBwk)
  
  
-## Hightlights
+## Highlights
 
 There were so many good talks, so here is a very incomplete compilation of our highlights in random order. Thanks to 
 Stefan Maier, Sven Fritz, Vasu Sharma, Phillip Sonntag, Jakob Herpel, Aniruddh Goteti and Lucas Rademaker for their 
