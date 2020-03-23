@@ -20,7 +20,7 @@ list of our highlight talks. Take these as inspirations for your own submission.
 
 PyCon.DE is a Python conference held in Germany where attendees can meet to learn about new and upcoming Python 
 libraries, tools, software, and data science.
-In 2019 PyCon.DE & PyData Berlin took place in Berlin and had more than 1000 participants basically doubling the amount 
+In 2019 PyCon.DE & PyData Berlin took place in Berlin and had more than 1000 participants, basically doubling the amount 
 of attendees as compared to the 2018 conference in Karlsruhe. As almost all Python conferences this event was run and organised by 
 volunteers contributing free time and supported by community sponsors contributing work time of their employees. 
 Sebastian Neubauer from Blue Yonder is part of the organizing team.
