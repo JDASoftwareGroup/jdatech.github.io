@@ -111,7 +111,7 @@ Link: [https://www.youtube.com/watch?v=QMJIh-voWng](https://www.youtube.com/watc
 
 Speaker: Peter Wang
 
-Summary: Having the CEO of a big software company give the keynote at a community driven conference is at least unexpected. But Peter Wang has definitively proven that it was a very good choice. In his talk "Rethinking Open Source in the Era of Cloud & Machine Learning" he is deep-diving into how to sustainably run an open source project, commercial or uncommercial. A must see for everyone who is interested in the hidden forces behind the tectonic shifts of the  IT landscape in the recent years.
+Summary: Having the CEO of a big software company give the keynote at a community driven conference is at least unexpected. But Peter Wang has definitively proven that it was a very good choice. In his talk "Rethinking Open Source in the Era of Cloud & Machine Learning" he dives deeply into how to sustainably run an open source project, commercial or noncommercial. A must see for everyone who is interested in the hidden forces behind the tectonic shifts of the  IT landscape in the recent years.
 
 ### Title: Are you sure about that?! Uncertainty Quantification in AI
 
