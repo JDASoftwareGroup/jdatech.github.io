@@ -129,7 +129,7 @@ Speaker: Sean Matthews, Jannes Quer
 
 Summary: The talk presented an extrapolation problem in demand forecasting (the aggregated demand for drugs). It was remarkably different from many other data science talks in several respects.
 
-1.  It did rather deal with seemingly old-school methods on a small dataset.
+1.  It did deal with seemingly old-school methods on a small dataset.
 2.  The model choice was done extremely deliberately. For example, the speaker first applied standard methods such a Gaussian process regression and then demonstrated the need to go beyond, since the data had a secular event at the end of the sample data. In the end, he came up with a custom state-space model, and I would need to explore the literature a little further to really understand his final solution.
 3.  The speaker was extremely explicit on the methods chosen and about the implementation, although the problem was not an academic one, but occurred in an industry context. (He showed parts of his `pystan` code explicitly.)
 4.  The modelling was more of a one-off undertaking and not conceived for contributing to a productive model pipeline that is automatically retrained regularly. When I asked the speaker if he would recommend fitting the same model again after one year, the answer was a clear "No, since I don't know the future, I can't tell whether the model would still perform well then."
