@@ -44,7 +44,7 @@ associates gave a talk themselves:
  
 ## Highlights
 
-There were so many good talks, so here is a very incomplete compilation of our highlights in random order. Thanks to 
+There were many good talks, so here is a very incomplete compilation of our highlights in random order. Thanks to 
 Stefan Maier, Sven Fritz, Vasu Sharma, Phillip Sonntag, Jakob Herpel, Aniruddh Goteti and Lucas Rademaker for their 
 contribution to this list.
 
