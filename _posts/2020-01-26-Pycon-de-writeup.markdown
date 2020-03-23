@@ -29,7 +29,7 @@ Python is basically used throughout the entire Blue Yonder stack and attending t
 latest developments in the Python world. Furthermore, since Blue Yonder profits a lot from the open source community, 
 the company was a Gold sponsor at this year's conference and thus present with a booth at the venue. In total, eleven 
 Blue Yonder associates from the German offices in Karlsruhe and Hamburg traveled to the conference, talked to colleagues 
-and potential candidates at the booth, and learned new things attending the talks. Furthermore, three Blue Yonder 
+and potential candidates at the booth, and learned new things attending the talks. Additionally, three Blue Yonder 
 associates gave a talk themselves:
 
  * Florian Jetter: **"Kartothek – Table management for cloud object stores powered by Apache Arrow and Dask"**  
