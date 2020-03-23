@@ -142,7 +142,7 @@ Link: [https://www.youtube.com/watch?v=4-4pKPv9lJ4](https://www.youtube.com/watc
 
 Speaker: Franziska Horn
 
-Summary: The speaker gave an overview on the typical feature engineering workflow in machine learning. She illustrated how this can be automated useing the [autofeat](https://github.com/cod3licious/autofeat) library. My impression was that this is a viable workflow when you start off with a new dataset, to get a good first iteration and to gain insight into the dataset. It however it seems not to be a tool that can automate away feature engineering completely when you are aiming for best-in-class predictions with a high degree of reliability and retraceability. Nevertheless it could a huge time-saver on the way to that goal.
+Summary: The speaker gave an overview on the typical feature engineering workflow in machine learning. She illustrated how this can be automated useing the [autofeat](https://github.com/cod3licious/autofeat) library. My impression was that this is a viable workflow when you start off with a new dataset, to get a good first iteration and to gain insight into the dataset. It, however, does not seem to be a tool that can automate away feature engineering completely when you are aiming for best-in-class predictions with a high degree of reliability and retraceability. Nevertheless it could a huge time-saver on the way to that goal.
 
 ### Title: Why you don’t see many real-world applications of Reinforcement Learning.
 
