@@ -54,7 +54,7 @@ Link: [https://www.youtube.com/watch?v=zZXSGzlVxvU](https://www.youtube.com/watc
 
 Speaker: James Powell
 
-Summary: James is a "rockstar" among the python speakers, that much that he is not in the need for handing in an abstract or even a title and still being accepted. He is well known for his fast-paced presentations only using vim. This time he talked about metaprogramming in python, but there is no way around to watch it to get a clue what it is about.
+Summary: James is a "rockstar" among the python speakers, that much that he is not in the need for handing in an abstract or even a title and still being accepted. He is well known for his fast-paced presentations only using vim. This time he talked about metaprogramming in python, but there is no way around watching the talk to get a clue on what it is about.
 
 ### Title: How MicroPython went into space
 
