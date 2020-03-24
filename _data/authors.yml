@@ -67,3 +67,10 @@ Marco Neumann:
     - label: "Github"
       icon: "fab fa-fw fa-github-square"
       url: "https://github.com/crepererum"
+
+Lucas Rademaker:
+    name        : "Lucas Rademaker"
+    links:
+      - label: "Github"
+        icon: "fab fa-fw fa-github-square"
+        url: "https://github.com/lr4d"
