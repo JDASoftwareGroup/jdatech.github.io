@@ -68,7 +68,7 @@ Link: [https://www.youtube.com/watch?v=Vh_5Lz1mLq8](https://www.youtube.com/watc
 
 Speaker: Christine Spindler
 
-Summary: It is just mind-blowing in how many fields python drains into. Not only there is MicroPython which brings python to embedded devices, but this project now is under certification for the use in space!! So, not long until python will steer and control satellites and the space stations. Awesome!
+Summary: It is just mind-blowing in how many fields python drains into. Not only there is MicroPython which brings python to embedded devices, but this project now is under certification for the use in space!! So, it won't be long until python will steer and control satellites and the space stations. Awesome!
 
 ### Title: Automating feature engineering for supervised learning? Methods, open-source tools and prospects.
 
