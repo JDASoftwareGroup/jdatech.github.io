@@ -76,7 +76,7 @@ Link: [https://www.youtube.com/watch?v=XK7mKGWSue8](https://www.youtube.com/watc
 
 Speaker: Thorben Jensen
 
-Summary: The talk basically reported a case study comparing three open source libraries ``tsfresh``, ``featuretools`` and ``TPOT``. At the end of the day, ``TPOT`` seemed superior in most categories, including the degree of automation. However, the case study was only carried out on a single data set. When asked about the potential biases of this dataset, the speaker said that ``tsfresh`` does provide the better support for time series problems, and that this may be more critical for other datasets.
+Summary: The talk reported a case study comparing three open source libraries ``tsfresh``, ``featuretools`` and ``TPOT``. At the end of the day, ``TPOT`` seemed superior in most categories, including the degree of automation. However, the case study was only carried out on a single data set. When asked about the potential biases of this dataset, the speaker said that ``tsfresh`` does provide the better support for time series problems, and that this may be more critical for other datasets.
 (Shameless plug: ``tsfreh`` is a very popular Blue Yonder open source project: [https://github.com/blue-yonder/tsfresh](https://github.com/blue-yonder/tsfresh))
 
 ### Title: Docker and Python - A Match made in Heaven
@@ -109,7 +109,7 @@ Link: [https://www.youtube.com/watch?v=fOdCxum-qLA](https://www.youtube.com/watc
 
 Speaker: Łukasz Langa
 
-Summary: In this keynote, Łukasz gives a unique look behind the scenes of how Python, especially cpython, is developed and he gives some predictions where the future will, or should go. But you should definitively watch the talk because of the many anecdotes shared by him. BTW: In the hallway track, Łukasz, the creator of "black" assured me he also doesn't like some of the formatting decisions, but it is "black". Even he is not able to argue with it, it's "black"!
+Summary: In this keynote, Łukasz gives a unique look behind the scenes of how Python, especially CPython, is developed and he gives some predictions where the future will, or should go. But you should definitively watch the talk because of the many anecdotes shared by him. BTW: In the hallway track, Łukasz, the creator of "black" assured me he also doesn't like some of the formatting decisions, but it is "black". Even he is not able to argue with it, it's "black"!
 
 ### Title: Rethinking Open Source in the Era of Cloud & Machine Learning
 
