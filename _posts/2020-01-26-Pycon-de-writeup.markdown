@@ -26,7 +26,7 @@ recommendations as an inspirations for your own submission.
 
 PyCon.DE is a Python conference held in Germany where attendees can meet to learn about new and upcoming Python 
 libraries, tools, software, and data science.
-In 2019 PyCon.DE & PyData Berlin took place in Berlin and had more than 1000 participants basically doubling the amount 
+In 2019 PyCon.DE & PyData Berlin took place in Berlin and had more than 1000 participants, basically doubling the amount 
 of attendees as compared to the 2018 conference in Karlsruhe. As almost all Python conferences this event was run and organised by 
 volunteers contributing free time and supported by community sponsors contributing work time of their employees. 
 Sebastian Neubauer from Blue Yonder is part of the organizing team.
@@ -35,7 +35,7 @@ Python is basically used throughout the entire Blue Yonder stack and attending t
 latest developments in the Python world. Furthermore, since Blue Yonder profits a lot from the open source community, 
 the company was a Gold sponsor at this year's conference and thus present with a booth at the venue. In total, eleven 
 Blue Yonder associates from the German offices in Karlsruhe and Hamburg traveled to the conference, talked to colleagues 
-and potential candidates at the booth, and learned new things attending the talks. Furthermore, three Blue Yonder 
+and potential candidates at the booth, and learned new things attending the talks. Additionally, three Blue Yonder 
 associates gave a talk themselves:
 
  * Florian Jetter: **"Kartothek – Table management for cloud object stores powered by Apache Arrow and Dask"**  
@@ -50,7 +50,7 @@ associates gave a talk themselves:
  
 ## Highlights
 
-There were so many good talks, so here is a very incomplete compilation of our highlights in random order. Thanks to 
+There were many good talks, so here is a very incomplete compilation of our highlights in random order. Thanks to 
 Stefan Maier, Sven Fritz, Vasu Sharma, Phillip Sonntag, Jakob Herpel, Aniruddh Goteti and Lucas Rademaker for their 
 contribution to this list.
 
@@ -60,7 +60,7 @@ Link: [https://www.youtube.com/watch?v=zZXSGzlVxvU](https://www.youtube.com/watc
 
 Speaker: James Powell
 
-Summary: James is a "rockstar" among the python speakers, that much that he is not in the need for handing in an abstract or even a title and still being accepted. He is well known for his fast-paced presentations only using vim. This time he talked about metaprogramming in python, but there is no way around to watch it to get a clue what it is about.
+Summary: James is a "rockstar" among the python speakers, that much that he is not in the need for handing in an abstract or even a title and still being accepted. He is well known for his fast-paced presentations only using vim. This time he talked about metaprogramming in python, but there is no way around watching the talk to get a clue on what it is about.
 
 ### Title: How MicroPython went into space
 
@@ -117,7 +117,7 @@ Link: [https://www.youtube.com/watch?v=QMJIh-voWng](https://www.youtube.com/watc
 
 Speaker: Peter Wang
 
-Summary: Having the CEO of a big software company give the keynote at a community driven conference is at least unexpected. But Peter Wang has definitively proven that it was a very good choice. In his talk "Rethinking Open Source in the Era of Cloud & Machine Learning" he is deep-diving into how to sustainably run an open source project, commercial or uncommercial. A must see for everyone who is interested in the hidden forces behind the tectonic shifts of the  IT landscape in the recent years.
+Summary: Having the CEO of a big software company give the keynote at a community driven conference is at least unexpected. But Peter Wang has definitively proven that it was a very good choice. In his talk "Rethinking Open Source in the Era of Cloud & Machine Learning" he dives deeply into how to sustainably run an open source project, commercial or noncommercial. A must see for everyone who is interested in the hidden forces behind the tectonic shifts of the  IT landscape in the recent years.
 
 ### Title: Are you sure about that?! Uncertainty Quantification in AI
 
@@ -125,7 +125,7 @@ Link: [https://www.youtube.com/watch?v=LCDIqL-8bHs](https://www.youtube.com/watc
 
 Speaker: Florian Wilhelm
 
-Summary: The talk introduced the concepts of aleatoric and epistemic uncertainty. It compared various methods for uncertainty estimates according to several categories, such as performance, implementation effort etc. A simple, one variable toy dataset was used to evaluate these methods in practice. Some methods apparently showed a poor performance such as Monte-Carlo dropouts. I personally would have like to learn on why some methods performed better or worse on the dataset or not and how this generalizes to real-world datasets. However, based on later conversations with the speaker, this seems a tough problem for some of the methods used. What I definitely learned was how to give an easy explanation on the difference between aleatoric and epistemic uncertainty, and on quantile regression to a broad audience. And it was the first time I had been given such a systematic overview on uncertainty quantification.
+Summary: The talk introduced the concepts of aleatoric and epistemic uncertainty. It compared various methods for uncertainty estimates according to several categories, such as performance, implementation effort etc. A simple, one variable toy dataset was used to evaluate these methods in practice. Some methods apparently showed a poor performance such as Monte-Carlo dropouts. I personally would have like to learn on why some methods performed better or worse on the dataset or not and how this generalizes to real-world datasets. However, based on later conversations with the speaker, this seems to be a tough problem for some of the methods used. What I definitely learned was how to give an easy explanation on the difference between aleatoric and epistemic uncertainty, and on quantile regression to a broad audience. And it was the first time I had been given such a systematic overview on uncertainty quantification.
 
 ### Title: Time series modelling with probabilistic programming
 
@@ -135,7 +135,7 @@ Speaker: Sean Matthews, Jannes Quer
 
 Summary: The talk presented an extrapolation problem in demand forecasting (the aggregated demand for drugs). It was remarkably different from many other data science talks in several respects.
 
-1.  It did rather deal with seemingly old-school methods on a small dataset.
+1.  It did deal with seemingly old-school methods on a small dataset.
 2.  The model choice was done extremely deliberately. For example, the speaker first applied standard methods such a Gaussian process regression and then demonstrated the need to go beyond, since the data had a secular event at the end of the sample data. In the end, he came up with a custom state-space model, and I would need to explore the literature a little further to really understand his final solution.
 3.  The speaker was extremely explicit on the methods chosen and about the implementation, although the problem was not an academic one, but occurred in an industry context. (He showed parts of his `pystan` code explicitly.)
 4.  The modelling was more of a one-off undertaking and not conceived for contributing to a productive model pipeline that is automatically retrained regularly. When I asked the speaker if he would recommend fitting the same model again after one year, the answer was a clear "No, since I don't know the future, I can't tell whether the model would still perform well then."
@@ -148,7 +148,7 @@ Link: [https://www.youtube.com/watch?v=4-4pKPv9lJ4](https://www.youtube.com/watc
 
 Speaker: Franziska Horn
 
-Summary: The speaker gave an overview on the typical feature engineering workflow in machine learning. She illustrated how this can be automated useing the [autofeat](https://github.com/cod3licious/autofeat) library. My impression was that this is a viable workflow when you start off with a new dataset, to get a good first iteration and to gain insight into the dataset. It however it seems not to be a tool that can automate away feature engineering completely when you are aiming for best-in-class predictions with a high degree of reliability and retraceability. Nevertheless it could a huge time-saver on the way to that goal.
+Summary: The speaker gave an overview on the typical feature engineering workflow in machine learning. She illustrated how this can be automated useing the [autofeat](https://github.com/cod3licious/autofeat) library. My impression was that this is a viable workflow when you start off with a new dataset, to get a good first iteration and to gain insight into the dataset. It, however, does not seem to be a tool that can automate away feature engineering completely when you are aiming for best-in-class predictions with a high degree of reliability and retraceability. Nevertheless it could a huge time-saver on the way to that goal.
 
 ### Title: Why you don’t see many real-world applications of Reinforcement Learning.
 
@@ -179,7 +179,7 @@ Link: [https://www.youtube.com/watch?v=ZzKaFJxiDzA](https://www.youtube.com/watc
 
 Speaker: Tin Marković
 
-Summary: Tim currently works at [Kiwi.com](http://Kiwi.com) and focussed his talk on reducing "code debt" by refactoring the code base regularly. The key elements he touched upon were easy wins, like automating some checks by using `black`, `mypy`, `coala`, etc., patterns that hint to "smelly code", and possible reasons ranging from "historical reasons" to "high priority urgent hacky requests". This is often not easily apparent, however, tools like "SonarQube" can help in identifying sections of code that might need refactoring. Another element that he talked about are over use of decorators, which may seem like a good idea but can lead to non-obvious functionality, and recommended that they be only limited, and shouldn't at least alter the function signature and calls. Another suggestion that I liked was around code reviews, in which it may be good idea to structure the reviews at overall scope, followed by system scope, and finally code scope. This can help save coding time in case the architecture or overall scope needs to be changed. Overall, the focus was to always keep an eye out for code debt and try to improve little by little.
+Summary: Tim currently works at [Kiwi.com](http://Kiwi.com) and focused his talk on reducing "code debt" by refactoring the code base regularly. The key elements he touched upon were easy wins, like automating some checks by using `black`, `mypy`, `coala`, etc., patterns that hint to "smelly code", and possible reasons ranging from "historical reasons" to "high priority urgent hacky requests". This is often not easily apparent, however, tools like "SonarQube" can help in identifying sections of code that might need refactoring. Another element that he talked about are over use of decorators, which may seem like a good idea but can lead to non-obvious functionality, and recommended that they be only limited, and shouldn't at least alter the function signature and calls. Another suggestion that I liked was around code reviews, in which it may be good idea to structure the reviews at overall scope, followed by system scope, and finally code scope. This can help save coding time in case the architecture or overall scope needs to be changed. Overall, the focus was to always keep an eye out for code debt and try to improve little by little.
 
 ### Title: 10 ways to debug Python code
 
