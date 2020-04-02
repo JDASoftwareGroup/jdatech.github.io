@@ -13,9 +13,15 @@ author_profile: true
 # Write-Up of the PyConDE & PyData Berlin 2019 conference
 
 
-The CfP for the 2020 PyCon.DE & PyData Berlin conference is now open (submit your proposal 
-[here](https://de.pycon.org/)). This is a great time to share our experiences from the 2019 conference and compile a 
-list of our highlight talks. Take these as inspirations for your own submission.
+As many of us are working from home these days, we thought it might be a good idea to share our highlight talks of the 
+PyCon.DE & PyData Berlin 2019 conference, so you have something interesting to watch during your breaks. 
+While there is so much good content, let's all hope we don't have the time to watch conference recordings very soon, 
+because we can go out with friends and familiy again!
+
+
+Also, the CfP for the 2020 PyCon.DE & PyData Berlin conference is now open (submit your proposal 
+[here](https://de.pycon.org/)). There is a chance that you have time to write a proposal, so take these talk 
+recommendations as an inspirations for your own submission.
 
 
 PyCon.DE is a Python conference held in Germany where attendees can meet to learn about new and upcoming Python 
