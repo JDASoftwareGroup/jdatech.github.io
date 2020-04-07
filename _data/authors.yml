@@ -41,7 +41,18 @@ Peter Hoffmann:
       url: "https://twitter.com/peterhoffmann"
 
 Sebastian Neubauer:
-  name        : "Sebastian Neubauer"
+  name: "Sebastian Neubauer"
+  avatar: "assets/images/authors/sebastian_neubauer.jpeg"
+  links:
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      url: "https://twitter.com/sebineubauer"
+    - label: "Github"
+      icon: "fab fa-fw fa-github-square"
+      url: "https://github.com/sebastianneubauer"
+    - label: "LinkedIn"
+      icon: "fab fa-linkedin"
+      url: "https://www.linkedin.com/in/sebastian-neubauer-16626a79"
 
 Florian Jetter:
     name        : "Florian Jetter"
