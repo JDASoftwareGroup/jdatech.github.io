@@ -74,3 +74,10 @@ Lucas Rademaker:
       - label: "Github"
         icon: "fab fa-fw fa-github-square"
         url: "https://github.com/lr4d"
+
+Nefta Kanilmaz:
+  name: "Nefta Kanilmaz"
+  links:
+    - label: "Github"
+      icon: "fab fa-fw fa-github-square"
+      url: "https://github.com/NeroCorleone"
