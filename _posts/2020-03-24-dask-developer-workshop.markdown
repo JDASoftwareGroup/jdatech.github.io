@@ -4,10 +4,10 @@ title:  "Karlsruhe to D.C. ― a Dask story"
 date:   2020-03-24 20:00:00 +0100
 tags: technology python data-engineering Dask distributed
 header:
-  overlay_image: assets/images/tech_gear_banner.jpg
+  overlay_image: assets/images/dask_icon.svg
   overlay_filter: 0.2
   show_overlay_excerpt: false
-author: Lucas Rademaker, Nefta Kanilmaz
+author: Lucas Rademaker
 author_profile: true
 ---
 # Karlsruhe to D.C. ― a Dask story
