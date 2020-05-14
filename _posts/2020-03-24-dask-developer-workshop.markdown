@@ -31,6 +31,9 @@ This exchange between users and developers enabled immediate fixes of minor prob
 
 ## The Blue Yonder way of using Dask
 
+When _we_ talk about _Dask_, we mainly refer to _Dask.distributed_, as this is our main use case.
+We are still finishing our migration from a proprietary job scheduler to Dask.distributed.
+
 We quickly realized that Blue Yonder’s use case is almost unique in the Dask community.
 
 Florian Jetter opened the stage at the conference and presented the typical data flow for our machine learning products, the usage of Dask and Dask.distributed within this flow, and where we were currently facing issues.
@@ -42,22 +45,25 @@ A lot of Dask users we met at the workshop also utilized Dask clusters for data-
 
 ## Issues we have encountered with Dask and potential improvements
 
-The combination of talks and open discussions made the workshop very unique. However, instead of writing about the talks, we wanted to give a snapshot of how the open discussions looked like.  
+The combination of talks and open discussions made the workshop very unique. However, instead of writing about the talks, we wanted to give a snapshot of how the open discussions looked like because we thought these were more interesting.
 In these discussions we talked about a lot of topics, some of which have been or still are big problems for us. We encountered community members who had similar experiences. Below are some of the issues we want to share.
 
 ### Distributed stability
 <!-- TODO: Shorten first two paragraphs -->
-We started migrating one of our largest data pipelines to Dask in the last months of 2019. With these newly migrated pipelines, we started to observe significant instability during the computation of the Dask graph.
-One of the issues that we identified was a scenario wherein the scheduler saw a worker as being in an "invalid" state and, as a result, killed it, although
-the worker had been running fine up until that point. This issue was related to a temporary loss of network connectivity between worker and scheduler. The team at Blue Yonder contributed several patches to increase the robustness of the distributed scheduler with regard to network stability.
+We migrated some of our largest data pipelines to Dask in the last months of 2019. For these pipelines, we started to observe significant instability during the computation of the Dask graph. We hadn't seen this issue in any of our previous pipelines running on distributed. Our team contributed several patches upstream in order to resolve these issues on our side. 
+
+<!-- TODO: "invalid" state scenario is technically not entirely correct -->
+One of the issues that we identified was a scenario where a ssl handshake issue which could not be properly recovered. The team at Blue Yonder contributed several patches to increase the robustness of the distributed scheduler with regard to network stability.
 
 We also observed critical behaviour of the distributed scheduler when the cluster is being downsized. Downscaling/downsizing refers to the process of workers being removed from an active cluster.
 Downsizing of a cluster during computation can result in a re-computation of large parts of the graph. This occurs when a worker that is holding a task result is being shut down. This task will then need to be re-computed including all necessary dependencies, leading to significantly increased computation time or possible never-ending executions.
 The Blue Yonder Core Platform team implemented several work-arounds to allow for graceful downscaling, but this has not yet been addressed in a generic way in the distributed scheduler.
+-->
  
-During the working sessions, we had a number of fruitful conversations about stability with  Dask developers and users facing similar issues.
-One idea which may help mitigate the above issues is _replication of some task results_. The idea is the following: if a worker which is holding a task result is shut down, but the task result is replicated, then we do not need to re-compute parts of the graph again.
-One could think about replicating task results for tasks that qualify some criteria such as long running time or small task size.
+During the working sessions, a number of conversations took place related to the stability of the distributed scheduler, involving Dask developers and users.
+One idea which came up to increase the overall robustness of distributed was _replication of task results_. The idea is the following: if a worker which is holding a task result is shut down, but the task result is replicated, then we do not need to re-compute parts of the graph again.
+As of the time of this writing, we have not had a chance to actively work on something like this yet, but it is something that we keep in mind.
+<!-- One could think about replicating task results for tasks that qualify some criteria such as long running time or small task size. -->
 
 ### Performance and graph optimization
 While monitoring the execution of one of our Dask production pipelines.
@@ -70,7 +76,8 @@ This lack of optimization referred to as memory back-pressure does not only impa
 ## Looking back
 
 ### Results from working sessions
-Lucas had the pleasure to work with [John Lee](https://github.com/jlee3) on writing down a benchmark to enable [work stealing for tasks with restrictions](https://github.com/Dask/distributed/pull/3069), as well as with [Tom Augspurger](https://github.com/TomAugspurger) on a Dask.dataframe bug involving categoricals (PR still pending).
+<!-- Remove names -->
+Lucas had the pleasure to collaborate with John Lee on writing down a benchmark to enable [work stealing for tasks with restrictions](https://github.com/Dask/distributed/pull/3069). He also got input from an expert on dask internals, accelerating progress on a Dask.dataframe bug involving categoricals.
 
 However, arguably the most useful work we did was the implementation of a semaphore in Dask.distributed.
 We need to be able to rate-limit the access of the computation clusters to certain resources such as production databases. Migrating workflows which were still heavily dependent on accessing the database to the distributed scheduler was not possible without a semaphore implementation.
@@ -79,6 +86,12 @@ Coincidentally, we also talked with other attendees of the workshop whom were in
 This is something we did not forget; despite the jetlag, we left D.C. with a good chunk of the implementation necessary for a semaphore. This finally got [released](https://github.com/Dask/distributed/commit/2129b740c1e3f524e5ba40a0b6a77b239d4c1f94) with distributed 2.14.0.
 
 ### Interaction with the community
+<!--
+- Value of organizing workshop. Putting together all core developers / power users in one place
+- Highlight sprints and working sessions more. Focused, very productive work given so much "brain power"
+
+- Community is good, etc
+-->
 <!-- TODO: Check if duplicated with intro to ## Issues we have encountered with Dask and potential improvements -->
 Being able to share our issues with the Dask community and discuss potential ways of improvement with expert users and core developers was extremely valuable. Additionally, this interaction gave us a wider perspective on the current status of Dask, the ecosystem around it, and what we can expect in the future.
 
