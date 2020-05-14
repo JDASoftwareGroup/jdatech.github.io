@@ -1,6 +1,6 @@
 ---
 layout: single
-title:  "Tales from D.C.: Dask Developer Workshop 2020"
+title:  "Karlsruhe to D.C. ― a Dask story"
 date:   2020-03-24 20:00:00 +0100
 tags: technology python data-engineering Dask distributed
 header:
@@ -10,10 +10,11 @@ header:
 author: Lucas Rademaker, Nefta Kanilmaz
 author_profile: true
 ---
-# Karlsruhe to D.C.: a Dask story
+# Karlsruhe to D.C. ― a Dask story
 
 Back in February 2020, we (Florian Jetter, Nefta Kanilmaz and Lucas Rademaker) travelled to the Washington D.C. metropolitan area to attend the first Dask developer conference. Our primary goal was to discuss Blue Yonder’s issues related to Dask with the attending developers and users. When we returned back to Germany, we had not only connected with many of the core developers in the Dask community, but also had an (almost finished) implementation of a distributed semaphore in our bags. 
 
+There is [a blog post](https://blog.dask.org/2020/04/28/dask-summit) giving an overview on and summary of the workshop talks. We want to share our experience around this workshop. 
 
 ## Setting
 
@@ -31,10 +32,9 @@ This exchange between users and developers enabled immediate fixes of minor prob
 
 ## The Blue Yonder way of using Dask
 
-When _we_ talk about _Dask_, we mainly refer to _Dask.distributed_, as this is our main use case.
-We are still finishing our migration from a proprietary job scheduler to Dask.distributed.
+We at Blue Yonder are still finishing our migration from a proprietary job scheduler to Dask.distributed. This is why when _we_ talk about _Dask_ in this post, we are mainly referring to _Dask.distributed_, as this is our main use case.
 
-We quickly realized that Blue Yonder’s use case is almost unique in the Dask community.
+We quickly realized at the workshop that Blue Yonder’s use case is almost unique in the Dask community.
 
 Florian Jetter opened the stage at the conference and presented the typical data flow for our machine learning products, the usage of Dask and Dask.distributed within this flow, and where we were currently facing issues.
  
@@ -45,7 +45,6 @@ A lot of Dask users we met at the workshop also utilized Dask clusters for data-
 
 ## Issues we have encountered with Dask and potential improvements
 
-The combination of talks and open discussions made the workshop very unique. However, instead of writing about the talks, we wanted to give a snapshot of how the open discussions looked like because we thought these were more interesting.
 In these discussions we talked about a lot of topics, some of which have been or still are big problems for us. We encountered community members who had similar experiences. Below are some of the "rants" we want to share.
 
 
@@ -67,8 +66,7 @@ This lack of optimization, also referred to as memory back-pressure, does not on
 ## Looking back
 
 ### Results from working sessions
-<!-- Remove names -->
-Lucas had the pleasure to collaborate with John Lee on writing down a benchmark to enable [work stealing for tasks with restrictions](https://github.com/Dask/distributed/pull/3069). He also got input from an expert on dask internals, accelerating progress on a Dask.dataframe bug involving categoricals.
+Lucas had the pleasure to collaborate with John Lee on writing down a benchmark to enable [work stealing for tasks with restrictions](https://github.com/Dask/distributed/pull/3069). He also got valuable input from Tom Augspurger on dask internals while debugging a Dask.dataframe bug involving categoricals.
 
 However, arguably the most useful work we did was the implementation of a semaphore in Dask.distributed.
 We need to be able to rate-limit the access of the computation clusters to certain resources such as production databases. Migrating workflows which were still heavily dependent on accessing the database to the distributed scheduler was not possible without a semaphore implementation.
@@ -77,13 +75,6 @@ Coincidentally, we also talked with other attendees of the workshop whom were in
 This is something we did not forget; despite the jetlag, we left D.C. with a good chunk of the implementation necessary for a semaphore. This finally got [released](https://github.com/Dask/distributed/commit/2129b740c1e3f524e5ba40a0b6a77b239d4c1f94) with distributed 2.14.0.
 
 ### Interaction with the community
-<!--
-- Value of organizing workshop. Putting together all core developers / power users in one place
-- Highlight sprints and working sessions more. Focused, very productive work given so much "brain power"
-
-- Community is good, etc
--->
-<!-- TODO: Check if duplicated with intro to ## Issues we have encountered with Dask and potential improvements -->
 Being able to share our issues with the Dask community and discuss potential ways of improvement with expert users and core developers was extremely valuable. Additionally, this interaction gave us a wider perspective on the current status of Dask, the ecosystem around it, and what we can expect in the future.
 
 We were also reminded once again by the value of open-source software. 
