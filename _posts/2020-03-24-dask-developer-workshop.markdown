@@ -7,7 +7,7 @@ header:
   overlay_image: assets/images/dask_icon.svg
   overlay_filter: 0.2
   show_overlay_excerpt: false
-author: Lucas Rademaker
+author: Lucas Rademaker & Nefta Kanilmaz
 author_profile: true
 ---
 # Karlsruhe to D.C. ― a Dask story

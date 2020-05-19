@@ -68,16 +68,12 @@ Marco Neumann:
       icon: "fab fa-fw fa-github-square"
       url: "https://github.com/crepererum"
 
-Lucas Rademaker:
-    name        : "Lucas Rademaker"
+Lucas Rademaker & Nefta Kanilmaz:
+    name        : "Lucas Rademaker & Nefta Kanilmaz"
     links:
-      - label: "Github"
+      - label: "Lucas' Github"
         icon: "fab fa-fw fa-github-square"
         url: "https://github.com/lr4d"
-
-Nefta Kanilmaz:
-  name: "Nefta Kanilmaz"
-  links:
-    - label: "Github"
-      icon: "fab fa-fw fa-github-square"
-      url: "https://github.com/NeroCorleone"
+      - label: "Nefta's Github"
+        icon: "fab fa-fw fa-github-square"
+        url: "https://github.com/NeroCorleone"
