@@ -57,7 +57,7 @@ As of the time of this writing, we have not had a chance to actively work on som
 
 ### Performance and graph optimization
 While monitoring the execution of one of our Dask production pipelines, we observed that the amount of memory consumed by the workers was significantly higher than one would expect in an ideal scenario where tasks are executed in a way which minimizes memory usage of the workers.
-When investigating the Dask.optimization module, we saw that code to optimize memory usage was already there. In practice, however, the graphs are not executed in such an order because of other constraints during execution.
+When investigating the Dask.optimization module, we saw that code to optimize memory usage was already there. In practice, however, the graphs are not executed in the optimal order with regards to memory usage because of other constraints during execution.
 
 A Dask user at the workshop facing this issue told us that they worked around this by injecting dummy dependencies into Dask graphs. These dependencies acted as "choke-holds" for certain types of tasks, in order to improve the memory usage during execution.
 
