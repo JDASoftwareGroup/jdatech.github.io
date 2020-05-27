@@ -18,14 +18,14 @@ There is [a blog post](https://blog.dask.org/2020/04/28/dask-summit) giving a ge
 
 ## Setting
 
-The three-day long workshop included sessions with short talks, as well as dedicated time slots for working on Dask-related issues and discussions.
-Talks covered a broad spectrum of topics including Dask-ML and usage of Dask in general data analysis, Dask deployment and infrastructure, and many more. All talks focused on answering these key questions: 
+The three-day long workshop included sessions with short talks, as well as time slots for working on Dask-related issues and discussions.
+The talks covered a broad spectrum of topics including Dask-ML and the usage of Dask in general data analysis, Dask deployment and infrastructure, and many more. All talks focused on answering these key questions: 
 
 - Who are Dask users and what are their use cases?
 - What are current pain points and what needs to be fixed as soon as possible?
 - What is on the Dask users' wish list?
 
-In other words, this was the chance for presenters to officially “rant” [*] about Dask, with experts having the experience and knowledge to help in the same room.
+In other words, this was an opportunity for presenters to officially “rant” [*] about Dask, with experts having the experience and knowledge to help in the same room.
 This exchange between users and developers enabled immediate fixes of minor problems, identifying synergies between different projects, as well as shaping the roadmap for future development of Dask. We feel that this is a successful model for driving the Dask open-source community.
 
 [*] quote Matthew Rocklin
@@ -69,8 +69,7 @@ This lack of optimization, also referred to as memory back-pressure, not only im
 Lucas had the pleasure to collaborate with John Lee on writing down a benchmark to enable [work stealing for tasks with restrictions](https://github.com/Dask/distributed/pull/3069). He also got valuable input from Tom Augspurger on dask internals while debugging a Dask.dataframe bug involving categoricals.
 
 However, arguably the most useful work we did was the implementation of a semaphore in Dask.distributed.
-We need to be able to rate-limit the access of the computation clusters to certain resources such as production databases. Migrating workflows which were still heavily dependent on accessing the database to the distributed scheduler was not possible without a semaphore implementation.
-By working on the semaphore during the workshop, we unblocked a Blue Yonder product team in its migration to Dask.
+Our workflows depend heavily on accessing resources like production databases. Migrating them to the distributed scheduler was therefore not possible without first being able to rate-limit the access of computation cluster to such resources. For this, we needed a semaphore implementation.
 Coincidentally, we also talked with other attendees of the workshop whom were interested in such a functionality.
 This is something we did not forget; despite the jetlag, we left D.C. with a good chunk of the implementation necessary for a semaphore. This finally got [released](https://github.com/Dask/distributed/commit/2129b740c1e3f524e5ba40a0b6a77b239d4c1f94) with distributed 2.14.0.
 
@@ -79,8 +78,8 @@ Being able to share our issues with the Dask community and discuss potential way
 
 We were also reminded once again of the value of open-source software. 
 There was a clear synergy in terms of intended functionality between [Kartothek](https://github.com/JDASoftwareGroup/kartothek) and other tools in the ecosystem such as Arrow/Parquet and Dask.dataframe I/O and partitioning.
-We are sharing responsibility of Dask with the community; by committing to this project we are accessing a broad pool of developers.
-In this sense, to be able to get the best software out there, collaborating with the community is a necessity. 
+Dask is driven by a wide community of skilled and passionate developers. 
+By committing to this community-driven project, we get to collaboratively shape the best software out there.
 
 ### Final remarks
 
