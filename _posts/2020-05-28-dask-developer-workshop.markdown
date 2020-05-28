@@ -1,7 +1,7 @@
 ---
 layout: single
 title:  "Karlsruhe to D.C. ― a Dask story"
-date:   2020-03-24 20:00:00 +0100
+date:   2020-05-28 20:00:00 +0100
 tags: technology python data-engineering Dask distributed
 header:
   overlay_image: assets/images/dask_icon.svg
