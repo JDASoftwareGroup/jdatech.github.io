@@ -1,4 +1,4 @@
-JDA Tech Blog
+Blue Yonder Tech Blog
 =====================
 
 
