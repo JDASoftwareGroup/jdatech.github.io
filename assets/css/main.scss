@@ -5,16 +5,43 @@
 @charset "utf-8";
 
 /* Theme Overrides - must preceed minimal mistakes imports below.*/
-$primary-color: #1398d9;
+$primary-color: #000E4E;
 $link-color: $primary-color;
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
+@import url("https://cdn.blueyonder.com/global/css/fonts.css");
 
-.page__hero--overlay {
-  padding: 4.5em 0;
+body
+{
+	font-family: 'Accord', 'sans-serif';
+	font-size: 18px;
 }
 
-.site-logo img {
-  max-height: 3rem;
+.site-logo img 
+{
+	max-height: 90px;
 }
+
+.page__hero--overlay 
+{
+	padding: 4.5em 0;
+}
+
+.page__footer
+{
+	background-color: $primary-color;
+}
+
+.page__footer .page-footer-legal
+{
+	font-size: 0.8em;
+}
+
+.page__footer .page-footer-legal .legal-links a
+{
+	display: inline-block;
+	margin: auto 15px; 
+}
+
+

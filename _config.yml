@@ -15,10 +15,11 @@ remote_theme             : "mmistakes/minimal-mistakes"
 minimal_mistakes_skin    : "contrast" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
 # Site Settings
+legal_name               : "Blue Yonder Group, Inc."
+name                     : "Blue Yonder"
 locale                   : "en-US"
 title                    : "Blue Yonder Tech Blog"
 title_separator          : "-"
-name                     : "Blue Yonder"
 description              : "A blog on technology and open source software."
 url                      : https://tech.blueyonder.com
 baseurl                  : # the subpath of your site, e.g. "/blog"
@@ -134,19 +135,21 @@ head_scripts:
 
 # Site Footer
 footer:
-  links:
+  social_links:
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
       url: "https://twitter.com/TechJda"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/JDASoftwareGroup"
+   
+  legal_links:
     - label: "Privacy Policy"
       url: "https://blueyonder.com/privacy-policy"
-      icon: ""
     - label: "Terms of Use"
       url: "https://blueyonder.com/terms-of-use"
-      icon: ""
+
+  
     
 
 
