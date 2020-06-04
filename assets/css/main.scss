@@ -4,9 +4,12 @@
 
 @charset "utf-8";
 
-/* Theme Overrides - must preceed minimal mistakes imports below.*/
-$primary-color: #000E4E;
+$primary-color: rgba(0, 14, 78, 1.0);
+$text-color: rgba(49, 49, 49, 1.0);
 $link-color: $primary-color;
+$font-family-sans-serif: 'Accord', 'sans-serif';
+$font-family-serif: 'Sectra', 'serif';
+$breakpoint-xs: 575.98px;
 
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
@@ -14,8 +17,32 @@ $link-color: $primary-color;
 
 body
 {
-	font-family: 'Accord', 'sans-serif';
-	font-size: 20px;
+	color: $text-color;
+	font-family: $font-family-sans-serif;
+	font-size: 18px;
+}
+
+h1
+{
+	color: $primary-color;
+	font-family: $font-family-serif;
+}
+
+h2,
+h3,
+h4,
+h5,
+h6
+{
+	color: $primary-color;
+	font-family: $font-family-sans-serif;
+	font-weight: 500;
+}
+
+.greedy-nav .visible-links a:before
+{
+	background-color: $primary-color;
+	height: 3px;
 }
 
 .site-logo img 
@@ -28,6 +55,28 @@ body
 	padding: 4.5em 0;
 }
 
+.page__hero--overlay p.page__meta {
+    bottom: 0;
+    position: absolute;
+    margin: 0 0 10px 10px;
+}
+
+.archive__item a[rel="permalink"] 
+{
+    text-decoration: none;
+	font-weight: normal;
+}
+
+.archive__item-excerpt
+{
+	color: $text-color;
+}
+
+.page
+{
+	padding-right: 0;
+}
+
 .page__footer
 {
 	background-color: $primary-color;
@@ -35,13 +84,65 @@ body
 
 .page__footer .page-footer-legal
 {
-	font-size: 0.7em;
+	font-size: 0.8em;
+}
+
+.page__footer .page-footer-legal .legal-links
+{
+	white-space: nowrap;
+}
+
+@media (max-width: $breakpoint-xs) 
+{ 
+	.page__footer .page-footer-legal .legal-links
+	{
+		display: block;
+	}
 }
 
 .page__footer .page-footer-legal .legal-links a
 {
 	display: inline-block;
-	margin: auto 15px; 
 }
 
+.page__footer .page-footer-legal .legal-links a::before
+{
+	content: " | ";
+	padding: 15px;
+}
 
+@media (max-width: $breakpoint-xs) 
+{ 
+	.page__footer .page-footer-legal .legal-links a:first-of-type::before
+	{
+		display: none;
+	}
+}
+
+.search-content .search-input 
+{
+    font-size: 1.3em;
+    border: 1px solid;
+    padding: 8px;
+}
+
+.search-content .results 
+{
+    margin: 0 20px;
+    width: 100%;
+}
+
+.search-content .results__found
+{
+	font-size: 0.8em;	
+}
+
+.search-content .archive__item 
+{
+	width: auto;
+}
+
+.search-content .archive__item-excerpt 
+{
+	font-size: 1em;
+}

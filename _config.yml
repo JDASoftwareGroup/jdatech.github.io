@@ -83,8 +83,8 @@ search_provider          : # lunr (default), algolia, google
 # naver_site_verification  :
 
 # Social Sharing
-twitter:
-  username               : BlueYonderTech
+#twitter:
+#  username               : BlueYonderTech
 # facebook:
 #   username               :
 #   app_id                 :
@@ -136,9 +136,9 @@ head_scripts:
 # Site Footer
 footer:
   social_links:
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/BlueYonderTech"
+    #- label: "Twitter"
+    #  icon: "fab fa-fw fa-twitter-square"
+    #  url: "https://twitter.com/BlueYonderTech"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/JDASoftwareGroup"
