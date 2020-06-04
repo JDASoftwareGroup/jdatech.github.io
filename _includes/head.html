@@ -1,0 +1,36 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="application-name" content="Blue Yonder Tech Blog" />
+<meta name="theme-color" content="#000E4E" />
+<link href="https://cdn.blueyonder.com/global/images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+<link href="https://cdn.blueyonder.com/global/images/favicon.ico" rel="icon" type="image/x-icon" />
+<link href="https://cdn.blueyonder.com/global/images/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180" type="image/png" />
+<link href="https://cdn.blueyonder.com/global/images/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" type="image/png" />
+<link href="https://cdn.blueyonder.com/global/images/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144" type="image/png" />
+<link href="https://cdn.blueyonder.com/global/images/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" type="image/png" />
+<link href="https://cdn.blueyonder.com/global/images/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114" type="image/png" />
+<link href="https://cdn.blueyonder.com/global/images/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" type="image/png" />
+<link href="https://cdn.blueyonder.com/global/images/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72" type="image/png" />
+<link href="https://cdn.blueyonder.com/global/images/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57" type="image/png" />
+
+{% include seo.html %}
+
+<link href="{% if site.atom_feed.path %}{{ site.atom_feed.path }}{% else %}{{ '/feed.xml' | relative_url }}{% endif %}" type="application/atom+xml" rel="alternate" title="{{ site.title }} Feed">
+
+<script>
+	document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+
+{% if site.head_scripts %}
+	{% for script in site.head_scripts %}
+		{% if script contains "://" %}
+			{% capture script_path %}{{ script }}{% endcapture %}
+		{% else %}
+			{% capture script_path %}{{ script | relative_url }}{% endcapture %}
+		{% endif %}
+		<script src="{{ script_path }}"></script>
+	{% endfor %}
+{% endif %}

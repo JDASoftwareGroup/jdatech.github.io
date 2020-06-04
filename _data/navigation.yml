@@ -2,16 +2,17 @@
 main:
   - title: "Posts by Tags"
     url: /tags
-  - title: "About"
-    url: /about
+  - title: "About Blue Yonder"
+    url: https://blueyonder.com/
+  - title: Careers
+    url: https://blueyonder.com/careers
+  
 
 # side menu
 docs:
-  - title: Careers
-    url: https://blueyonder.com/careers
   - title: GitHub
-    children:
+    children:       
       - title: "Blue Yonder"
-        url: https://github.com/blue-yonder        
-      - title: "JDA"
         url: https://github.com/JDASoftwareGroup
+      - title: "Blue Yonder GmbH"
+        url: https://github.com/blue-yonder 
