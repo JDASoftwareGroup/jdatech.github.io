@@ -20,6 +20,7 @@ body
 	color: $text-color;
 	font-family: $font-family-sans-serif;
 	font-size: 18px;
+	min-height: 101vh /* Ensure scroll bars don't disappear as it causes jumping */
 }
 
 h1
@@ -55,10 +56,27 @@ h6
 	padding: 4.5em 0;
 }
 
-.page__hero--overlay p.page__meta {
+.page__hero--overlay p.page__meta 
+{
     bottom: 0;
     position: absolute;
     margin: 0 0 10px 10px;
+}
+
+.sidebar
+{
+	margin-top: 4px;
+}
+
+.nav__sub-title
+{
+	@extend .archive__subtitle;
+}
+
+.archive
+{
+	margin-top: 0;
+	padding-right: 0;
 }
 
 .archive__item a[rel="permalink"] 
@@ -70,6 +88,7 @@ h6
 .archive__item-excerpt
 {
 	color: $text-color;
+	font-size: 1em;
 }
 
 .page
