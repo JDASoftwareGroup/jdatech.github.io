@@ -21,14 +21,14 @@
 <div class="page-footer-legal">
 	<div class="page-footer-legal-copyright">
 		&copy; {{ site.time | date: '%Y' }} {{ site.legal_name }} All rights reserved.
-	</div>
-	<div class="legal-links">
-		{% if site.footer.social_links %}
-			{% for link in site.footer.social_links %}
-				{% if link.label and link.url %}
-					<a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.label }}</a>
-				{% endif %}
-			{% endfor %}
-		{% endif %}
+		<span class="legal-links">
+			{% if site.footer.legal_links %}
+				{% for link in site.footer.legal_links %}
+					{% if link.label and link.url %}
+						<a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.label }}</a>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+		</span>
 	</div>
 </div>
