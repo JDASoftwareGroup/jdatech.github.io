@@ -132,7 +132,17 @@ h6
     width: 100%;
 }
 
+.search-content .results__found
+{
+	font-size: 0.8em;	
+}
+
 .search-content .archive__item 
 {
 	width: auto;
+}
+
+.search-content .archive__item-excerpt 
+{
+	font-size: 1em;
 }
