@@ -12,7 +12,7 @@ main:
 docs:
   - title: GitHub
     children:       
-      - title: "Blue Yonder, Inc."
+      - title: "Blue Yonder"
         url: https://github.com/JDASoftwareGroup
       - title: "Blue Yonder GmbH"
         url: https://github.com/blue-yonder 
