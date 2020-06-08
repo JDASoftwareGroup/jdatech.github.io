@@ -80,13 +80,13 @@ Run-length encoding is a simple yet powerful technique. Instead of storing array
 so called "runs" --- consecutive elements of the array where the same value is stored. For each run, it then just keeps
 its value and length:
 
-![run-length encoding, step 1](/assets/images/2019-12-01-rle-array/rle_array1.png)
+![run-length encoding, step 1](/assets/images/2019-12-01-rle-array/rle_array1.svg)
 
 Pandas requires us to be able to do quick [random access](https://en.wikipedia.org/wiki/Random_access), e.g. for
 sorting and group-by operations. Instead of the actual run-lengths we store the end positions of each run (this is the
 cumulative sum of the lengths):
 
-![run-length encoding, step 2](/assets/images/2019-12-01-rle-array/rle_array2.png)
+![run-length encoding, step 2](/assets/images/2019-12-01-rle-array/rle_array2.svg)
 
 This way, we can use [binary search](https://en.wikipedia.org/wiki/Binary_search_algorithm) to implement random access.
 
@@ -119,7 +119,7 @@ created as followed:
 
 The whole setup can also be visualized:
 
-![cube](/assets/images/2019-12-01-rle-array/cube.png)
+![cube](/assets/images/2019-12-01-rle-array/cube.svg)
 
 You can generate the same data using
 [`rle_array.testing.generate_test_dataframe`](https://jdasoftwaregroup.github.io/rle-array/_rst/rle_array.testing.html#rle_array.testing.generate_test_dataframe).
@@ -162,7 +162,7 @@ encouraged to try these and others.
 Dictionary encoding replaces the actual payload data with a mapping. The trick is that mapped values can often be more
 memory-efficient, especially when the original data is very long (e.g. for strings) and are repeated multiple times:
 
-![dictionary encoding memory layout](/assets/images/2019-12-01-rle-array/dictionary_encoding.png)
+![dictionary encoding memory layout](/assets/images/2019-12-01-rle-array/dictionary_encoding.svg)
 
 This is what [Pandas Categoricals](https://pandas.pydata.org/pandas-docs/stable/user_guide/categorical.html) implement.
 For data-at-rest, this is implemented by
@@ -187,7 +187,7 @@ This distinction between semantics and data size is also made by the
 
 Here is how this looks like in memory (for [big endian machines](https://en.wikipedia.org/wiki/Endianness)):
 
-![data types memory layout](/assets/images/2019-12-01-rle-array/data_types.png)
+![data types memory layout](/assets/images/2019-12-01-rle-array/data_types.svg)
 
 In this example, we can easily use 16 bits per element instead of 64, resulting in a 75% memory reduction.
 
@@ -198,7 +198,7 @@ noticeable exceptions due to the lacking hardware support on most CPUs), it also
 ### Bit-packing
 Bit-packing is similar to [Data Types](#data-types), but allows to create types with non-standard width:
 
-![bit packing memory layout](/assets/images/2019-12-01-rle-array/bit_packing.png)
+![bit packing memory layout](/assets/images/2019-12-01-rle-array/bit_packing.svg)
 
 The advantage is that you can save even more memory, but it comes with heavy performance penalties, since
 CPUs cannot read unaligned data that efficiently. In some cases however, it can be even faster due to the saved memory
@@ -212,7 +212,7 @@ Often we find columns in our DataFrames where information only occurs for a very
 is often more efficient to explicitly store and look-up these few cases --- e.g. by using a
 [HashTable](https://en.wikipedia.org/wiki/Hash_table) --- than using a simple array:
 
-![sparse data memory layout](/assets/images/2019-12-01-rle-array/sparse_data.png)
+![sparse data memory layout](/assets/images/2019-12-01-rle-array/sparse_data.svg)
 
 This is what [Pandas SparseArray](https://pandas.pydata.org/pandas-docs/stable/user_guide/sparse.html) implements. Note
 that the default value does not need to be `0`, but can be an arbitrary element. One downside of sparse arrays is that
