@@ -17,86 +17,55 @@ Back in 2017, Blue Yonder started to look into
 our machine learning and data pipelines.
 It's 2020 now, and we are using it heavily in production for performing machine learning based
 forecasting and optimization for our customers.
-Time to take a a look at the way we are using Dask!
+Over time, we discovered that the way we are using Dask differs from how it is typically
+used in the community. 
+(Teaser: For instance, we are running about 500 Dask clusters in total and dynamically scale up and down 
+the number of workers.)
+So we think it's time to take a a look at the way we are using Dask!
 
-## Use cases
+## Use case
 
-First, let's have a look at the use cases we have for Dask. The use of Dask at Blue Yonder
-is strongly coupled to the concept of [Datasets](https://tech.jda.com/introducing-kartothek/),
+First, let's have a look at the main use case we have for Dask. The use of Dask at Blue Yonder
+is strongly coupled to the concept of [datasets](https://tech.jda.com/introducing-kartothek/),
 tabular data stored as [Apache Parquet](https://parquet.apache.org/) files in blob storage. 
 We use datasets for storing the input data for our computations as well as intermediate results and the final output data
 served again to our customers.
 Dask is used in managing/creating this data as well as performing the necessary computations.
 
+Our pipeline consists of downloading data from a relational database into a dataset
+(we use Dask here for parallelization of the download) and then of several steps that each read
+the data from an input dataset, do a computations on it, and write it out to another dataset.
+
+In many cases, the layout of the source dataset (the partitioning, i.e., what data resides in which blob)
+is used for parallelization. 
+This means the algorithms work independently on the individual blobs of the source dataset. 
+Therefore, our respective Dask graphs are embarassingly parallel.
+The individual nodes perfom
+the sequential operations of reading in the data from a source dataset blob, doing some computation on it,
+and writing it out to a target dataset blob. 
+Again, there is a final reduction node writing the target
+dataset metadata. 
+We typically use Dask's Delayed interface for these computations.
+
+![Simple Dask graph with parallel nodes and final reduction](/assets/images/2020-03-16-dask-usage-at-by-graph.png)
+
+In between, we have intermediate steps for re-shuffling the data.
+This works by reading the dataset as a [Dask dataframe](https://docs.dask.org/en/latest/dataframe.html) 
+repartitioning the dataframe using network shuffle, and writing it out again to a dataset.
+
 The size of the data we work on varies strongly depending on the individual customer.
 The largest ones currently amount to about one billion rows per day. 
 This corresponds to 30 GiB of compressed Parquet data, which is roughly 500 GiB of uncompressed data in memory.
 
-### Downloading data from a database to a dataset
-
-One typical use case that we have is downloading large amounts of data from a database into a
-dataset. We use Dask/Distributed here as a means to parallelize the download and the graph is
-an embarassingly parallel one: a lot of independent nodes downloading pieces of data into a blob and one
-reduction node writing the [dataset metadata](https://github.com/JDASoftwareGroup/kartothek)
-(which is basically a dictionary what data can be found in which blob).
-Since the database can be overloaded by too many parallel downloads, we need to limit concurrency.
-In the beginning, we accomplished this by using a Dask cluster with a limited the number of workers.
-In the meantime, we contributed a 
-[Semaphore implementation](https://docs.dask.org/en/latest/futures.html?highlight=semaphore#id1)
-to Dask for solving this problem.
-
-### Doing computations on a dataset
-
-A lot of our algorithms for machine learning, forecasting, and optimization work on datasets.
-A source dataset is read, computations are performed on the data, and the result is written to
-a target dataset.
-In many cases, the layout of the source dataset (the partitioning, i.e., what data resides in which blob)
-is used for parallelization. This means the algorithms work independently on the individual
-blobs of the source dataset. Therefore, our respective Dask graphs again look very simple, with parallel nodes each performing
-the sequential operations of reading in the data from a source dataset blob, doing some computation on it,
-and writing it out to a target dataset blob. Again, there is a final reduction node writing the target
-dataset metadata. We typically use Dask's Delayed interface for these computations.
-
-![Simple Dask graph with parallel nodes and final reduction](/assets/images/2020-03-16-dask-usage-at-by-graph.png)
-
-### Dataset maintenance
-
-We use Dask/Distributed for performing maintenance operations like garbage collection on datasets.
-Garbage collection is necessary since we use a lazy approach when updating datasets and only delete or update
-references to blobs in the dataset metadata, deferring the deletion of no longer used blobs.
-In this case, Dask is used to parallelize the delete requests to the storage provider (Azure blob service).
-In a similar fashion, we use Dask to parallelize copy operations for backing up datasets.
-
-### Repartitioning a dataset
-
-Our algorithms rely on source datasets that are partitioned in a particular way. It is not always
-the case that we have the data available in a suitable partitioning, for instance, if the data results
-from a computation that used a different partitioning. In this case, we have to repartition the data.
-This works by reading the dataset as a [Dask dataframe](https://docs.dask.org/en/latest/dataframe.html) 
-repartitioning the dataframe using network shuffle, and writing it out again to a dataset.
-
-## Ad hoc data analysis
-
-Finally, our data scientists also use Dask for out-of-core analysis of data using Jupyter notebooks.
-This allows us to take advantage of all the nice features of Jupyter even for data that is too large to
-fit into an individual compute node's memory.
-
 ## Dask cluster setup at Blue Yonder
 
 We run a somewhat unique setup of Dask clusters that is driven by the specific requirements
-of our domain (environment isolation for SaaS applications and data isolation between customers). 
-We have a large number of individual clusters
-that are homogeneous in size with many of the clusters dynamically scaled. The peculiarities of this
-setup have in some cases triggered edge cases and uncovered bugs, which lead us to submit a number
-of upstream pull requests.
-
-### Cluster separation
-
-To provide isolation between customer environments we run separate Dask clusters per customer.
-For the same reason, we also run separate clusters for production, staging, and development environments. 
+of our domain.
+For reasons of data isolation between customers and environment isolation for SaaS applications 
+we run separate Dask clusters per customer and per environment (production, staging, and development).
 
 But it does not stop there. 
-The service we provide to our customers is comprised of several products that build upon each other and 
+The service we provide to our customers is comprised of several products that build upon each other
 and maintained by different teams. We typically perform daily batch runs with these products running sequentially
 in separated environments.
 For performance reasons, we install the Python packages holding the code needed for the computations on each worker. 
@@ -105,8 +74,10 @@ means we have to run a separate Dask cluster for each of the steps in the batch 
 This results in us operating more than
 ten Dask clusters per customer and environment, with most of the time, only one of the clusters being active
 and computing something. While this leads to overhead in terms of administration and hardware resouces,
+(which we have to mitigate, as outlined below)
 it also gives us a lot of flexibility. For instance, we can update the software on the cluster of one part of the compute pipeline
 while another part of the pipeline is computing something on a different cluster.
+
 
 ### Some numbers
 
@@ -127,7 +98,8 @@ The total number of dask workers we run varies between 1000 and 2000.
 To improve manageability, resilience, and resource utilization, we run the Dask clusters on top
 of [Apache Mesos](http://mesos.apache.org/)/[Aurora](http://aurora.apache.org/) 
 and [Kubernetes](https://kubernetes.io/). This means every worker as well as the scheduler and client
-each run in an isolated container. Communication happens via reverse proxies to make the communication
+each run in an isolated container. Communication happens via a simple service mesh 
+implemented via  reverse proxies to make the communication
 endpoints independent of the actual container instance.
 
 Running on top of a system like Mesos or Kubernetes provides us with resilience since a failing worker 
