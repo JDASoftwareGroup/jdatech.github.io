@@ -67,7 +67,6 @@ Florian Jetter:
 Andreas Merkel:
   name: "Andreas Merkel"
 
-
 Marco Neumann:
   name: "Marco Neumann"
   avatar: "assets/images/authors/marco_neumann.jpg"
@@ -88,3 +87,6 @@ Lucas Rademaker & Nefta Kanilmaz:
       - label: "Nefta's Github"
         icon: "fab fa-fw fa-github-square"
         url: "https://github.com/NeroCorleone"
+
+Andreas Merkel, Kshitij Mathur:
+    name: "Andreas Merkel and Kshitij Mathur"
