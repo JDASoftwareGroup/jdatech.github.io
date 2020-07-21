@@ -137,30 +137,37 @@ It also maps well to multiple backends we planned to use.
  Cube uses lazy approach of seed based join, 
  since it better supports independent copies and backups of datasets and also simplifies some of our processing pipelines (e.g. geolocation data can blindly be fetched for too many locations and dates.)	
 
-## Dask And Yamal Support
+## Backend Support
 
 The following features are supported by different backends:
 
 
-| Feature | Eager | Dask.Bag | Dask.DataFrame |	Yamal |
-| :-------: | :-----: | :--------: | :--------------: | :-----: |
-| Build	  |    yes    |    yes     |      yes         |   yes   |
-| Extend  |	 yes  |	  yes	 |     yes        |	 yes  |
-| Remove  |  yes  |   no	 |     no         |   no  |
-| Append  |  yes  |   yes	 |     yes        |	 yes  |
-| Delete  |  yes  |   yes    |     no         |  yes  |
-| Copy	  |  yes  |   yes    |	   no         |	 yes  |
-| Query	  |  yes  |   yes    |	   yes        |  yes  |
-| Stats	  |  yes  |   yes	 |     no	      |  yes  |
-| Cleanup |	 yes  |   yes    |	   no         |  yes  |
-| ------- | ----- | -------- | -------------- | ----- |
+| Feature | Eager | Dask.Bag | Dask.DataFrame |
+| :------:|:-----:|:--------:|:--------------:|
+| Build	  |  yes  |   yes    |     yes        |
+| Extend  |	 yes  |	  yes	 |     yes        |
+| Remove  |  yes  |   no	 |     no         |
+| Append  |  yes  |   yes	 |     yes        |
+| Delete  |  yes  |   yes    |     no         | 
+| Copy	  |  yes  |   yes    |	   no         |
+| Query	  |  yes  |   yes    |	   yes        |
+| Stats	  |  yes  |   yes	 |     no	      |
+| Cleanup |	 yes  |   yes    |	   no         |
+| ------- | ----- | -------- | -------------- | 
 
 
 ## New Features to Kartothek :
 Kartothek features a **command line interface (CLI)** for some cube operations. 
-To use it, create a  **skv.yml** file that describes storefact stores and use commands to gather information of the required cube.
-Here we use geodata cube to get some information.
+To use it, create a  **skv.yml** file that describes [storefact](https://github.com/JDASoftwareGroup/storefact) stores and use commands to gather information of the required cube.
 
+Sample skv.yml:
+```
+dataset:
+   type: hfs
+   path: path/to/data
+```
+
+Here we use **geodata** cube to get some information.
 ```python
 >>>kartothek_cube geodata info  (gives geodata cube info)
 >>>kartothek_cube geodata stats  (for cube scan)
