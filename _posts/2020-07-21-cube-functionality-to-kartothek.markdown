@@ -168,7 +168,7 @@ dataset:
 ```
 
 Here we use **geodata** cube to get some information.
-```python
+```shell
 >>>kartothek_cube geodata info  (gives geodata cube info)
 >>>kartothek_cube geodata stats  (for cube scan)
 >>>kartothek_cube --help  (To get list of  ktk_cube commands)
