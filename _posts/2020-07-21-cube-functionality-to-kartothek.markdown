@@ -13,28 +13,47 @@ author_profile: true
 # Introducing Cube Functionality To Kartothek
 
 In our last blog we introduced [Kartothek](2019-05-28-introducing-kartothek.markdown), a table management python library powered by Dask. 
-Our journey continued by adding a gem to our jewel. We empowered Kartothek with cube functionality. 
-Kartothek already provides Dataset features, As a user do I really need a cube? Hang On!! 
-Let us spend rest of our time understanding the story of “Cube”. 
+Our journey continued by adding a gem to our jewel. We empowered Kartothek with multiple-dataset functionality. 
+Kartothek already provides Dataset features, As a user do I really need a multiple-dataset? Hang On!! 
+Let us spend rest of our time understanding the story of **Cube (kartothek that supports multiple datasets)**. 
 
 ## What is a Cube?
 A Cube deals with multiple Kartothek datasets.
 
-TODO: Why Cube functionality is developed?????
-
-![Cube Image](/assets/images/2020-07-21-kartothek-cube.png)
-
 Let us start with building a cube for **geodata**. Similar to Kartothek, 
-we need a simplekv-based store backend along with an abstract cube definition.
+we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along with an abstract cube definition.
+
+**df_weather** is a pandas dataframe created from reading a csv file.
+
+```python
+>>> from io import StringIO
+>>> df_weather = pd.read_csv(
+...     filepath_or_buffer=StringIO("""
+... avg_temp     city country        day
+...        6  Hamburg      DE 2018-01-01
+...        5  Hamburg      DE 2018-01-02
+...        8  Dresden      DE 2018-01-01
+...        4  Dresden      DE 2018-01-02
+...        6   London      UK 2018-01-01
+...        8   London      UK 2018-01-02
+...     """.strip()),
+...     delim_whitespace=True,
+...     parse_dates=["day"],
+... )
+```
+
 
 ```python
 >>> from kartothek.core.cube.cube import Cube
+>>>##we are creating a geodata cube instance
 >>> cube = Cube(
 ...     uuid_prefix="geodata",
 ...     dimension_columns=["city", "day"],
 ...     partition_columns=["country"]
 ...)
 ```
+
+We use the simple **klee2.io.eager_cube** backend to store the data:
 
 ```python
 >>> from kartothek.io.eager_cube import build_cube
@@ -45,44 +64,114 @@ we need a simplekv-based store backend along with an abstract cube definition.
 ...)
 ```
 
-where **df_weather** is a pandas dataframe created from reading a csv file 
-and **store** is the **simplekv** store of storefactory. (For more details, please refer our [Kartothek](2019-05-28-introducing-kartothek.markdown) blog.)
+
+where **store** is the **simplekv** store of storefactory. (For more details, please refer our [Kartothek](2019-05-28-introducing-kartothek.markdown) blog.)
+
+We just have preserved a single Kartothek dataset. Lets print the content of seed dataset.
+
+```python
+>>> print(", ".join(sorted(datasets_build.keys())))
+seed
+>>> ds_seed = datasets_build["seed"].load_all_indices(store)
+>>> print(ds_seed.uuid)
+geodata++seed
+>>> print(", ".join(sorted(ds_seed.indices)))
+city, country, day
+```
+
+Finally, let’s have a quick look at the store content. Note that we cut out UUIDs and timestamps here for documentation purposes:
+
+```python
+>>> import re
+>>> def print_filetree(s, prefix=""):
+...     entries = []
+...     for k in sorted(s.keys(prefix)):
+...         k = re.sub("[a-z0-9]{32}", "<uuid>", k)
+...         k = re.sub("[0-9]{4}-[0-9]{2}-[0-9]{2}((%20)|(T))[0-9]{2}%3A[0-9]{2}%3A[0-9]+.[0-9]{6}", "<ts>", k)
+...         entries.append(k)
+...     print("\n".join(sorted(entries)))
+>>> print_filetree(store)
+geodata++seed.by-dataset-metadata.json
+geodata++seed/indices/city/<ts>.by-dataset-index.parquet
+geodata++seed/indices/day/<ts>.by-dataset-index.parquet
+geodata++seed/table/_common_metadata
+geodata++seed/table/country=DE/<uuid>.parquet
+geodata++seed/table/country=UK/<uuid>.parquet
+```
+
+Thus, A cube can be visualised as a metadataset of multiple datasets as shown in below image.
+ 
+ 
+![Cube Image](/assets/images/2020-07-21-kartothek-cube.png)
 
 
-Similarly, we can **Extend** this cube by **Adding** new columns to the dataframes,  
-**Append** new rows to the existing cube,  **Remove** partitions from cube,  **Delete** the entire cube,  
-**Transform** the cube using **query** and **extend** operations.
+Similarly, we can **Extend** this cube by **Adding** new columns to the dataframes.
 
+## Extend Operation
+
+Now let’s say we also would like to have longitude and latitude data in our cube.
+
+```python
+>>> from klee2.io.eager import extend_cube
+>>> df_location = pd.read_csv(
+...     filepath_or_buffer=StringIO("""
+...    city country  latitude  longitude
+... Hamburg      DE 53.551086   9.993682
+... Dresden      DE 51.050407  13.737262
+...  London      UK 51.509865  -0.118092
+...   Tokyo      JP 35.652832 139.839478
+...     """.strip()),
+...     delim_whitespace=True,
+... )
+```
+
+```
+>>> datasets_extend = extend_cube(
+...   data={"latlong": df_location},
+...   store=store,
+...   cube=cube,
+... )
+```
+
+This results in an extra dataset:
+
+```python
+>>> print(", ".join(sorted(datasets_extend.keys())))
+latlong
+>>> ds_latlong = datasets_extend["latlong"].load_all_indices(store)
+>>> print(ds_latlong.uuid)
+geodata++latlong
+>>> print(", ".join(sorted(ds_latlong.indices)))
+country
+```
+Note that for the second dataset, no indices for **city** and **day** exists. 
+These are only created for the seed dataset, since that datasets forms the groundtruth about which city-day entries are part of the cube.
+(Dataset that provides the groundtruth about which Cells are in a Cube is called the **seed dataset**).
+
+If you look at the file tree, you can see that the second dataset is completely separated. This is useful to copy/backup parts of the cube:
+
+```python
+>>> print_filetree(store)
+geodata++latlong.by-dataset-metadata.json
+geodata++latlong/table/_common_metadata
+geodata++latlong/table/country=DE/<uuid>.parquet
+geodata++latlong/table/country=JP/<uuid>.parquet
+geodata++latlong/table/country=UK/<uuid>.parquet
+geodata++seed.by-dataset-metadata.json
+geodata++seed/indices/city/<ts>.by-dataset-index.parquet
+geodata++seed/indices/day/<ts>.by-dataset-index.parquet
+geodata++seed/table/_common_metadata
+geodata++seed/table/country=DE/<uuid>.parquet
+geodata++seed/table/country=UK/<uuid>.parquet
+```
+## Query
 
 The whole beauty of Cube does not come from storing multiple datasets,
 but especially from retrieving the data  (**Querying**)  in a very comfortable way. 
 Kartothek views the whole cube as a large, virtual DataFrame.
-Dataset that provides the groundtruth about which Cells are in a Cube is called the **seed dataset**.
 The seed dataset presents the groundtruth regarding rows, all other datasets are joined via a left join. 
 Cube naturally supports **partition-by** semantic, which is more helpful for distributed backends.
 
-## Query System
-This section explain some technical details around this mechanism.
-
-*  **Per Dataset Partitions**: First of all, all partition files for all datasets are gathered. Every partition file is represented by a unique label. 
-For every dataset, index data for the Primary Indices (i.e partition columns) will be loaded and joined with the labels.  Also, pre-conditions are applied during that step. 
-These are the conditions that can be evaluated based on index data (Partition Indices, Explicit Secondary Indices for dimension columns as well as index columns)
-*  Now,  partition-by data is added (if not already present).  Finally, rows with identical partition information (physical and partition-by) are compactified.
- 
-*  **Alignment** : After data is prepared for every dataset, they are aligned using their physical partitions. 
-Partitions that are present in non-seed datasets but are missing from the seed dataset are dropped.
-In case pre-conditions got applied to any non-seed dataset or partition-by columns that are neither a Partition Column nor Dimension Column, 
-the resulting join will be an inner join. This may result in removing potential partitions early.
-
-*  **Re-Grouping** :  Now, the DataFrame is grouped by **partition-by**.
-
-*  **Intra-Partition Joins** :
-A simple explanation of the join logic would be: “The coordinates (cube cells) are taken from the seed dataset, all other information is add via a left join.”
-Because the user is able to add conditions to the query and because we want to utilize predicate pushdown in a very efficient way,
-we define another term: restricted dataset. These are datasets which contain non-Dimension Column and non-Partition Column to 
-which users wishes to apply restrictions (via conditions or via partition-by). 
-Because these restrictions always need to apply, we can evaluate them pre-join and execute an inner join with the seed dataset.
- 
  
  ```python
 >>> from kartothek.io.eager_cube import query_cube
@@ -123,40 +212,72 @@ The query system also supports selection and projection:
 1         4  Dresden      DE 2020-07-02
 ```
 
+ 
+Similarly, we can **Transform** the cube using **query** and **extend** operations,
+ **Append** new rows to the existing cube.
+ 
+## Remove and Delete Operations
+
+You can **Remove** entire partitions from the cube using the remove operation.
+
+```python
+>>> from klee2.io.eager import remove_partitions
+>>> datasets_after_removal = remove_partitions(
+...     cube=cube,
+...     store=store,
+...     klee_dataset_ids=["latlong"],
+...     conditions=(C("country") == "UK"),
+... )
+>>> query_cube(
+...     cube=cube,
+...     store=store,
+... )[0]
+   avg_temp  avg_temp_country_min      city country        day   latitude  longitude
+0         8                   6.0   Dresden      DE 2018-01-01  51.050407  13.737262
+1         4                   4.0   Dresden      DE 2018-01-02  51.050407  13.737262
+2         6                   6.0   Hamburg      DE 2018-01-01  53.551086   9.993682
+3         5                   4.0   Hamburg      DE 2018-01-02  53.551086   9.993682
+4         6                   6.0    London      UK 2018-01-01        NaN        NaN
+5         8                   4.0    London      UK 2018-01-02        NaN        NaN
+6        20                   NaN  Santiago      CL 2018-01-01        NaN        NaN
+7        22                   NaN  Santiago      CL 2018-01-02        NaN        NaN 
+```
+
+You can also **Delete** entire datasets (or the entire cube).
+
+```python
+>>> from klee2.io.eager import delete_cube
+>>> datasets_still_in_cube = delete_cube(
+...     cube=cube,
+...     store=store,
+...     datasets=["transformed"],
+... )
+>>> query_cube(
+...     cube=cube,
+...     store=store,
+... )[0]
+   avg_temp      city country        day   latitude  longitude
+0         8   Dresden      DE 2018-01-01  51.050407  13.737262
+1         4   Dresden      DE 2018-01-02  51.050407  13.737262
+2         6   Hamburg      DE 2018-01-01  53.551086   9.993682
+3         5   Hamburg      DE 2018-01-02  53.551086   9.993682
+4         6    London      UK 2018-01-01        NaN        NaN
+5         8    London      UK 2018-01-02        NaN        NaN
+6        20  Santiago      CL 2018-01-01        NaN        NaN
+7        22  Santiago      CL 2018-01-02        NaN        NaN
+```
 
 ## Additional Features of Cube
 
-*	**Multi-dataset with Single Table**: When mapping multiple parts (tables or datasets) to Kartothek, using multiple datasets allows users to copy, backup and delete them separately. 
-Index structures are bound to datasets which feels more consistent.
-*	**Explicit physical Partitions**: We have decided for explicit physical partitions since we have seen that this data model works well for our current data flow. 
-It allows quick and efficient re-partitioning to allow row-based, group-based, and timeseries-based data processing steps, while keeping the technical complexity rather low (compared to an automatic + dynamic partitioning).
-It also maps well to multiple backends we planned to use.
-*	**Update Granularity Partition-wise**: Entire partitions can overwrite old physical partitions. Deletion operations are partition-wise.
+*	**Multiple-datasets**: When mapping multiple parts (tables or datasets) to Kartothek, using multiple datasets allows users to copy, backup and delete them separately. 
+Index structures are bound to datasets.
 *	**Seed-Based Join System / Partition-alignment**: When data is stored in multiple parts (tables or datasets), the question is how to expose it to the user during read operations.
  Seed based Join marks a single part as seed which provides seed dataset in the cube, all other parts are just additional columns.
  Cube uses lazy approach of seed based join, 
  since it better supports independent copies and backups of datasets and also simplifies some of our processing pipelines (e.g. geolocation data can blindly be fetched for too many locations and dates.)	
 
-## Backend Support
 
-The following features are supported by different backends:
-
-
-| Feature | Eager | Dask.Bag | Dask.DataFrame |
-| :------:|:-----:|:--------:|:--------------:|
-| Build	  |  yes  |   yes    |     yes        |
-| Extend  |	 yes  |	  yes	 |     yes        |
-| Remove  |  yes  |   no	 |     no         |
-| Append  |  yes  |   yes	 |     yes        |
-| Delete  |  yes  |   yes    |     no         | 
-| Copy	  |  yes  |   yes    |	   no         |
-| Query	  |  yes  |   yes    |	   yes        |
-| Stats	  |  yes  |   yes	 |     no	      |
-| Cleanup |	 yes  |   yes    |	   no         |
-| ------- | ----- | -------- | -------------- | 
-
-
-## New Features to Kartothek :
+## Command Line Interface (CLI)
 Kartothek features a **command line interface (CLI)** for some cube operations. 
 To use it, create a  **skv.yml** file that describes [storefact](https://github.com/JDASoftwareGroup/storefact) stores and use commands to gather information of the required cube.
 
@@ -174,5 +295,5 @@ Here we use **geodata** cube to get some information.
 >>>kartothek_cube --help  (To get list of  ktk_cube commands)
 ```
 
-## Outlook:
+## Outlook
 TODO:What features are coming up next ??
