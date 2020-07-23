@@ -53,7 +53,7 @@ we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along
 ...)
 ```
 
-We use the simple **klee2.io.eager_cube** backend to store the data:
+We use the simple **kartothek.io.eager_cube** backend to store the data:
 
 ```python
 >>> from kartothek.io.eager_cube import build_cube
@@ -112,7 +112,7 @@ Similarly, we can **Extend** this cube by **Adding** new columns to the datafram
 Now let’s say we also would like to have longitude and latitude data in our cube.
 
 ```python
->>> from klee2.io.eager import extend_cube
+>>> from kartothek.io.eager_cube import extend_cube
 >>> df_location = pd.read_csv(
 ...     filepath_or_buffer=StringIO("""
 ...    city country  latitude  longitude
@@ -213,19 +213,127 @@ The query system also supports selection and projection:
 ```
 
  
-Similarly, we can **Transform** the cube using **query** and **extend** operations,
- **Append** new rows to the existing cube.
+## Transform
+
+Query and Extend can be combined to build powerful transformation pipelines. To better illustrate this we will use **dask.bag_cube** for that example.
+
+```python
+>>> from kartothek.io.dask.bag_cube import (
+...     extend_cube_from_bag,
+...     query_cube_bag,
+... )
+>>> def transform(df):
+...     df["avg_temp_country_min"] = df["avg_temp"].min()
+...     return {
+...         "transformed": df.loc[
+...             :,
+...             [
+...                 "avg_temp_country_min",
+...                 "city",
+...                 "country",
+...                 "day",
+...             ]
+...         ],
+...     }
+>>> transformed = query_cube_bag(
+...     cube=cube,
+...     store=store_factory,
+...     partition_by="day",
+... ).map(transform)
+>>> datasets_transformed = extend_cube_from_bag(
+...     data=transformed,
+...     store=store_factory,
+...     cube=cube,
+...     ktk_cube_dataset_ids=["transformed"],
+... ).compute()
+>>> query_cube(
+...     cube=cube,
+...     store=store,
+...     payload_columns=[
+...         "avg_temp",
+...         "avg_temp_country_min",
+...     ],
+... )[0]
+   avg_temp  avg_temp_country_min     city country        day
+0         8                     6  Dresden      DE 2018-01-01
+1         4                     4  Dresden      DE 2018-01-02
+2         6                     6  Hamburg      DE 2018-01-01
+3         5                     4  Hamburg      DE 2018-01-02
+4         6                     6   London      UK 2018-01-01
+5         8                     4   London      UK 2018-01-02
+```
+Notice that the **partition_by** argument does not have to match the cube Partition Columns to work. 
+You may use any indexed column. Keep in mind that fine-grained partitioning can have drawbacks though, 
+namely large scheduling overhead and many blob files which can make reading the data inefficient.
+
+```python
+>>> print_filetree(store, "geodata++transformed")
+geodata++transformed.by-dataset-metadata.json
+geodata++transformed/table/_common_metadata
+geodata++transformed/table/country=DE/<uuid>.parquet
+geodata++transformed/table/country=DE/<uuid>.parquet
+geodata++transformed/table/country=UK/<uuid>.parquet
+geodata++transformed/table/country=UK/<uuid>.parquet
+```
+
+## Append
+New rows can be added to the cube using an append operation:
+
+```python
+>>> from kartothek.io.eager_cube import append_to_cube
+>>> df_weather2 = pd.read_csv(
+...     filepath_or_buffer=StringIO("""
+... avg_temp     city country        day
+...       20 Santiago      CL 2018-01-01
+...       22 Santiago      CL 2018-01-02
+...     """.strip()),
+...     delim_whitespace=True,
+...     parse_dates=["day"],
+... )
+>>> datasets_appended = append_to_cube(
+...   data=df_weather2,
+...   store=store,
+...   cube=cube,
+... )
+>>> print_filetree(store, "geodata++seed")
+geodata++seed.by-dataset-metadata.json
+geodata++seed/indices/city/<ts>.by-dataset-index.parquet
+geodata++seed/indices/city/<ts>.by-dataset-index.parquet
+geodata++seed/indices/day/<ts>.by-dataset-index.parquet
+geodata++seed/indices/day/<ts>.by-dataset-index.parquet
+geodata++seed/table/_common_metadata
+geodata++seed/table/country=CL/<uuid>.parquet
+geodata++seed/table/country=DE/<uuid>.parquet
+geodata++seed/table/country=UK/<uuid>.parquet
+```
+Notice that the indices where updated automatically.
+```python
+>>> query_cube(
+...     cube=cube,
+...     store=store,
+... )[0]
+   avg_temp  avg_temp_country_min      city country        day   latitude  longitude
+0         8                   6.0   Dresden      DE 2018-01-01  51.050407  13.737262
+1         4                   4.0   Dresden      DE 2018-01-02  51.050407  13.737262
+2         6                   6.0   Hamburg      DE 2018-01-01  53.551086   9.993682
+3         5                   4.0   Hamburg      DE 2018-01-02  53.551086   9.993682
+4         6                   6.0    London      UK 2018-01-01  51.509865  -0.118092
+5         8                   4.0    London      UK 2018-01-02  51.509865  -0.118092
+6        20                   NaN  Santiago      CL 2018-01-01        NaN        NaN
+7        22                   NaN  Santiago      CL 2018-01-02        NaN        NaN
  
+```
+
 ## Remove and Delete Operations
 
 You can **Remove** entire partitions from the cube using the remove operation.
 
 ```python
->>> from klee2.io.eager import remove_partitions
+>>> from kartothek.io.eager_cube import remove_partitions
 >>> datasets_after_removal = remove_partitions(
 ...     cube=cube,
 ...     store=store,
-...     klee_dataset_ids=["latlong"],
+...     ktk_cube_dataset_ids=["latlong"],
 ...     conditions=(C("country") == "UK"),
 ... )
 >>> query_cube(
@@ -246,7 +354,7 @@ You can **Remove** entire partitions from the cube using the remove operation.
 You can also **Delete** entire datasets (or the entire cube).
 
 ```python
->>> from klee2.io.eager import delete_cube
+>>> from kartothek.io.eager_cube import delete_cube
 >>> datasets_still_in_cube = delete_cube(
 ...     cube=cube,
 ...     store=store,
@@ -290,10 +398,17 @@ dataset:
 
 Here we use **geodata** cube to get some information.
 ```shell
->>>kartothek_cube geodata info  (gives geodata cube info)
->>>kartothek_cube geodata stats  (for cube scan)
->>>kartothek_cube --help  (To get list of  ktk_cube commands)
+kartothek_cube geodata info  #gives geodata cube info
+kartothek_cube geodata stats  #for cube scan
+kartothek_cube --help  #To get list of  ktk_cube commands
 ```
 
 ## Outlook
-TODO:What features are coming up next ??
+- **API cleanup:** The API surface of kartothek grow organically over the years and we plan to re-design it. 
+While doing so, we will incorporate our learnings regarding API design and will also prune some features that are not needed anymore or that did not match their expectations (e.g. the original multi-table design).
+- **Ecosystem integration:** At this point in time, there are multiple dataset formats (e.g. [Apache Arrow](https://arrow.apache.org/docs/python/dataset.html), 
+[Apache Iceberg](https://iceberg.apache.org/), [Delta Lake](https://delta.io/)) and we will investigate how to evolve kartothek as a library and as a format to align better with the ecosystem and enable new features (like schema migrations and time travel), 
+while providing the stability and safety that our users require.
+- **Query Planning:** Currently the kartothek query planner solely relies on file-level information (file names for primary indices and separate index files for secondary indices). 
+It would be great to also use the RowGroup-level statistics as specified in [Apache Parquet](https://github.com/apache/parquet-format) to improve query performance.
+We will have a look at [the work Dask already did](https://github.com/dask/dask/blob/55445565c3746f97f2bc50d5628a484576cef90e/dask/dataframe/io/parquet/core.py) in this area.
