@@ -377,8 +377,8 @@ You can also **Delete** entire datasets (or the entire cube).
 
 ## Additional Features of Cube
 
-*	**Multiple-datasets**: When mapping multiple parts (tables or datasets) to Kartothek, using multiple datasets allows users to copy, backup and delete them separately. 
-Index structures are bound to datasets.
+*	**Multiple-datasets**: This was not possible with the existing multi-table (within a single dataset) feature present in kartothek.
+ When mapping multiple parts (tables or datasets) to Kartothek, using multiple datasets allows users to copy, backup and delete them separately. Index structures are bound to datasets.
 *	**Seed-Based Join System / Partition-alignment**: When data is stored in multiple parts (tables or datasets), the question is how to expose it to the user during read operations.
  Seed based Join marks a single part as seed which provides seed dataset in the cube, all other parts are just additional columns.
  Cube uses lazy approach of seed based join, 
