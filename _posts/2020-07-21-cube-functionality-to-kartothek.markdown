@@ -15,10 +15,15 @@ author_profile: true
 Last year we introduced [Kartothek](2019-05-28-introducing-kartothek.markdown), a table management python library powered by Dask. 
 Our journey continued by adding a gem to our jewel. We empowered Kartothek with multi-dataset functionality. 
 Kartothek already provides Dataset features, as a user do I really need multiple datasets? Hang On!! 
+
+The whole beauty of Cubes does not come from storing multiple datasets,
+but especially from retrieving the data  (**Querying**)  in a very comfortable way. 
+Kartothek views the whole cube as a large, virtual DataFrame.
+
 Here we present the story of **Cubes (kartothek that supports multiple datasets)**. 
 
-## What is a Cube?
-A Cube deals with multiple Kartothek datasets.
+## What are Cubes?
+Kartothek Cubes deals with multiple Kartothek datasets.
 
 Let us start with building a cube for **geodata**. Similar to Kartothek, 
 we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along with an abstract cube definition.
@@ -27,6 +32,7 @@ we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along
 
 ```python
 >>> from io import StringIO
+>>> import pandas as pd
 >>> df_weather = pd.read_csv(
 ...     filepath_or_buffer=StringIO("""
 ... avg_temp     city country        day
@@ -44,8 +50,8 @@ we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along
 
 
 ```python
->>> from kartothek.core.cube.cube import Cube
 >>>##we are creating a geodata cube instance
+>>> from kartothek.core.cube.cube import Cube
 >>> cube = Cube(
 ...     uuid_prefix="geodata",
 ...     dimension_columns=["city", "day"],
@@ -146,7 +152,7 @@ country
 ```
 Note that for the second dataset, no indices for **city** and **day** exists. 
 These are only created for the seed dataset, since that datasets forms the groundtruth about which city-day entries are part of the cube.
-(Dataset that provides the groundtruth about which Cells are in a Cube is called the **seed dataset**).
+(Dataset that provides the groundtruth about which Cells are in the Cubes is called the **seed dataset**).
 
 If you look at the file tree, you can see that the second dataset is completely separated. This is useful to copy/backup parts of the cube:
 
@@ -166,9 +172,6 @@ geodata++seed/table/country=UK/<uuid>.parquet
 ```
 ## Query
 
-The whole beauty of Cube does not come from storing multiple datasets,
-but especially from retrieving the data  (**Querying**)  in a very comfortable way. 
-Kartothek views the whole cube as a large, virtual DataFrame.
 The seed dataset presents the groundtruth regarding rows, all other datasets are joined via a left join. 
 Cubes naturally support **partition-by** semantics, which is especially helpful for distributed backends.
 
@@ -377,11 +380,12 @@ You can also **Delete** entire datasets (or the entire cube).
 
 ## Cube Features in Karotothek
 
-*	**Multiple-datasets**: This was not possible with the existing multi-table (within a single dataset) feature present in kartothek.
- When mapping multiple parts (tables or datasets) to Kartothek, using multiple datasets allows users to copy, backup and delete them separately. Index structures are bound to datasets.
+*	**Multiple-datasets**: When mapping multiple parts (tables or datasets) to Kartothek, using multiple datasets allows users to copy, backup and delete them separately. Index structures are bound to datasets.
+ This was not possible with the existing multi-table (within a single dataset) feature present in kartothek. We intend to phase out the multi-table single dataset functionality soon.
+
 *	**Seed-Based Join System / Partition-alignment**: When data is stored in multiple parts (tables or datasets), the question is how to expose it to the user during read operations.
  Seed based Join marks a single part as seed which provides seed dataset in the cube, all other parts are just additional columns.
- Cube uses lazy approach of seed based join, 
+ Cubess use lazy approach of seed based join, 
  since it better supports independent copies and backups of datasets and also simplifies some of our processing pipelines (e.g. geolocation data can blindly be fetched for too many locations and dates.)	
 
 
