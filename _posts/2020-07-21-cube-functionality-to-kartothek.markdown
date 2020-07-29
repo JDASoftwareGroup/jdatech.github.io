@@ -12,7 +12,7 @@ author_profile: true
 ---
 # Introducing Cube Functionality To Kartothek
 
-In our last blog we introduced [Kartothek](2019-05-28-introducing-kartothek.markdown), a table management python library powered by Dask. 
+Last year we introduced [Kartothek](2019-05-28-introducing-kartothek.markdown), a table management python library powered by Dask. 
 Our journey continued by adding a gem to our jewel. We empowered Kartothek with multi-dataset functionality. 
 Kartothek already provides Dataset features, As a user do I really need a multiple-dataset? Hang On!! 
 Let us spend rest of our time understanding the story of **Cube (kartothek that supports multiple datasets)**. 
