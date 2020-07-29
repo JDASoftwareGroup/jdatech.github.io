@@ -125,7 +125,7 @@ Now let’s say we also would like to have longitude and latitude data in our cu
 ... )
 ```
 
-```
+```python
 >>> datasets_extend = extend_cube(
 ...   data={"latlong": df_location},
 ...   store=store,
