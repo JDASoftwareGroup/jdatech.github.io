@@ -170,7 +170,7 @@ The whole beauty of Cube does not come from storing multiple datasets,
 but especially from retrieving the data  (**Querying**)  in a very comfortable way. 
 Kartothek views the whole cube as a large, virtual DataFrame.
 The seed dataset presents the groundtruth regarding rows, all other datasets are joined via a left join. 
-Cube naturally supports **partition-by** semantic, which is more helpful for distributed backends.
+Cubes naturally support **partition-by** semantics, which is especially helpful for distributed backends.
 
  
  ```python
