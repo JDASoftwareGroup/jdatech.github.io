@@ -85,7 +85,7 @@ geodata++seed
 city, country, day
 ```
 
-Finally, let’s have a quick look at the store content. Note that we cut out UUIDs and timestamps here for brevity:
+Now we have a quick look at the store content. Note that we cut out UUIDs and timestamps here for brevity:
 
 ```python
 >>> import re
@@ -105,7 +105,7 @@ geodata++seed/table/country=DE/<uuid>.parquet
 geodata++seed/table/country=UK/<uuid>.parquet
 ```
 
-Thus, A cube can be visualised as a metadataset of multiple datasets as shown in below image.
+Thus, A cube can be visualised as a collection of multiple datasets as shown in below image.
  
  
 ![Cube Image](/assets/images/2020-07-21-kartothek-cube.png)
