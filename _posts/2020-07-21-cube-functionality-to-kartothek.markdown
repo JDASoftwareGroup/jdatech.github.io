@@ -79,7 +79,7 @@ geodata++seed
 city, country, day
 ```
 
-Finally, let’s have a quick look at the store content. Note that we cut out UUIDs and timestamps here for documentation purposes:
+Finally, let’s have a quick look at the store content. Note that we cut out UUIDs and timestamps here for brevity:
 
 ```python
 >>> import re
