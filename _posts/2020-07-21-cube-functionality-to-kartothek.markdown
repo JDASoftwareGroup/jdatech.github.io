@@ -375,7 +375,7 @@ You can also **Delete** entire datasets (or the entire cube).
 7        22  Santiago      CL 2018-01-02        NaN        NaN
 ```
 
-## Additional Features of Cube
+## Cube Features in Karotothek
 
 *	**Multiple-datasets**: This was not possible with the existing multi-table (within a single dataset) feature present in kartothek.
  When mapping multiple parts (tables or datasets) to Kartothek, using multiple datasets allows users to copy, backup and delete them separately. Index structures are bound to datasets.
