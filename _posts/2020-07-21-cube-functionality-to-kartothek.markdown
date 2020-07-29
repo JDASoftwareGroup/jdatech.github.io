@@ -105,7 +105,7 @@ geodata++seed/table/country=DE/<uuid>.parquet
 geodata++seed/table/country=UK/<uuid>.parquet
 ```
 
-Thus, A cube can be visualised as a metadataset of multiple datasets as shown in below image.
+Thus a cube can be visualised as a metadataset of multiple datasets as shown in below image.
  
  
 ![Cube Image](/assets/images/2020-07-21-kartothek-cube.png)
