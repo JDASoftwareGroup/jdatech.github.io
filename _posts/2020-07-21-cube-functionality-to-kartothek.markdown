@@ -12,18 +12,18 @@ author_profile: true
 ---
 # Introducing Cube Functionality To Kartothek
 
-Last year we introduced [Kartothek](2019-05-28-introducing-kartothek.markdown), a table management python library powered by Dask. 
+Last year we introduced [Kartothek](../introducing-kartothek/), a table management python library powered by Dask. 
 Our journey continued by adding a gem to our treasure. We empowered Kartothek with multi-dataset functionality. 
 Kartothek already provides Dataset features, as a user do I really need multiple datasets? Hang On!! 
 
 Here we present the story of **Cubes (kartothek that supports multiple datasets)**. 
 
-The whole beauty of Cubes does not come from storing multiple datasets,
+The whole beauty of cube does not come from storing multiple datasets,
 but especially from retrieving the data  (**Querying**)  in a very comfortable way. 
 Kartothek views the whole cube as a large, virtual DataFrame.
 
-## What are Cubes?
-Kartothek Cubes deals with multiple Kartothek datasets.
+## What is a Cube?
+Kartothek Cube deals with multiple Kartothek datasets, loosely modeled after [Data Cubes](https://en.wikipedia.org/wiki/Data_cube).
 
 Let us start with building the cube for **geodata**. Similar to Kartothek, 
 we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along with an abstract cube definition.
@@ -105,12 +105,6 @@ geodata++seed/table/country=DE/<uuid>.parquet
 geodata++seed/table/country=UK/<uuid>.parquet
 ```
 
-Thus the cubes can be visualised as a collection of multiple datasets as shown in below image.
- 
- 
-![Cube Image](/assets/images/2020-07-21-kartothek-cube.png)
-
-
 We can **extend** this cube by adding new columns to the dataframes.
 
 ## Extend Operation
@@ -152,7 +146,7 @@ country
 ```
 Note that for the second dataset, no indices for **city** and **day** exists. 
 These are only created for the seed dataset, since that datasets forms the groundtruth about which city-day entries are part of the cube.
-(Dataset that provides the groundtruth about which Cells are in the Cubes are called the **seed dataset**).
+(Dataset that provides the groundtruth about which Cells are in the cube is called the **seed dataset**).
 
 If you look at the file tree, you can see that the second dataset is completely separated. This is useful to copy/backup parts of the cube:
 
@@ -173,7 +167,6 @@ geodata++seed/table/country=UK/<uuid>.parquet
 ## Query
 
 The seed dataset presents the groundtruth regarding rows, all other datasets are joined via a left join. 
-Cubes naturally support **partition-by** semantics, which is especially helpful for distributed backends.
 
  
 ```python
@@ -218,7 +211,7 @@ The query system also supports selection and projection:
  
 ## Transform
 
-Query and Extend can be combined to build powerful transformation pipelines. To better illustrate this we will use **dask.bag_cube** for that example.
+Query and Extend can be combined to build powerful transformation pipelines. To better illustrate this we will use **dask.bag_cube** for the example.
 
 ```python
 >>> from kartothek.io.dask.bag_cube import (
@@ -280,7 +273,7 @@ geodata++transformed/table/country=UK/<uuid>.parquet
 ```
 
 ## Append
-New rows can be added to the cubes using an append operation:
+New rows can be added to the cube using an append operation.
 
 ```python
 >>> from kartothek.io.eager_cube import append_to_cube
@@ -330,7 +323,7 @@ Notice that the indices where updated automatically.
 
 ## Remove and Delete Operations
 
-You can **Remove** entire partitions from the cubes using the remove operation.
+You can **Remove** entire partitions from the cube using the remove operation.
 
 ```python
 >>> from kartothek.io.eager_cube import remove_partitions
@@ -355,7 +348,7 @@ You can **Remove** entire partitions from the cubes using the remove operation.
 7        22                   NaN  Santiago      CL 2020-07-02        NaN        NaN 
 ```
 
-You can also **Delete** entire datasets (or the entire cubes).
+You can also **Delete** entire datasets (or the entire cube).
 
 ```python
 >>> from kartothek.io.eager_cube import delete_cube
@@ -386,29 +379,13 @@ You can also **Delete** entire datasets (or the entire cubes).
 
 *	**Seed-Based Join System / Partition-alignment**: When data is stored in multiple parts (tables or datasets), the question is how to expose it to the user during read operations.
  Seed based Join marks a single part as seed which provides seed dataset in the cube, all other parts are just additional columns.
- Cubes use lazy approach of seed based join, since it better supports independent copies and backups of datasets and also simplifies some of our processing pipelines
+ Cube uses lazy approach of seed based join, since it better supports independent copies and backups of datasets and also simplifies some of our processing pipelines
  (e.g. geolocation data can blindly be fetched for too many locations and dates.)	
 
 
-## Command Line Interface (CLI)
-Kartothek features a **command line interface (CLI)** for some cube operations. 
-To use it, create a  **skv.yml** file that describes [storefact](https://github.com/JDASoftwareGroup/storefact) stores and use commands to gather information of the required cube.
-
-Sample skv.yml:
-```
-dataset:
-   type: hfs
-   path: path/to/data
-```
-
-Here we use **geodata** cubes to get some information.
-```shell
-kartothek_cube geodata info  #gives geodata cube info
-kartothek_cube geodata stats  #for cube scan
-kartothek_cube --help  #To get list of  ktk_cube commands
-```
-
 ## Outlook
+In the upcoming months we’ll continue to expand the Kartothek functionality. Here are a few highlights of what's next:
+
 - **API cleanup:** The API surface of kartothek grew organically over the years and we plan to re-design it. 
 While doing so, we will incorporate our learnings regarding API design and will also prune some features that are not needed anymore or that did not match their expectations (e.g. the original multi-table design).
 - **Ecosystem integration:** At this point in time, there are multiple dataset formats (e.g. [Apache Arrow](https://arrow.apache.org/docs/python/dataset.html), 
