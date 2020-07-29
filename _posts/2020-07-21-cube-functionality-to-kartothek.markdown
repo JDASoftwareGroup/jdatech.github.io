@@ -105,7 +105,7 @@ Thus, A cube can be visualised as a metadataset of multiple datasets as shown in
 ![Cube Image](/assets/images/2020-07-21-kartothek-cube.png)
 
 
-Similarly, we can **Extend** this cube by **Adding** new columns to the dataframes.
+Similarly, we can **extend** this cube by adding new columns to the dataframes.
 
 ## Extend Operation
 
