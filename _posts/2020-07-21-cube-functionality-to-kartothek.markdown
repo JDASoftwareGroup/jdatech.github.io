@@ -404,7 +404,7 @@ kartothek_cube --help  #To get list of  ktk_cube commands
 ```
 
 ## Outlook
-- **API cleanup:** The API surface of kartothek grow organically over the years and we plan to re-design it. 
+- **API cleanup:** The API surface of kartothek grew organically over the years and we plan to re-design it. 
 While doing so, we will incorporate our learnings regarding API design and will also prune some features that are not needed anymore or that did not match their expectations (e.g. the original multi-table design).
 - **Ecosystem integration:** At this point in time, there are multiple dataset formats (e.g. [Apache Arrow](https://arrow.apache.org/docs/python/dataset.html), 
 [Apache Iceberg](https://iceberg.apache.org/), [Delta Lake](https://delta.io/)) and we will investigate how to evolve kartothek as a library and as a format to align better with the ecosystem and enable new features (like schema migrations and time travel), 
