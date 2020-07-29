@@ -13,19 +13,19 @@ author_profile: true
 # Introducing Cube Functionality To Kartothek
 
 Last year we introduced [Kartothek](2019-05-28-introducing-kartothek.markdown), a table management python library powered by Dask. 
-Our journey continued by adding a gem to our jewel. We empowered Kartothek with multi-dataset functionality. 
+Our journey continued by adding a gem to our treasure. We empowered Kartothek with multi-dataset functionality. 
 Kartothek already provides Dataset features, as a user do I really need multiple datasets? Hang On!! 
+
+Here we present the story of **Cubes (kartothek that supports multiple datasets)**. 
 
 The whole beauty of Cubes does not come from storing multiple datasets,
 but especially from retrieving the data  (**Querying**)  in a very comfortable way. 
 Kartothek views the whole cube as a large, virtual DataFrame.
 
-Here we present the story of **Cubes (kartothek that supports multiple datasets)**. 
-
 ## What are Cubes?
 Kartothek Cubes deals with multiple Kartothek datasets.
 
-Let us start with building a cube for **geodata**. Similar to Kartothek, 
+Let us start with building the cube for **geodata**. Similar to Kartothek, 
 we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along with an abstract cube definition.
 
 **df_weather** is a pandas dataframe created from reading a csv file.
@@ -36,12 +36,12 @@ we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along
 >>> df_weather = pd.read_csv(
 ...     filepath_or_buffer=StringIO("""
 ... avg_temp     city country        day
-...        6  Hamburg      DE 2018-01-01
-...        5  Hamburg      DE 2018-01-02
-...        8  Dresden      DE 2018-01-01
-...        4  Dresden      DE 2018-01-02
-...        6   London      UK 2018-01-01
-...        8   London      UK 2018-01-02
+...        6  Hamburg      DE 2020-07-01
+...        5  Hamburg      DE 2020-07-02
+...        8  Dresden      DE 2020-07-01
+...        4  Dresden      DE 2020-07-02
+...        6   London      UK 2020-07-01
+...        8   London      UK 2020-07-02
 ...     """.strip()),
 ...     delim_whitespace=True,
 ...     parse_dates=["day"],
@@ -73,7 +73,7 @@ We use the simple **kartothek.io.eager_cube** backend to store the data:
 
 where **store** is the **simplekv** store of storefactory. (For more details, please refer our [Kartothek](2019-05-28-introducing-kartothek.markdown) post.)
 
-We just have preserved a single Kartothek dataset. Let's print the content of seed dataset.
+We have just preserved a single Kartothek dataset. Let's print the content of seed dataset.
 
 ```python
 >>> print(", ".join(sorted(datasets_build.keys())))
@@ -105,13 +105,13 @@ geodata++seed/table/country=DE/<uuid>.parquet
 geodata++seed/table/country=UK/<uuid>.parquet
 ```
 
-Thus a cube can be visualised as a metadataset of multiple datasets as shown in below image.
+Thus the cubes can be visualised as a collection of multiple datasets as shown in below image.
  
  
 ![Cube Image](/assets/images/2020-07-21-kartothek-cube.png)
 
 
-Similarly, we can **extend** this cube by adding new columns to the dataframes.
+We can **extend** this cube by adding new columns to the dataframes.
 
 ## Extend Operation
 
@@ -152,7 +152,7 @@ country
 ```
 Note that for the second dataset, no indices for **city** and **day** exists. 
 These are only created for the seed dataset, since that datasets forms the groundtruth about which city-day entries are part of the cube.
-(Dataset that provides the groundtruth about which Cells are in the Cubes is called the **seed dataset**).
+(Dataset that provides the groundtruth about which Cells are in the Cubes are called the **seed dataset**).
 
 If you look at the file tree, you can see that the second dataset is completely separated. This is useful to copy/backup parts of the cube:
 
@@ -176,7 +176,7 @@ The seed dataset presents the groundtruth regarding rows, all other datasets are
 Cubes naturally support **partition-by** semantics, which is especially helpful for distributed backends.
 
  
- ```python
+```python
 >>> from kartothek.io.eager_cube import query_cube
 >>> dfs = query_cube(
 ...     cube=cube,
@@ -258,12 +258,12 @@ Query and Extend can be combined to build powerful transformation pipelines. To 
 ...     ],
 ... )[0]
    avg_temp  avg_temp_country_min     city country        day
-0         8                     6  Dresden      DE 2018-01-01
-1         4                     4  Dresden      DE 2018-01-02
-2         6                     6  Hamburg      DE 2018-01-01
-3         5                     4  Hamburg      DE 2018-01-02
-4         6                     6   London      UK 2018-01-01
-5         8                     4   London      UK 2018-01-02
+0         8                     6  Dresden      DE 2020-07-01
+1         4                     4  Dresden      DE 2020-07-02
+2         6                     6  Hamburg      DE 2020-07-01
+3         5                     4  Hamburg      DE 2020-07-02
+4         6                     6   London      UK 2020-07-01
+5         8                     4   London      UK 2020-07-02
 ```
 Notice that the **partition_by** argument does not have to match the cube Partition Columns to work. 
 You may use any indexed column. Keep in mind that fine-grained partitioning can have drawbacks though, 
@@ -280,15 +280,15 @@ geodata++transformed/table/country=UK/<uuid>.parquet
 ```
 
 ## Append
-New rows can be added to the cube using an append operation:
+New rows can be added to the cubes using an append operation:
 
 ```python
 >>> from kartothek.io.eager_cube import append_to_cube
 >>> df_weather2 = pd.read_csv(
 ...     filepath_or_buffer=StringIO("""
 ... avg_temp     city country        day
-...       20 Santiago      CL 2018-01-01
-...       22 Santiago      CL 2018-01-02
+...       20 Santiago      CL 2020-07-01
+...       22 Santiago      CL 2020-07-02
 ...     """.strip()),
 ...     delim_whitespace=True,
 ...     parse_dates=["day"],
@@ -310,26 +310,27 @@ geodata++seed/table/country=DE/<uuid>.parquet
 geodata++seed/table/country=UK/<uuid>.parquet
 ```
 Notice that the indices where updated automatically.
+
 ```python
 >>> query_cube(
 ...     cube=cube,
 ...     store=store,
 ... )[0]
    avg_temp  avg_temp_country_min      city country        day   latitude  longitude
-0         8                   6.0   Dresden      DE 2018-01-01  51.050407  13.737262
-1         4                   4.0   Dresden      DE 2018-01-02  51.050407  13.737262
-2         6                   6.0   Hamburg      DE 2018-01-01  53.551086   9.993682
-3         5                   4.0   Hamburg      DE 2018-01-02  53.551086   9.993682
-4         6                   6.0    London      UK 2018-01-01  51.509865  -0.118092
-5         8                   4.0    London      UK 2018-01-02  51.509865  -0.118092
-6        20                   NaN  Santiago      CL 2018-01-01        NaN        NaN
-7        22                   NaN  Santiago      CL 2018-01-02        NaN        NaN
+0         8                   6.0   Dresden      DE 2020-07-01  51.050407  13.737262
+1         4                   4.0   Dresden      DE 2020-07-02  51.050407  13.737262
+2         6                   6.0   Hamburg      DE 2020-07-01  53.551086   9.993682
+3         5                   4.0   Hamburg      DE 2020-07-02  53.551086   9.993682
+4         6                   6.0    London      UK 2020-07-01  51.509865  -0.118092
+5         8                   4.0    London      UK 2020-07-02  51.509865  -0.118092
+6        20                   NaN  Santiago      CL 2020-07-01        NaN        NaN
+7        22                   NaN  Santiago      CL 2020-07-02        NaN        NaN
  
 ```
 
 ## Remove and Delete Operations
 
-You can **Remove** entire partitions from the cube using the remove operation.
+You can **Remove** entire partitions from the cubes using the remove operation.
 
 ```python
 >>> from kartothek.io.eager_cube import remove_partitions
@@ -344,17 +345,17 @@ You can **Remove** entire partitions from the cube using the remove operation.
 ...     store=store,
 ... )[0]
    avg_temp  avg_temp_country_min      city country        day   latitude  longitude
-0         8                   6.0   Dresden      DE 2018-01-01  51.050407  13.737262
-1         4                   4.0   Dresden      DE 2018-01-02  51.050407  13.737262
-2         6                   6.0   Hamburg      DE 2018-01-01  53.551086   9.993682
-3         5                   4.0   Hamburg      DE 2018-01-02  53.551086   9.993682
-4         6                   6.0    London      UK 2018-01-01        NaN        NaN
-5         8                   4.0    London      UK 2018-01-02        NaN        NaN
-6        20                   NaN  Santiago      CL 2018-01-01        NaN        NaN
-7        22                   NaN  Santiago      CL 2018-01-02        NaN        NaN 
+0         8                   6.0   Dresden      DE 2020-07-01  51.050407  13.737262
+1         4                   4.0   Dresden      DE 2020-07-02  51.050407  13.737262
+2         6                   6.0   Hamburg      DE 2020-07-01  53.551086   9.993682
+3         5                   4.0   Hamburg      DE 2020-07-02  53.551086   9.993682
+4         6                   6.0    London      UK 2020-07-01        NaN        NaN
+5         8                   4.0    London      UK 2020-07-02        NaN        NaN
+6        20                   NaN  Santiago      CL 2020-07-01        NaN        NaN
+7        22                   NaN  Santiago      CL 2020-07-02        NaN        NaN 
 ```
 
-You can also **Delete** entire datasets (or the entire cube).
+You can also **Delete** entire datasets (or the entire cubes).
 
 ```python
 >>> from kartothek.io.eager_cube import delete_cube
@@ -368,25 +369,25 @@ You can also **Delete** entire datasets (or the entire cube).
 ...     store=store,
 ... )[0]
    avg_temp      city country        day   latitude  longitude
-0         8   Dresden      DE 2018-01-01  51.050407  13.737262
-1         4   Dresden      DE 2018-01-02  51.050407  13.737262
-2         6   Hamburg      DE 2018-01-01  53.551086   9.993682
-3         5   Hamburg      DE 2018-01-02  53.551086   9.993682
-4         6    London      UK 2018-01-01        NaN        NaN
-5         8    London      UK 2018-01-02        NaN        NaN
-6        20  Santiago      CL 2018-01-01        NaN        NaN
-7        22  Santiago      CL 2018-01-02        NaN        NaN
+0         8   Dresden      DE 2020-07-01  51.050407  13.737262
+1         4   Dresden      DE 2020-07-02  51.050407  13.737262
+2         6   Hamburg      DE 2020-07-01  53.551086   9.993682
+3         5   Hamburg      DE 2020-07-02  53.551086   9.993682
+4         6    London      UK 2020-07-01        NaN        NaN
+5         8    London      UK 2020-07-02        NaN        NaN
+6        20  Santiago      CL 2020-07-01        NaN        NaN
+7        22  Santiago      CL 2020-07-02        NaN        NaN
 ```
 
-## Cube Features in Karotothek
+## Cube Features in Kartothek
 
 *	**Multiple-datasets**: When mapping multiple parts (tables or datasets) to Kartothek, using multiple datasets allows users to copy, backup and delete them separately. Index structures are bound to datasets.
  This was not possible with the existing multi-table (within a single dataset) feature present in kartothek. We intend to phase out the multi-table single dataset functionality soon.
 
 *	**Seed-Based Join System / Partition-alignment**: When data is stored in multiple parts (tables or datasets), the question is how to expose it to the user during read operations.
  Seed based Join marks a single part as seed which provides seed dataset in the cube, all other parts are just additional columns.
- Cubess use lazy approach of seed based join, 
- since it better supports independent copies and backups of datasets and also simplifies some of our processing pipelines (e.g. geolocation data can blindly be fetched for too many locations and dates.)	
+ Cubes use lazy approach of seed based join, since it better supports independent copies and backups of datasets and also simplifies some of our processing pipelines
+ (e.g. geolocation data can blindly be fetched for too many locations and dates.)	
 
 
 ## Command Line Interface (CLI)
@@ -400,7 +401,7 @@ dataset:
    path: path/to/data
 ```
 
-Here we use **geodata** cube to get some information.
+Here we use **geodata** cubes to get some information.
 ```shell
 kartothek_cube geodata info  #gives geodata cube info
 kartothek_cube geodata stats  #for cube scan
