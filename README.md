@@ -82,9 +82,11 @@ exceptions though (like photos).
 
 ### Linking to Posts
 To link other posts, please use the following local URL syntax instead of a global URL:
+Example : Global URL : http://0.0.0.0:4000/introducing-kartothek/
+post-name: introducing-kartothek
 
 ```markdown
-[Another Post](<YYYY>-<MM>-<DD>-<another-post>.markdown)
+[Another Post](../post-name/)
 ```
 
 
