@@ -7,7 +7,7 @@ header:
   overlay_image: assets/images/tech_gear_banner.jpg
   overlay_filter: 0.2
   show_overlay_excerpt: false
-author: Marco Neumann & Usha Nemani
+author: Usha Nemani & Marco Neumann
 author_profile: true
 ---
 # Introducing Cube Functionality To Kartothek
