@@ -12,18 +12,26 @@ author_profile: true
 ---
 # Introducing Cube Functionality To Kartothek
 
-Last year we introduced [Kartothek](../introducing-kartothek/), a table management python library powered by Dask. 
-Our journey continued by adding a gem to our treasure. We empowered Kartothek with multi-dataset functionality. 
-Kartothek already provides Dataset features, as a user do I really need multiple datasets? Hang On!! 
+Last year, we introduced [Kartothek](../introducing-kartothek/), a table management python library powered by Dask. 
+Our journey continued by adding another gem to our open source treasure: We empowered Kartothek with multi-dataset functionality.
+ 
+You might think: "Kartothek already provides Dataset features, as a user do I really need multiple datasets?" Hang on,
+ we will present you the story of **Cubes (kartothek that supports multiple datasets)**. 
 
-Here we present the story of **Cubes (kartothek that supports multiple datasets)**. 
+Imagine a typical machine learning workflow, which might look like this:
+* First, we get some input data, or source data. In this context, we will refer to the source data as seed data or seed dataset.
+* On this seed dataset, we might want to train a model that generates predictions.
+* Based on these predicitons, we might want to generate reports and calculate KPIs.
+* Last, but not least, we might want to create some dashboards showing plots of the aggregated KPIs as well as the underlying input data.
+What we need for this workflow is not a table-like view on our data, but a view on everything that we generated in these different steps.
+ 
+Kartothek Cubes deals with multiple Kartothek datasets, loosely modeled after [Data Cubes](https://en.wikipedia.org/wiki/Data_cube).
 
-The whole beauty of cube does not come from storing multiple datasets,
-but especially from retrieving the data  (**Querying**)  in a very comfortable way. 
-Kartothek views the whole cube as a large, virtual DataFrame.
+Cubes offer an interface to query all of the data without performing complex join operations manually each time. 
 
-## What is a Cube?
-Kartothek Cube deals with multiple Kartothek datasets, loosely modeled after [Data Cubes](https://en.wikipedia.org/wiki/Data_cube).
+Because kartothek offers a view on our cube as a large virtual pandas DataFrame, querying the whole dataset is very comfortable.
+
+## How to use Cubes?
 
 Let us start with building the cube for **geodata**. Similar to Kartothek, 
 we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along with an abstract cube definition.
@@ -48,9 +56,14 @@ we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along
 ... )
 ```
 
+Now, we want to store this dataframe using the cube interface.
+ 
+To achieve this, we have to specify the cube object first by providing some meta-information about our data.
+The `uuid_prefix` serves as identifier for our dataset. The `dimension_columns` are the dataset's primary keys, so all rows within this datset have to be unique with respect to the `dimension_columns`.
+The `partition_columns` specify the columns which are used to physically partition the dataset.
 
 ```python
->>># we are creating a geodata cube instance:
+>>>#we are creating a geodata cube instance
 >>> from kartothek.core.cube.cube import Cube
 >>> cube = Cube(
 ...     uuid_prefix="geodata",
@@ -144,11 +157,11 @@ geodata++latlong
 >>> print(", ".join(sorted(ds_latlong.indices)))
 country
 ```
-Note that for the second dataset, no indices for **city** and **day** exists. 
-These are only created for the seed dataset, since that datasets forms the groundtruth about which city-day entries are part of the cube.
+Note that for the second dataset, no indices for **city** and **day** exist. 
+These are only created for the seed dataset, since that dataset forms the groundtruth about which `city-day` entries are part of the cube.
 (Dataset that provides the groundtruth about which Cells are in the cube is called the **seed dataset**).
 
-If you look at the file tree, you can see that the second dataset is completely separated. This is useful to copy/backup parts of the cube:
+If you look at the file tree, you can see that the second dataset is completely separated. This is useful to copy/backup parts of the cube.
 
 ```python
 >>> print_filetree(store)
@@ -164,7 +177,7 @@ geodata++seed/table/_common_metadata
 geodata++seed/table/country=DE/<uuid>.parquet
 geodata++seed/table/country=UK/<uuid>.parquet
 ```
-## Query
+## Querying Cubes
 
 The seed dataset presents the groundtruth regarding rows, all other datasets are joined via a left join. 
 
@@ -258,7 +271,7 @@ Query and Extend can be combined to build powerful transformation pipelines. To 
 4         6                     6   London      UK 2020-07-01
 5         8                     4   London      UK 2020-07-02
 ```
-Notice that the **partition_by** argument does not have to match the cube Partition Columns to work. 
+Notice that the `partition_by` argument does not have to match the cube `partition_columns` to work. 
 You may use any indexed column. Keep in mind that fine-grained partitioning can have drawbacks though, 
 namely large scheduling overhead and many blob files which can make reading the data inefficient.
 
@@ -374,11 +387,12 @@ You can also **Delete** entire datasets (or the entire cube).
 
 ## Cube Features in Kartothek
 
-*	**Multiple-datasets**: When mapping multiple parts (tables or datasets) to Kartothek, using multiple datasets allows users to copy, backup and delete them separately. Index structures are bound to datasets.
- This was not possible with the existing multi-table (within a single dataset) feature present in kartothek. We intend to phase out the multi-table single dataset functionality soon.
+*	**Multiple-datasets**: When mapping multiple parts (tables or datasets) to Kartothek, using multiple datasets allow users to copy, backup and delete them separately.
+ Index structures are bound to datasets.This was not possible with the existing multi-table (within a single dataset) feature present in kartothek.
+ We intend to phase out the multi-table single dataset functionality soon.
 
 *	**Seed-Based Join System / Partition-alignment**: When data is stored in multiple parts (tables or datasets), the question is how to expose it to the user during read operations.
- Seed based Join marks a single part as seed which provides seed dataset in the cube, all other parts are just additional columns.
+ Seed-based join marks a single part as seed which provides seed dataset in the cube, all other parts are just additional columns.
  Cube uses lazy approach of seed based join, since it better supports independent copies and backups of datasets and also simplifies some of our processing pipelines
  (e.g. geolocation data can blindly be fetched for too many locations and dates.)	
 
