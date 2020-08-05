@@ -50,7 +50,7 @@ we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along
 
 
 ```python
->>>##we are creating a geodata cube instance
+>>># we are creating a geodata cube instance:
 >>> from kartothek.core.cube.cube import Cube
 >>> cube = Cube(
 ...     uuid_prefix="geodata",
