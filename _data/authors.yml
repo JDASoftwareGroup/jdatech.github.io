@@ -92,4 +92,8 @@ Andreas Merkel, Kshitij Mathur:
     name: "Andreas Merkel and Kshitij Mathur"
 
 Marco Neumann & Usha Nemani:
-    name: "Marco Neumann & Usha Nemani"
+    name: "Usha Nemani & Marco Neumann"
+    links:
+      - label: "Marcos' Github"
+        icon: "fab fa-fw fa-github-square"
+        url: "https://github.com/crepererum"
