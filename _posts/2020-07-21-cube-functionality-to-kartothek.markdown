@@ -388,7 +388,7 @@ You can also **delete** entire datasets (or the entire cube).
 ## Cube Features in Kartothek
 
 *	**Multiple-datasets**: When mapping multiple parts (tables or datasets) to Kartothek, using multiple datasets allow users to copy, backup and delete them separately.
- Index structures are bound to datasets.This was not possible with the existing multi-table (within a single dataset) feature present in kartothek.
+ Index structures are bound to datasets. This was not possible with the existing multi-table (within a single dataset) feature present in kartothek.
  We intend to phase out the multi-table single dataset functionality soon.
 
 *	**Seed-Based Join System / Partition-alignment**: When data is stored in multiple parts (tables or datasets), the question is how to expose it to the user during read operations.
