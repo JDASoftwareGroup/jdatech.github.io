@@ -15,7 +15,7 @@ author_profile: true
 Last year, we introduced [Kartothek](../introducing-kartothek/), a table management python library powered by Dask. 
 Our journey continued by adding another gem to our open source treasure: We empowered Kartothek with multi-dataset functionality.
  
-You might think: "Kartothek already provides Dataset features, as a user do I really need multiple datasets?" Hang on,
+You might think: "Kartothek already provides dataset features, do I really need multiple dataset interfaces?" Hang on,
  we will present you the story of **Cubes (kartothek that supports multiple datasets)**. 
 
 Imagine a typical machine learning workflow, which might look like this:
