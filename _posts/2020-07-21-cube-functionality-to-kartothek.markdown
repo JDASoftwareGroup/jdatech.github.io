@@ -361,7 +361,7 @@ You can **remove** entire partitions from the cube using the remove operation.
 7        22                   NaN  Santiago      CL 2020-07-02        NaN        NaN 
 ```
 
-You can also **Delete** entire datasets (or the entire cube).
+You can also **delete** entire datasets (or the entire cube).
 
 ```python
 >>> from kartothek.io.eager_cube import delete_cube
