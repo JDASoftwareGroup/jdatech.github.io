@@ -23,7 +23,7 @@ Imagine a typical machine learning workflow, which might look like this:
 * On this seed dataset, we might want to train a model that generates predictions.
 * Based on these predicitons, we might want to generate reports and calculate KPIs.
 * Last, but not least, we might want to create some dashboards showing plots of the aggregated KPIs as well as the underlying input data.
-What we need for this workflow is not a table-like view on our data, but a view on everything that we generated in these different steps.
+What we need for this workflow is not a table-like view on our data, but a single (virtual) view on everything that we generated in these different steps.
  
 Kartothek Cubes deals with multiple Kartothek datasets, loosely modeled after [Data Cubes](https://en.wikipedia.org/wiki/Data_cube).
 
