@@ -32,7 +32,6 @@ Because kartothek offers a view on our cube similar to large virtual pandas Data
 
 Let us start with building the cube for **geodata**. Similar to Kartothek, 
 we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along with an abstract cube definition.
-
 **df_weather** is a pandas dataframe created from reading a csv file.
 
 ```python
