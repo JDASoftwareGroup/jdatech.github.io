@@ -403,5 +403,5 @@ While doing so, we will incorporate our learnings regarding API design and will 
 [Apache Iceberg](https://iceberg.apache.org/), [Delta Lake](https://delta.io/)) and we will investigate how to evolve kartothek as a library and as a format to align better with the ecosystem and enable new features (like schema migrations and time travel), 
 while providing the stability and safety that our users demand.
 - **Query Planning:** Currently the kartothek query planner solely relies on file-level information (via file names for primary indices and separate index files for secondary indices). 
-It would be great to also use the RowGroup-level statistics as specified in [Apache Parquet](https://github.com/apache/parquet-format) to improve query performance.
+It would be great to also use the RowGroup-level statistics as specified by [Apache Parquet](https://github.com/apache/parquet-format) to improve query performance.
 We will have a look at [the work Dask already did](https://github.com/dask/dask/blob/55445565c3746f97f2bc50d5628a484576cef90e/dask/dataframe/io/parquet/core.py) in this area.
