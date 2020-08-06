@@ -19,7 +19,7 @@ You might think: "Kartothek already provides dataset features, do I really need 
  we will present you the story of **Kartothek cubes**, an interface that supports multiple datasets. 
 
 Imagine a typical machine learning workflow, which might look like this:
-* First, we get some input data, or source data. In this context, we will refer to the source data as seed data or seed dataset.
+* First, we get some input data, or source data. In the context of Kartothek cubes, we will refer to the source data as seed data or seed dataset.
 * On this seed dataset, we might want to train a model that generates predictions.
 * Based on these predicitons, we might want to generate reports and calculate KPIs.
 * Last, but not least, we might want to create some dashboards showing plots of the aggregated KPIs as well as the underlying input data.
