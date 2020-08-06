@@ -81,7 +81,7 @@ We use the simple **kartothek.io.eager_cube** backend to store the data:
 
 where **store** is the **simplekv** store of storefactory. (For more details, please refer our [Kartothek](2019-05-28-introducing-kartothek.markdown) post.)
 
-We have just preserved a single Kartothek dataset. Let's print the content of seed dataset.
+We have just preserved a single Kartothek dataset. Let's print the content of seed dataset:
 
 ```python
 >>> print(", ".join(sorted(datasets_build.keys())))
