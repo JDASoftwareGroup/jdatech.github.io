@@ -390,7 +390,7 @@ You can also **delete** entire datasets (or the entire cube).
 
 *	**Seed-Based Join System / Partition-alignment**: When data is stored in multiple parts (tables or datasets), the question is how to expose it to the user during read operations.
  Seed-based join marks a single part as seed which provides seed dataset in the cube, all other parts are just additional columns.
- Cube uses lazy approach of seed based join, since it better supports independent copies and backups of datasets and also simplifies some of our processing pipelines
+ Cubes use a lazy approach for joins, since it better supports independent copies and backups of datasets and also simplifies some of our processing pipelines
  (e.g. geolocation data can blindly be fetched for too many locations and dates.)	
 
 
