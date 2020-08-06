@@ -53,7 +53,6 @@ we need a [simplekv](https://simplekv.readthedocs.io/)-based store backend along
 ```
 
 Now, we want to store this dataframe using the cube interface.
- 
 To achieve this, we have to specify the cube object first by providing some meta-information about our data.
 The `uuid_prefix` serves as identifier for our dataset. The `dimension_columns` are the dataset's primary keys, so all rows within this datset have to be unique with respect to the `dimension_columns`.
 The `partition_columns` specify the columns which are used to physically partition the dataset.
