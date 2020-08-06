@@ -159,7 +159,6 @@ country
 ```
 Note that for the second dataset, no indices for **city** and **day** exist. 
 These are only created for the seed dataset, since that dataset forms the groundtruth about which `city-day` entries are part of the cube.
-(Dataset that provides the groundtruth about which Cells are in the cube is called the **seed dataset**).
 
 If you look at the file tree, you can see that the second dataset is completely separated. This is useful to copy/backup parts of the cube.
 
