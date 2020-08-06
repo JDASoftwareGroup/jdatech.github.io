@@ -395,7 +395,7 @@ You can also **delete** entire datasets (or the entire cube).
 
 
 ## Outlook
-In the upcoming months we’ll continue to expand the Kartothek functionality. Here are a few highlights of what's next:
+In the upcoming months we will continue to expand the Kartothek functionality. Here are a few highlights of what's next:
 
 - **API cleanup:** The API surface of kartothek grew organically over the years and we plan to re-design it. 
 While doing so, we will incorporate our learnings regarding API design and will also prune some features that are not needed anymore or that did not match their expectations (e.g. the original multi-table design).
