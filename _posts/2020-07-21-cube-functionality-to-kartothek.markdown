@@ -17,7 +17,6 @@ Our journey continued by adding another gem to our open source treasure: We empo
  
 You might think: "Kartothek already provides dataset features, do I really need multiple dataset interfaces?" Hang on,
  we will present you the story of **Kartothek cubes**, an interface that supports multiple datasets. 
-
 Imagine a typical machine learning workflow, which might look like this:
 * First, we get some input data, or source data. In the context of Kartothek cubes, we will refer to the source data as seed data or seed dataset.
 * On this seed dataset, we might want to train a model that generates predictions.
