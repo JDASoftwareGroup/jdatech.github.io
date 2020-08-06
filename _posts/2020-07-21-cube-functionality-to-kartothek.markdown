@@ -224,7 +224,7 @@ The query system also supports selection and projection:
  
 ## Transform
 
-Query and Extend can be combined to build powerful transformation pipelines. To better illustrate this we will use **dask.bag_cube** for the example.
+Query and extend operations can be combined to build powerful transformation pipelines. To better illustrate this we will use **dask.bag_cube** for the example.
 
 ```python
 >>> from kartothek.io.dask.bag_cube import (
