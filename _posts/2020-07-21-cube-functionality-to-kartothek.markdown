@@ -309,7 +309,7 @@ geodata++seed/table/country=CL/<uuid>.parquet
 geodata++seed/table/country=DE/<uuid>.parquet
 geodata++seed/table/country=UK/<uuid>.parquet
 ```
-Notice that the indices where updated automatically.
+Indices are updated automatically. If we query the data now, we can see that only the seed dataset got updated but the additional columns are missing:
 
 ```python
 >>> query_cube(
