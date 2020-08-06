@@ -27,7 +27,7 @@ What we need for this workflow is not a table-like view on our data, but a singl
 Kartothek Cubes deals with multiple Kartothek datasets, loosely modeled after [Data Cubes](https://en.wikipedia.org/wiki/Data_cube).
 
 Cubes offer an interface to query all of the data without performing complex join operations manually each time. 
-Because kartothek offers a view on our cube as a large virtual pandas DataFrame, querying the whole dataset is very comfortable.
+Because kartothek offers a view on our cube similar to large virtual pandas DataFrame, querying the whole dataset is very comfortable.
 
 ## How to use Cubes?
 
