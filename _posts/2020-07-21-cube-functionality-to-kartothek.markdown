@@ -336,7 +336,7 @@ Notice that the indices where updated automatically.
 
 ## Remove and Delete Operations
 
-You can **Remove** entire partitions from the cube using the remove operation.
+You can **remove** entire partitions from the cube using the remove operation.
 
 ```python
 >>> from kartothek.io.eager_cube import remove_partitions
