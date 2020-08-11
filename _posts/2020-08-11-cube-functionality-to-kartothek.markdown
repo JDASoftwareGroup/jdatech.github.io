@@ -1,7 +1,7 @@
 ---
 layout: single
 title:  "Introducing Cube Functionality To Kartothek"
-date:   2020-07-21 06:00:00 +0500
+date:   2020-08-11 10:00:00 +0530
 tags: technology python data-engineering
 header:
   overlay_image: assets/images/tech_gear_banner.jpg
