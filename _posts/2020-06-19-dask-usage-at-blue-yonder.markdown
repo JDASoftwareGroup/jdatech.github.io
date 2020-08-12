@@ -144,7 +144,7 @@ For instance, we were able to
 [workers are removed from the cluster](https://github.com/dask/distributed/pull/3366). 
 
 If you are interested in our contributions to Dask and our commitment to the dask community, please
-also check out our blog post [Karlsruhe to D.C. ― a Dask story](../dask-developer-workshop/).
+also check out our blog post [Karlsruhe to D.C. ― a Dask story](2020-05-28-dask-developer-workshop.markdown).
 
 ## Conclusion
 

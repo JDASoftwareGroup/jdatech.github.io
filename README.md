@@ -81,18 +81,12 @@ and uncompressed data ([PNG](https://en.wikipedia.org/wiki/Portable_Network_Grap
 exceptions though (like photos).
 
 ### Linking to Other Posts
-Example:
-
-Global URL: http://0.0.0.0:4000/introducing-kartothek/
-
-local URL: introducing-kartothek
-
-To link other posts (like above example) in your current post, please use the following local URL syntax instead of a global URL:
 
 ```markdown
-[Another Post](../local URL/)
+[Another Post](<YYYY>-<MM>-<DD>-<another-post>.markdown)
 ```
 
+Note: This link may not work, when running on localhost.
 
 ## How To: Add a new author
 
