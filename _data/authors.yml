@@ -90,3 +90,14 @@ Lucas Rademaker & Nefta Kanilmaz:
 
 Andreas Merkel, Kshitij Mathur:
     name: "Andreas Merkel and Kshitij Mathur"
+
+Usha Nemani & Marco Neumann:
+    name: "Usha Nemani & Marco Neumann"
+    links:
+      - label: "Usha's Github"
+        icon: "fab fa-fw fa-github-square"
+        url: "https://github.com/ushanemani"
+      - label: "Marco's Github"
+        icon: "fab fa-fw fa-github-square"
+        url: "https://github.com/crepererum"
+

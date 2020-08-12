@@ -80,11 +80,17 @@ In general, prefer vector images ([SVG](https://en.wikipedia.org/wiki/Scalable_V
 and uncompressed data ([PNG](https://en.wikipedia.org/wiki/Portable_Network_Graphics)) for compressed images. There are
 exceptions though (like photos).
 
-### Linking to Posts
-To link other posts, please use the following local URL syntax instead of a global URL:
+### Linking to Other Posts
+Example:
+
+Global URL: http://0.0.0.0:4000/introducing-kartothek/
+
+local URL: introducing-kartothek
+
+To link other posts (like above example) in your current post, please use the following local URL syntax instead of a global URL:
 
 ```markdown
-[Another Post](<YYYY>-<MM>-<DD>-<another-post>.markdown)
+[Another Post](../local URL/)
 ```
 
 
