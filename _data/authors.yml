@@ -101,3 +101,14 @@ Usha Nemani & Marco Neumann:
         icon: "fab fa-fw fa-github-square"
         url: "https://github.com/crepererum"
 
+Aditya Gupta:
+    name: "Aditya Gupta"
+    avatar: "assets/images/authors/aditya_gupta.jpg"
+    links:
+      - label: "Aditya's Github"
+        icon: "fab fa-fw fa-github-square"
+        url: "https://github.com/AdityaGupta6149"
+      - label: "LinkedIn"
+          icon: "fab fa-linkedin"
+          url: "https://www.linkedin.com/in/aditya-gupta-437504a7/"
+
