@@ -15,7 +15,7 @@ author_profile: true
 
 ##What is the motivation for accessing C++ code from Python?
 
-Blue Yonder has few projects in which few segments of code are in Python and few in C++ and hence it makes for an important use case to find some methodology to make these two languages communicate with each other efficiently. It becomes extremely crucial to find a tool for Python's seamless integration with the code written in C++.
+Blue Yonder has few projects in which few segments of code are in Python and few in C++ and hence it makes for an important use case to find some methodology to make these two languages communicate with each other efficiently. It is extremely crucial to find a tool for Python's seamless integration with the code written in C++.
  
 Before diving deeper into how to access C++ code from Python, let us try and understand why or under what circumstances would we want to do that: 
 
@@ -128,9 +128,9 @@ Assume we want to expose the below written C++ class to Python.
 ```cpp
 struct World 
 { 
-    void set(std::string msg) { mMsg = msg; } 
-    std::string greet() { return mMsg; } 
-    std::string mMsg; 
+    void set(std::string msg) { mMsg = msg; }
+    std::string greet() { return mMsg; }
+    std::string mMsg;
 }; 
  
 using namespace boost::python; 
