@@ -67,6 +67,8 @@ Using the Python/C API, you must deal with passing pointers back and forth betwe
 
 So now that we are done with the theoretical aspects of it, let’s get our hands dirty with some coding and see how it can be used through a short example. 
 
+To try it out yourself, check out this [repository](https://github.com/adityagupta-by/boost.python-examples) with basic build and execute instructions.
+
 Before we get to the actual coding part let’s see what the prerequisites are to run a program with a boost library: 
 
 1. [Boost](https://www.boost.org/) (version >= 1.3.2) 
