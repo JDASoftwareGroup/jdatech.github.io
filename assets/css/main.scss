@@ -77,6 +77,10 @@ h6
 	padding-right: 0;
 }
 
+.page__content img[src$=".svg"] {
+    width: 80%;
+}
+
 .page__footer
 {
 	background-color: $primary-color;
