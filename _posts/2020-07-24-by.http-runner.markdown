@@ -1,0 +1,132 @@
+---
+layout: single
+title:  "by.http-runner -- the Ups and Downs of Building a Swiss Army Knife"
+date:   2020-07-19 10:00:00 +0200
+tags: technology python HTTP batch-processing
+header:
+  overlay_image: assets/images/tech_gear_banner.jpg
+  overlay_filter: 0.2
+  show_overlay_excerpt: false
+author: Andreas Merkel
+author_profile: true
+---
+# by.http-runner -- the Ups and Downs of Building a Swiss Army Knife
+
+At Blue Yonder, we have a long history of doing batch processing: 
+The customer sends in data, we train a machine learning model on it, then use the result to compute predictions.
+Based upon that, we compute recommended order quantities or price proposals.
+On the other hand, we run our computations in a cloud environment on Microsoft Azure, and our control flow is
+implemented using microservices that communicate via HTTP.
+Therefore, we always had various custom implementations for wrapping a batch process so it could be triggered by an HTTP call
+and return the result of the batch run, or at least a status like `SUCCESS` or `FAILED`, in the response:
+
+```python
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/batch_run', methods=['POST'])
+def computation():
+    result = heavy_compute_action()
+    return result or 'FAILED'
+```
+
+Back in 2018, we were performing extensive changes in our architecture and put quite a number of new functionality
+into place -- again, implemented as batch calculations to be triggered via HTTP. 
+So once again, we were facing the problem of having to wrap batch processes into an HTTP interface. 
+Since we were aware that this was something we had solved a hundred times over, we decided to build a reusable component
+this time and born was **by.http-runner**. 
+
+In the past, we had solved the problem by wrapping the batch computation in a [Flask](https://flask.palletsprojects.com/)
+route and running the resulting
+web service in [Gunicorn](https://gunicorn.org/).
+The two main problems with this approach were request run times and scalability.
+Basically, the pattern we used for making a batch computation available for triggering via HTTP was decorating the 
+Python function implementing the computation with 
+[`app.route`](https://flask.palletsprojects.com/en/1.1.x/quickstart/#routing).
+This leads to the computation going off when there is a request to the route, with the HTTP response being returned
+after the computation is finished.
+Implemented like that, the time between the HTTP request and the HTTP response is equal to the run time of the batch
+computation.
+Our batch computations can take hours to complete.
+While the HTTP standard does not define a maximum time between request and response, most implementations dealing with
+the HTTP protocol have some kind of timeout and abort the connection if the response has not arrived after a certain time.
+For instance, we use HAProxy as a proxy to connect our services. 
+It has default [timeouts](http://cbonte.github.io/haproxy-dconv/2.3/configuration.html#4-timeout%20server) 
+in the range of seconds, which we had to tune up considerably.
+Another downside of coupling the batch computation to a single HTTP request: It is not possible to retrieve the result
+in case the client dies for some reason while the request is still running. 
+(The server cannot send back a response in that case.)
+In addition, scalability also suffers. 
+For instance, Gunicorn has a fixed number of worker
+processes (or threads, depending on how it is configured), and each process or thread can handle exactly one
+HTTP request at a time.
+Therefore, the maximum number of computations that can run in parallel is equal to the number of workers or threads.
+
+For by.http-runner, we therefore decided not to couple the batch computations to a single HTTP request,
+but rather to spawn a subprocess for the batch computation and have the HTTP request that triggered the computation
+return immediately.
+The status of the computation could then be queried by subsequent requests to the same route.
+Those requests would either return a status of `RUNNING` in case the computation was still ongoing, 
+or a status of `FINISHED` along with the result of the computation in case it was finished.
+This solved the runtime problem, as requests were now returning immediately, and the scalability problem, as
+each computation was launched in a newly spawned subprocess.
+
+This is an example of wrapping a long running computation in HTTP requests using by.http-runner.
+`handle_request` puts the computation into its own subprocess when a `POST` request is received, and
+returns the status of the computation upon `GET` requests.
+
+```python
+from by.http_runner import get_app, handle_request
+
+app = get_app(stratosphere=True)
+
+@app.route('/batch_run', methods=['POST, GET'])
+def computation():
+    return handle_request("mutex", heavy_compute_action())
+```
+
+While the new by.http-runner component was originally intended for a handful of newly implemented services,
+it's advantages of solving the runtime problem while at the same time offering a simple and consistent interface
+for triggering batch computations via HTTP lead to rapid adoption throughout the company.
+This enabled us to get rid of a lot of custom code and offer the same simple interface in a lot of different
+artifacts.
+The downside was that this adoption of by.http-runner happened in an unplanned fashion.
+This lead to the by.http-runner being used in ways it had never been intended for.
+We received a lot of pull requests for adding missing features ranging from configuration parsing over mutexes
+to progress indicators.
+While we were quite happy about the adoption and contributions, it also lead to feature creep in by.http-runner.
+The "missing pieces" were added onto a code base that had been drafted for a single, limited purpose.
+They came from various sides, and over an extended time. 
+We never did an overall design including all the new functionality.
+In the end, we ended up with features that did not play well together, and a hard-to-maintain code base.
+On the other side, the adoption was still growing, and we saw requests for new features that turned out hard
+to realize because of design decisions that had been taken earlier on, without these particular use cases in mind.
+
+Another problem was ownership: In the beginning, by.http-runner had a single maintainer and was intended to be used for 
+services owned by one team. As adoption grew and it was used by other teams also, other people started to share
+responsibilities of maintaining by.http-runner, but it was never formally agreed upon who owned it, who decided
+which features got into it and which ones not, and who was responsible that bugs got fixed.
+
+In the end, we decided to stop development on by.http-runner and replace it with a successor called fast-http-runner.
+This time, we started by involving all prospective users in a design phase and came up with a clean design
+that will eliminate many of the weaknesses of by.http-runner.
+
+Still, we consider by.http-runner a success, and not only because we gained a lot of consistency from using it.
+I don't think we could have started with the approach we are doing now with fast-http-runner right away for
+several reasons. For one, it was not clear at first exactly in which places we would benefit from something
+like by.http-runner (and that it would be in fact so many places.) 
+In addition, it was much easier to convince people that using by.http-runner was a good idea after we had
+it up and running in production. 
+And we probably could not have gotten the people now designing fast-http-runner at one table that easily if
+they had not been users of by.http-runner already, which makes having a clean design covering all of the use cases
+kind of a chicken-and-egg problem.
+
+So in the end, by.http-runner can be seen as a kind of prototype which helped us to explore all the use cases
+for such a solution. 
+If anything, we missed the point in time to switch from a prototype to a proper product
+with defined ownership and maintainers and a clear design, something we are now fixing wih fast-http-runner.
+The next challenge will be of course transitioning from by.http-runner to fast-http-runner,
+but this is something for another blog post.
+
+      
+    
