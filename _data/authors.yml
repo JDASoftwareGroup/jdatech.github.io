@@ -4,6 +4,14 @@ Manuel Baehr:
 Maximilian Christ:
   name        : "Maximilian Christ"
 
+Andrew Laird:
+  name        : "Andrew Laird"
+  avatar      : "assets/images/authors/andrew_laird.jpg"
+  links:
+    - label: "Twitter"
+      icon: "fab fa-fw fa-twitter-square"
+      url: "https://twitter.com/BlueYonderLaird"
+
 Stephan Erb:
   name        : "Stephan Erb"
   avatar      : "assets/images/authors/stephan_erb.jpg"
