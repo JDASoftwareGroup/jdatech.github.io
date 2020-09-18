@@ -116,12 +116,12 @@ To really show how different assembly can be from the original, and as an excuse
         return result == answer;
     }
 ```
-This method always returns 525_600 regardless of input and convoluted logic.   The first time that the JIT compiles this to assembler, it will transform the method "as-is".   In JITWatch, we see this for the get() method: 
+This method always returns 525_600 regardless of input and convoluted logic.   The first time that the JIT compiles this to assembler, it will transform the method "as-is".   In JITWatch, we see the following for the get() method, where the code is on the left, the bytecode for the get() method is in the middle, and the assembly on the right: 
 ![get_c1](/assets/images/2020-09-14-get-c1.png)
 
 Figure 2:  get() with bytecode and assembly.
 
-The code is on the left, the bytecode for the get() method is in the middle, and the assembly on the right.   I will zoom in so you can see the assembly better:    
+I will zoom in so you can see the assembly better:    
 ![get_c1_zoomed](/assets/images/2020-09-14-get-c1-zoomed.png)
 
 Figure 3:  C1 get() assembly zoomed
@@ -148,8 +148,9 @@ Now, if you stare long enough at the assembly, you'll notice several things abou
 5.  The JIT has rewritten our code to say:
     1. We will return false if "answer" has changed (since the method result appears to be constant). 
     2. If the contents of memory address 0xffffffffffff7fae0 ever changes or does not match "answer", we will abort our optimization and call the original method as our assumptions are no longer valid.  (This is called an "uncommon trap".)
+    3. Barring these two events, we return true.
 
-Given all the addition and subtraction operations in the original method, this is a significant rewrite of our code!   Here is a portion of the assembly of the original method, all of which has now been removed by the C4.
+Given all the addition and subtraction operations in the original method, this is a significant rewrite of our code!   Here is a portion of the assembly of the original method, all of which has now been removed by the C4:
   
 ![get_child_c1](/assets/images/2020-09-14-original-child-c1.png)
 
@@ -162,11 +163,11 @@ If you are curious, a colleague of mine has indeed seen this in production.  It 
 ## Carol Dweck
 **Carol Dweck** is a giant in the field of empowering people to worry more about achievements and glorious struggles rather than always "appearing smart".   Her concept is called the “Growth Mindset” and it is legitimately awesome.   I love her 10 minute video [How to Help Every Child Fulfil Their Potential](https://youtu.be/Yl9TVbAal5s) as an (animated!) intro as well as her book “The New Psychology of Success”.    Her “Growth Mindset” is a part of Blue Yonder culture, as touted from CEO down, and that culture is one of the many reasons why 20+ years later I still love coming to work here every day.
 
-How does Dweck pertain to this puzzle?  Dweck has two concepts that are key to solving issues like the one above:  "not yet" and "no titles".   Both are critical for continuous, amazing achievement. 
+How does Dweck pertain to this puzzle?  Dweck has two concepts that are key to solving issues like the one above:  "not yet" and "no titles".   Both are critical when striving for continuous, amazing achievement. 
 
 "Not yet" teaches us to avoid saying "I do not know" or "I cannot do this".  Say instead, "I don't know *yet*" and "I cannot solve this *yet*".   With hope and perseverence, rather than frustration and failure, you really can see and do more than the giants before you.    
 
-"No titles" teaches us to avoid titles like "smart", "genius", "expert", and the like.  These only inspire fear of failure and are debilitating.   If you have ever had someone compliment you just before you made a ridiculous mistake, you maybe see what I mean.  Instead, compliment actions.  "That was a brilliant point" is a much better phrasing, for example, than "you are brilliant" because the first inspires the recipient to try to earn that praise again with another achievement.  In my experience, this is the difference -- the very significant and real difference -- between a high achiever who is enjoyable to be around and will take risks, versus, the high achiever who always comes off as a bit of a jerk and seems to rest more on past success.   The jerk is usually trying to preserve an image.  
+"No titles" teaches us to avoid titles like "smart", "genius", "expert", and the like.  These only inspire fear of failure and are debilitating.   If you have ever had someone compliment you just before you made a ridiculous mistake, you maybe see what I mean.  Instead, compliment actions.  "That was a brilliant point" is a much better phrasing, for example, than "you are brilliant".  The former inspires the recipient to try to earn that praise again with another achievement while the latter inspires fear of not living up to the praise.  In my experience, this is the difference -- the very significant and real difference -- between a high achiever who is enjoyable to be around and will take risks, versus, the high achiever who always comes off as a bit of a jerk and seems to rest more on past success.   The jerk is usually trying to preserve an image.  
 
 In terms of striving to be a giant, avoiding titles is critical for taking that risk of diving into new subjects where you clearly do not know what you are doing (yet!).
 ## Conclusion
