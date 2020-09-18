@@ -19,10 +19,7 @@ I have an easy-to-code, hard-to-spot, impossible-to-debug infinite loop puzzle f
 
 >If I have seen further it is by standing on the shoulders of Giants – Isaac Newton
 
->Oh, I’m a moron.  I had a breakpoint set.  Sorry for the panic attack – me
-
-
-The first quote is me, Mr. Senior Principal Engineer, to a colleague recently after realizing that he did *not*, after all, introduce an infinite loop into a customer-facing software patch.   The second is from a scientist who himself became a giant whose shoulders uncounted others – famous, incredible others – have stood upon.   The third is from a java JVM and just-in-time (aka JIT) compiler master, as quoted from one blurb in a 100+ minute presentation on his area of expertise.  All three are relevant to this blog, but first the puzzle:
+The first is from a java JVM and just-in-time (aka JIT) compiler master, as quoted from one blurb in a 100+ minute presentation on his area of expertise. The second is from a scientist who himself became a giant whose shoulders uncounted others – famous, incredible others – have stood upon.  Both are relevant to this blog, but first the puzzle:
 
 ## The Seemingly-Impossible Infinite Loop
 Let’s start with Hawkins and his "terrifying" situation, who at the time was explaining a trivial-to-code *infinite-loop* bombshell.   
@@ -42,7 +39,9 @@ sharedDone = true;  //we are done producing so let the consumer make use of it
 while ( sharedDone == false);   //busy wait spin until producer is finished.   
 print (dataShared);   // executes once sharedDone is set to true by the other thread
 ```
-The puzzle is, quite simply, do you see the issue?   Amazingly, if you create a test program and debug this, you will not reproduce the problem.   If you create a trivial test program, you also likely will not reproduce the problem.  If you put this into production with real producer and consumer logic, you most likely *will* reproduce the problem (except this time you were really hoping you would *not*).   What on earth could the issue here be?
+The intent is for Consumer Thread to busy-spin while Producer Thread finishes creating dataShared.  Once notified that dataShared is ready (via a true value for sharedDone), the consumer will make use of dataShared.
+
+Unfortunately, this is likely to loop infinitely.  Do you see the issue?   Amazingly, if you create a test program and debug this, you will never reproduce the infinite loop.   If you create a trivial test program, you also likely will *not* reproduce the issue.  If you put this into production with real producer and consumer logic, you most likely *will* reproduce the infinite loop fairly consistently (except this time you were really hoping you would *not*).   What on earth could the issue here be?
 
 This brings me to Newton.   
 
@@ -119,29 +118,59 @@ To really show how different assembly can be from the original, and as an excuse
 ```
 This method always returns 525_600 regardless of input and convoluted logic.   The first time that the JIT compiles this to assembler, it will transform the method "as-is".   In JITWatch, we see this for the get() method: 
 ![get_c1](/assets/images/2020-09-14-get-c1.png)
+
 Figure 2:  get() with bytecode and assembly.
 
-The code is on the left, the bytecode for the get() method is in the middle, and the assembly on the right.   Note all the assembly for gathering member variable data in preparation for the call, as well as the "call" command itself to invoke the child method.   In fact, this probably matches your expectations fairly well.   Even the variables are in the same order as the code.
+The code is on the left, the bytecode for the get() method is in the middle, and the assembly on the right.   I will zoom in so you can see the assembly better:    
+![get_c1_zoomed](/assets/images/2020-09-14-get-c1-zoomed.png)
+
+Figure 3:  C1 get() assembly zoomed
+
+Note all the assembly for gathering member variable data in preparation for the call, as well as the "call" command itself to invoke the child method. In fact, this probably matches your expectations fairly well.   Even the variables are in the same order as the code.
 
 The assembly version above is the output of the C1 JIT compiler, which does fast simple-stupid when possible.   The assembly for the called method, howDoYouMeasure_MeasureAYear(), is equally straightforward so I'll skip showing it, but even the pointless additions and subtractions are included.  
 
-After a few seconds, however, the JIT realizes it has CPU cycles available to take another look.  The output of this advanced JIT processor (called the C4) is far more interesting.   The end result is very different from the original java code (and corresponding bytecode).   Here is the new assembly code for get():
+After a few seconds, however, the JIT realizes it has CPU cycles available to take another look.  The output of this advanced JIT processor (called the C4) is far more interesting.  Now we JITWatch shows the following:
 ![get_c4](/assets/images/2020-09-14-get-c4.png)
-Figure 3:  get() with same bytecode and new optimized assembly
 
+Figure 4:  get() with optimized assembly
+
+Of course, the java code and the bytecode are still the same. But, the assembly is very different.  I will zoom in again:
+![get_c4_zoomed](/assets/images/2020-09-14-get-c4-zoomed.png)
+
+Figure 5:  get() with new optimized assembly zoomed
+ 
 Now, if you stare long enough at the assembly, you'll notice several things about this rewrite:
 1.  The JIT is no longer bothering to load member variables into memory in preparation for a call. 
-2.  The JIT is no longer even calling our child method.  It copied the relevant assembly into get() itself (an optimization called "inlining", as called out in the popup). 
+2.  The JIT is actually no longer even calling our child method.  It copied the relevant assembly into get() itself (an optimization called "inlining", as called out in the popup). 
 3.  The JIT realized our child method is completely stupid and always returns the same answer.
-4.  The JIT has put the answer it always gets from our child method in memory address 0xffffffffffff7fae0 for get() to use.
-5.  The JIT assumes this memory address contents will match our member variable "answer".  If ever wrong, it will jump to the "uncommon trap" area of code and call the original child method.
+4.  The JIT has put the answer it always gets from our child method in memory address 0xffffffffffff7fae0 for get() to use.  
+5.  The JIT has rewritten our code to say:
+    1. We will return false if "answer" has changed (since the method result appears to be constant). 
+    2. If the contents of memory address 0xffffffffffff7fae0 ever changes or does not match "answer", we will abort our optimization and call the original method as our assumptions are no longer valid.  (This is called an "uncommon trap".)
 
-Note too that the bytecode is unchanged.   So, again, if you try to debug the new optimized code of "get()", you'll step through the (unchanged) bytecode and fail to reproduce the exact same behavior.  
+Given all the addition and subtraction operations in the original method, this is a significant rewrite of our code!   Here is a portion of the assembly of the original method, all of which has now been removed by the C4.
+  
+![get_child_c1](/assets/images/2020-09-14-original-child-c1.png)
 
+Figure 6:  Original (now removed) assembly of "howDoYouMeasure_MeasureAYear()"
+
+Again, if you try to debug the changes, you will simply step over the unchanged bytecode, not the assembly, and so will not be able to observe it. 
+
+If you are curious, a colleague of mine has indeed seen this in production.  It was, of course, only through research like the above that the issue was resolved.  "Volatile" is definitely on our checklist for spotting errors of omission.
+
+## Carol Dweck
+**Carol Dweck** is a giant in the field of empowering people to worry more about achievements and glorious struggles rather than always "appearing smart".   Her concept is called the “Growth Mindset” and it is legitimately awesome.   I love her 10 minute video [How to Help Every Child Fulfil Their Potential](https://youtu.be/Yl9TVbAal5s) as an (animated!) intro as well as her book “The New Psychology of Success”.    Her “Growth Mindset” is a part of Blue Yonder culture, as touted from CEO down, and that culture is one of the many reasons why 20+ years later I still love coming to work here every day.
+
+How does Dweck pertain to this puzzle?  Dweck has two concepts that are key to solving issues like the one above:  "not yet" and "no titles".   Both are critical for continuous, amazing achievement. 
+
+"Not yet" teaches us to avoid saying "I do not know" or "I cannot do this".  Say instead, "I don't know *yet*" and "I cannot solve this *yet*".   With hope and perseverence, rather than frustration and failure, you really can see and do more than the giants before you.    
+
+"No titles" teaches us to avoid titles like "smart", "genius", "expert", and the like.  These only inspire fear of failure and are debilitating.   If you have ever had someone compliment you just before you made a ridiculous mistake, you maybe see what I mean.  Instead, compliment actions.  "That was a brilliant point" is a much better phrasing, for example, than "you are brilliant" because the first inspires the recipient to try to earn that praise again with another achievement.  In my experience, this is the difference -- the very significant and real difference -- between a high achiever who is enjoyable to be around and will take risks, versus, the high achiever who always comes off as a bit of a jerk and seems to rest more on past success.   The jerk is usually trying to preserve an image.  
+
+In terms of striving to be a giant, avoiding titles is critical for taking that risk of diving into new subjects where you clearly do not know what you are doing (yet!).
 ## Conclusion
 This post was about an infinite loop puzzle, but also much more.   As software engineers, we often search for magic incantations (code snippets) from online communities for our immediate problem at hand, enjoy introductory videos for the latest technologies or concepts, and certainly (hopefully) peruse online manuals for the same.   However, without studying the software engineering "giants", you will only learn to solve the issues that *you know about*.   You will miss learning the solutions to all the unknown issues you have yet to encounter, often interweaving concepts you have yet to come across.  For me, at the time I was first studying Hawkins, this puzzle was just one such example, and Hawkins was just one of several "giants" introducing me to the vast amount I did not know.  Enjoy studying my giants above, or discover your own, and amaze yourself with how much farther you begin to see.
 
-## Postscript
-Oh, I did not mention my quote yet – why did I include that?    Just because we can stand on the shoulders of giants does not mean we will not stumble now and then, and that is perfectly okay.   **Carol Dweck** is a giant in the field of empowering people to worry more about achievements and glorious struggles rather than always "appearing smart".   Her concept is called the “Growth Mindset” and it is legitimately awesome.   I love her 10 minute video [How to Help Every Child Fulfil Their Potential](https://youtu.be/Yl9TVbAal5s) as an (animated!) intro as well as her book “The New Psychology of Success”.    Her “Growth Mindset” is a part of Blue Yonder culture, as touted from CEO down, and that culture is one of the many reasons why 20+ years later I still love coming to work here every day.
 
 Credit to song [Seasons of Love](https://en.wikipedia.org/wiki/Seasons_of_Love) for inspiration for my method.  
