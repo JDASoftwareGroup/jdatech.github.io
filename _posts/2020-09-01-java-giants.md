@@ -104,7 +104,7 @@ To really show how different assembly can be from the original, and as an excuse
         int minutes = 525_600;  //FYI 0x80520 in hex
         long result = daylights+sunsets+midnights+cupsOfCoffee;
         result += inches + miles + +laughter + strife;
-        result -=result + minutes;
+        result -= (result - minutes);
         return result;
     }
 
@@ -114,7 +114,7 @@ To really show how different assembly can be from the original, and as an excuse
         long result = howDoYouMeasure_MeasureAYear(daylights, sunsets, midnights, cupsOfCoffee,
                 inches, miles, laughter, strife);
         return result == answer;
-    }
+    } 
 ```
 This method always returns 525_600 regardless of input and convoluted logic.   The first time that the JIT compiles this to assembler, it will transform the method "as-is".   In JITWatch, we see the following for the get() method, where the code is on the left, the bytecode for the get() method is in the middle, and the assembly on the right: 
 ![get_c1](/assets/images/2020-09-14-get-c1.png)
@@ -130,12 +130,13 @@ Note all the assembly for gathering member variable data in preparation for the 
 
 The assembly version above is the output of the C1 JIT compiler, which does fast simple-stupid when possible.   The assembly for the called method, howDoYouMeasure_MeasureAYear(), is equally straightforward so I'll skip showing it, but even the pointless additions and subtractions are included.  
 
-After a few seconds, however, the JIT realizes it has CPU cycles available to take another look.  The output of this advanced JIT processor (called the C4) is far more interesting.  Now we JITWatch shows the following:
+After a few seconds, however, the JIT realizes it has CPU cycles available to take another look.  The output of this advanced JIT processor (called the C2) is far more interesting.  Now JITWatch shows the following:
 ![get_c4](/assets/images/2020-09-14-get-c4.png)
 
 Figure 4:  get() with optimized assembly
 
 Of course, the java code and the bytecode are still the same. But, the assembly is very different.  I will zoom in again:
+
 ![get_c4_zoomed](/assets/images/2020-09-14-get-c4-zoomed.png)
 
 Figure 5:  get() with new optimized assembly zoomed
@@ -143,14 +144,11 @@ Figure 5:  get() with new optimized assembly zoomed
 Now, if you stare long enough at the assembly, you'll notice several things about this rewrite:
 1.  The JIT is no longer bothering to load member variables into memory in preparation for a call. 
 2.  The JIT is actually no longer even calling our child method.  It copied the relevant assembly into get() itself (an optimization called "inlining", as called out in the popup). 
-3.  The JIT realized our child method is completely stupid and always returns the same answer.
-4.  The JIT has put the answer it always gets from our child method in memory address 0xffffffffffff7fae0 for get() to use.  
-5.  The JIT has rewritten our code to say:
-    1. We will return false if "answer" has changed (since the method result appears to be constant). 
-    2. If the contents of memory address 0xffffffffffff7fae0 ever changes or does not match "answer", we will abort our optimization and call the original method as our assumptions are no longer valid.  (This is called an "uncommon trap".)
-    3. Barring these two events, we return true.
+3.  The JIT has simply put the method result it always gets as a constant, 0x80520 (or 525_600 in hex), for get() to use.
+4.  The JIT simply compares field "answer" and 525_600 in hex and returns 1 (true) if they match.
+5.  If the JIT is ever wrong about field "answer" matching 525_600 in hex, it will abort the optimization and call the original method as its assumptions are no longer valid (this is called an "uncommon trap").
 
-Given all the addition and subtraction operations in the original method, this is a significant rewrite of our code!   Here is a portion of the assembly of the original method, all of which has now been removed by the C4:
+Given all the addition and subtraction operations in the original method, this is a significant rewrite of our code!   Here is a portion of the assembly of the original method, all of which has now been removed by the C2:
   
 ![get_child_c1](/assets/images/2020-09-14-original-child-c1.png)
 
@@ -161,7 +159,7 @@ Again, if you try to debug the changes, you will simply step over the unchanged 
 If you are curious, a colleague of mine has indeed seen this in production.  It was, of course, only through research like the above that the issue was resolved.  "Volatile" is definitely on our checklist for spotting errors of omission.
 
 ## Carol Dweck
-**Carol Dweck** is a giant in the field of empowering people to worry more about achievements and glorious struggles rather than always "appearing smart".   Her concept is called the “Growth Mindset” and it is legitimately awesome.   I love her 10 minute video [How to Help Every Child Fulfil Their Potential](https://youtu.be/Yl9TVbAal5s) as an (animated!) intro as well as her book “The New Psychology of Success”.    Her “Growth Mindset” is a part of Blue Yonder culture, as touted from CEO down, and that culture is one of the many reasons why 20+ years later I still love coming to work here every day.
+**Carol Dweck** is a giant in the field of empowering people to worry more about achievements and glorious struggles rather than always "appearing smart".   Her concept is called the “Growth Mindset” and it is legitimately awesome.   I love her 10 minute video [How to Help Every Child Fulfil Their Potential](https://youtu.be/Yl9TVbAal5s) as an (animated!) intro as well as her book “The New Psychology of Success”.  
 
 How does Dweck pertain to this puzzle?  Dweck has two concepts that are key to solving issues like the one above:  "not yet" and "no titles".   Both are critical when striving for continuous, amazing achievement. 
 
