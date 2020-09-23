@@ -103,7 +103,7 @@ To really show how different assembly can be from the original, and as an excuse
 
         int minutes = 525_600;  //FYI 0x80520 in hex
         long result = daylights+sunsets+midnights+cupsOfCoffee;
-        result += inches + miles + +laughter + strife;
+        result += inches + miles + laughter + strife;
         result -= (result - minutes);
         return result;
     }
