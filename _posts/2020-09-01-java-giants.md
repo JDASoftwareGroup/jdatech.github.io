@@ -51,27 +51,29 @@ Newton’s statement reads like a humble admission but is more accurately a **ro
 ## Martin Thompson
 So, if at first glance the code looks clean then maybe there is something hidden in the hardware architecture.  The giant who first introduced me to the great impact of computer architecture on production software is **Martin Thompson**, as found in a one-hour presentation [How to do 100K TPS at Less than 1ms Latency](https://www.infoq.com/presentations/LMAX/) with Michael Barker that is very relevant today despite having been recorded in 2010.  Martin Thompson, borrowing a term coined by racing driver Jackie Steward, explains that you must have some **“mechanical sympathy”** to understand how to write code that runs well on production-quality hardware.   Even if you do not use the software pattern ultimately revealed in this video, the video itself is an excellent display of using mechanical sympathy in software design considerations.  
 
-I will pause a moment while you watch the video…. All good?   Great, so, now we can reveal the first probable cause for the infinite loop above:   We may have multiple copies of “sharedDone” in our L1 to L3 CPU core caches, while one has been set to “true”, the other may still say “false”.   The Consumer Thread, not knowing it has a stale version of the truth, loops on and on.
+I will pause a moment while you watch the video…. All good? So, having learned all about the hidden magic of CPUs, caches, and main memory, my first educated guess for the infinite loop above is the following:   Perhaps we have multiple copies of “sharedDone” in our L1 to L3 CPU core caches.  While one CPU's cache has been set to “true”, perhaps the other may still say “false”.   If true, the Consumer Thread, not knowing it has a stale version of the truth, would loop on and on.   Is this actually possible?
 
-![cpu with cached sharedDone](/assets/images/2020-09-14-cpu-with-shareddone.png)
+In my first version of this blog, I thought it was indeed possible for caches to have mismatched information such that they could create an infinite loop.  Luckily I asked for a blog review before posting and the person I will properly introduce next disabused me of this idea.   Although there is indeed something missing from our code above to prevent the infinite loop, the reason *why* in this case has nothing to do with hardware.   For a given memory location (such as the value of *sharedDone*), the hardware must give the illusion of a single value across all memory.   So, although in reality you may have different values between caches and main memory from time to time, you will never *observe* this to be true. 
 
-Figure 1:  sharedDone is “true” in the blue Producer core and “false” in the green Consumer core.  
+Let's properly introduce our next master. 
 
 ## Aleksey Shipilev
-But wait -- shouldn’t the java memory model properly update other threads (and the underlying core caches) when a shared variable is updated?   The next giant on our tour is someone who can speak to that: JVM master **Aleksey Shipilev**.   Just reading through his articles in [JVM Anatomy Quarks](https://shipilev.net/jvm/anatomy-quarks/) will amaze you with how much you don’t know you don’t know.  See also his widely-used microbenchmark framework [JMH](https://openjdk.java.net/projects/code-tools/jmh/).  For this specific exercise, we can learn much from another hour-long video titled [Java Memory Model Unlearning](https://www.youtube.com/watch?v=TK-7GCCDF_I).   Please enjoy.   
+So, if the hardware is happy, is the problem in the java memory model somehow? The next giant on our tour is someone who can speak to that: JVM master **Aleksey Shipilev**.   Just reading through his articles in [JVM Anatomy Quarks](https://shipilev.net/jvm/anatomy-quarks/) will amaze you with how much you don’t know you don’t know.  See also his widely-used microbenchmark framework [JMH](https://openjdk.java.net/projects/code-tools/jmh/).  For this specific exercise, we can learn much from another hour-long video titled [Java Memory Model Unlearning](https://www.youtube.com/watch?v=TK-7GCCDF_I).   Please enjoy.   
 
 …Okay, well, if you are like me, you found the start of the video a bit intimidating.   However, if you had the patience to get through it, I am sure by the end you appreciated the journey (and the speaker).  Hey, he’s a giant – these topics are indeed challenging!   As a reward for your patience, you almost certainly now know more about this subject than *anyone else* at your company – a newly minted giant yourself.  
 
 So, now we see we must tell java that more than one thread will be updating and reading this variable by using the keyword “volatile”.  With “volatile”, java knows that any changes to “sharedDone” must be instantly published to all cores with that field in their caches.   This is why you may have already found “volatile” in your career if you have searched for “java double checked locking”.  (My favorite Shipilev quote from the video: “If you are not sure where to put volatile, put it freakin’ everywhere!”)   
 
-Well, we know how to fix the problem, but do we really understand how the absence of "volatile" creates an infinite loop?   With our present knowledge, we suspect that sharedDone was in two places in our CPU caches and java did not know to notify the second thread that the first had set sharedDone to true.   Now, to be honest, I am not *positive* that this will loop infinitely.   Perhaps context switching or other reasons would cause core caches to be flushed to main memory and Consumer would eventually grab the updated value.   So, maybe this would be “confusingly, glacially slow” looping rather than “infinite looping”.  Still catastrophic in most situations, but not quite our smoking gun.  Let's keep digging.
+(In fact, Shipilev reminds me that since we only have *one* variable that requires coherency between the threads, we could technically use "getOpaque()" and "setOpaque()" with "VarHandle" rather than the stronger "volatile".  If you watched his talk, or if you would like to study the Opaque section in Doug Lea's paper [Using JDK 9 Memory Order Modes](http://gee.cs.oswego.edu/dl/html/j9mm.html), which Shipilev pointed me to, you can further appreciate this fine point.   Finally, note that Shipilev contributed comments and suggestions to the Doug Lea paper, as did other giants -- I find this community of computer scientists so impressive...)
+
+Well, we know how to fix the problem, but do we really understand *how* the absence of "volatile" creates an infinite loop?   If the hardware must give the illusion of a single value across memory, why exactly is "volatile" important?   How exactly do all of these concepts Shipilev just taught us really come into play?
 
 ## Douglas Hawkins
 Well, I guess I must give up and return to the person who proposed the puzzle, our giant **Douglas Hawkins**.   Of his many presentations (watch them all!), my favorite is the 100+ minute presentation [Understanding the Tricks Behind the JIT](https://www.youtube.com/watch?v=oH4_unx8eJQ) where he mentions this specific puzzle. Here, Hawkins gives an expert and entertaining dive into the java just in time (aka JIT) compiler.   I will again pause for you to watch it, including minute 54 that sparked this post.
 
 …All done watching?   So, now you fully understand the final reason the above will loop infinitely.   The code you write, which is compiled to bytecode, is much closer to a “statement of intent” than a specific "mandate" to do exactly what you say.   The debugging experience will fool you into thinking every line is executed as-is, in code order.   However, in production, this is a lie.   
 
-The JIT employs many optimizations as it transforms bytecode to assembler code.   By “optimization” the JIT means “I’ll rewrite your code for optimal performance”.   One of these optimizations is called “loop invariant hoisting” where a value which cannot change in the current thread can be rewritten as a local constant.   If you do not use “volatile”, the JVM assumes that multi-thread situations need not be considered.
+The JIT employs many optimizations as it transforms bytecode to assembler code.   By “optimization” the JIT means “I’ll rewrite your code for optimal performance”.   One of these optimizations is called “loop invariant hoisting” where a value which cannot change in the current thread can be rewritten as a local constant.   If you do not use “volatile”, the JVM assumes that multi-thread situations need not be considered.  "Volatile" and "VarHandle" do not exist to tackle issues caused by the hardware.  They exist to better inform the JIT optimizer of what it can and cannot do! 
 
 So, expanding on the Hawkins video further for this puzzle, we have:  
 
@@ -143,18 +145,20 @@ Figure 5:  get() with new optimized assembly zoomed
  
 Now, if you stare long enough at the assembly, you'll notice several things about this rewrite:
 1.  The JIT is no longer bothering to load member variables into memory in preparation for a call. 
-2.  The JIT is actually no longer even calling our child method.  It copied the relevant assembly into get() itself (an optimization called "inlining", as called out in the popup). 
-3.  The JIT has simply put the method result it always gets as a constant, 0x80520 (or 525_600 in hex), for get() to use.
+2.  The JIT is actually no longer even calling our child method howDoYouMeasure_MeasureAYear().  It copied the relevant assembly into get() itself. 
+    * This is an optimization called "inlining", as called out in the popup. 
+3.  The JIT has simply put the method result it always gets, 0x80520 (or 525_600 in hex), as a constant for get() to use.
 4.  The JIT simply compares field "answer" and 525_600 in hex and returns 1 (true) if they match.
-5.  If the JIT is ever wrong about field "answer" matching 525_600 in hex, it will abort the optimization and call the original method as its assumptions are no longer valid (this is called an "uncommon trap").
+5.  If the JIT is ever wrong about field "answer" matching 525_600 in hex, it will abort the optimization and call the original method as its assumptions are no longer valid.  
+    * This is called an "uncommon trap".
 
-Given all the addition and subtraction operations in the original method, this is a significant rewrite of our code!   Here is a portion of the assembly of the original method, all of which has now been removed by the C2:
+Given all the addition and subtraction operations in the original method, this is a significant rewrite of our code!   Here is a portion of the assembly of the original method, all of which has now been *removed* by the C2:
   
 ![get_child_c1](/assets/images/2020-09-14-original-child-c1.png)
 
 Figure 6:  Original (now removed) assembly of "howDoYouMeasure_MeasureAYear()"
 
-Again, if you try to debug the changes, you will simply step over the unchanged bytecode, not the assembly, and so will not be able to observe it. 
+Again, if you try to debug the changes, you will simply step over the unchanged bytecode, not the assembly, and so will never be able to observe it. 
 
 If you are curious, a colleague of mine has indeed seen this in production.  It was, of course, only through research like the above that the issue was resolved.  "Volatile" is definitely on our checklist for spotting errors of omission.
 
