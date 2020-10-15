@@ -175,5 +175,6 @@ In terms of striving to be a giant, avoiding titles is critical for taking that 
 ## Conclusion
 This post was about an infinite loop puzzle, but also much more.   As software engineers, we often search for magic incantations (code snippets) from online communities for our immediate problem at hand, enjoy introductory videos for the latest technologies or concepts, and certainly (hopefully) peruse online manuals for the same.   However, without studying the software engineering "giants", you will only learn to solve the issues that *you know about*.   You will miss learning the solutions to all the unknown issues you have yet to encounter, often interweaving concepts you have yet to come across.  For me, at the time I was first studying Hawkins, this puzzle was just one such example, and Hawkins was just one of several "giants" introducing me to the vast amount I did not know.  Enjoy studying my giants above, or discover your own, and amaze yourself with how much farther you begin to see.
 
+Special thanks to Aleksey Shipilev and Sebastian Neubauer for all the comments and suggestions.  
 
 Credit to song [Seasons of Love](https://en.wikipedia.org/wiki/Seasons_of_Love) for inspiration for my method.  
