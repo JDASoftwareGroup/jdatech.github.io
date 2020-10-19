@@ -162,16 +162,6 @@ Again, if you try to debug the changes, you will simply step over the unchanged 
 
 If you are curious, a colleague of mine has indeed seen this in production.  It was, of course, only through research like the above that the issue was resolved.  "Volatile" is definitely on our checklist for spotting errors of omission.
 
-## Carol Dweck
-**Carol Dweck** is a giant in the field of empowering people to worry more about achievements and glorious struggles rather than always "appearing smart".   Her concept is called the “Growth Mindset” and it is legitimately awesome.   I love her 10 minute video [How to Help Every Child Fulfil Their Potential](https://youtu.be/Yl9TVbAal5s) as an (animated!) intro as well as her book “The New Psychology of Success”.  
-
-How does Dweck pertain to this puzzle?  Dweck has two concepts that are key to solving issues like the one above:  "not yet" and "no titles".   Both are critical when striving for continuous, amazing achievement. 
-
-"Not yet" teaches us to avoid saying "I do not know" or "I cannot do this".  Say instead, "I don't know *yet*" and "I cannot solve this *yet*".   With hope and perseverence, rather than frustration and failure, you really can see and do more than the giants before you.    
-
-"No titles" teaches us to avoid titles like "smart", "genius", "expert", and the like.  These only inspire fear of failure and are debilitating.   If you have ever had someone compliment you just before you made a ridiculous mistake, you maybe see what I mean.  Instead, compliment actions.  "That was a brilliant point" is a much better phrasing, for example, than "you are brilliant".  The former inspires the recipient to try to earn that praise again with another achievement while the latter inspires fear of not living up to the praise.  In my experience, this is the difference -- the very significant and real difference -- between a high achiever who is enjoyable to be around and will take risks, versus, the high achiever who always comes off as a bit of a jerk and seems to rest more on past success.   The jerk is usually trying to preserve an image.  
-
-In terms of striving to be a giant, avoiding titles is critical for taking that risk of diving into new subjects where you clearly do not know what you are doing (yet!).
 ## Conclusion
 This post was about an infinite loop puzzle, but also much more.   As software engineers, we often search for magic incantations (code snippets) from online communities for our immediate problem at hand, enjoy introductory videos for the latest technologies or concepts, and certainly (hopefully) peruse online manuals for the same.   However, without studying the software engineering "giants", you will only learn to solve the issues that *you know about*.   You will miss learning the solutions to all the unknown issues you have yet to encounter, often interweaving concepts you have yet to come across.  For me, at the time I was first studying Hawkins, this puzzle was just one such example, and Hawkins was just one of several "giants" introducing me to the vast amount I did not know.  Enjoy studying my giants above, or discover your own, and amaze yourself with how much farther you begin to see.
 
