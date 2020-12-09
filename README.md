@@ -36,6 +36,7 @@ docker run \
 Create a new markdown file `_posts/<YYYY>-<MM>-<DD>-<some-title>.markdown`:
 
 ```markdown
+
 ---
 layout: single
 title: "<Some Title>"
