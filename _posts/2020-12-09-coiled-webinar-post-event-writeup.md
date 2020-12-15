@@ -75,9 +75,12 @@ for a mid-sized vendor. We saw how quickly this involves 10 million time series.
 
 ![supply chain network](/assets/images/2020-12-09-coiled-webinar-post-event5.png)
 
-Using 10 years years of data from the customer, Blue Yonder is working with 40 terabytes of uncompressed data, which 
-represents a huge data engineering challenge. “We need to crunch this together, ideally in a way that is cheap to store 
-and in a way that data scientists can scale-out, and this is where Dask comes in.” Everything after the initial data 
+As an example, using 10 years of data from the customer, Blue Yonder has to process 40 terabytes of uncompressed data, which 
+represents a huge data engineering challenge. 
+>“We need to crunch this together, ideally in a way that is cheap to store 
+and in a way that data scientists can scale-out, and this is where Dask comes in.” 
+
+Everything after the initial data 
 ingestion, which is a web service, is then exclusively powered by Dask. Optimizing each customer’s specific network for 
 things like strategy and regional events creates another layer of complexity and data processing.
 
@@ -122,21 +125,21 @@ incredibly complex”
 
 Florian then showed us how to build out a ML data pipeline at terabyte scale using Parquet, Dask, and Kartothek. 
 
->"We want to persist intermediate data as a parquet file using kartothek to create resilience, consistency (e.g. data 
+>"We want to persist intermediate data as a parquet file using Kartothek to create resilience, consistency (e.g. data 
 may change an hour later), and for data lineage purposes."
 
 [Kartothek](https://kartothek.readthedocs.io/en/latest/) is an open-source library that is essentially a storage layer 
 for parquet data created by Blue yonder. Florian noted:
 
 >“If you have huge parquet data sets and you need more control over how they are produced and managed and additional 
-metadata information, this is where kartothek comes into play.”
+metadata information, this is where Kartothek comes into play.”
 
 He also explained the implementation of a partition encoding key for compatibility purposes. 
 
 Where exactly is the ML? Using Dask, Florian was able to apply a machine learning model to each partition of his 
 dataset. This lets Blue Yonder’s machine learning experts make complex predictions. Florian said: 
 
->”Once we have these predictions it’s also just a Dask dataframe. I’ll store them again as a kartothek data set and I 
+>”Once we have these predictions it’s also just a Dask dataframe. I’ll store them again as a Kartothek data set and I 
 can build other indices on my predictions…and then data scientists can browse these prediction tables however they 
 want”. 
 
