@@ -49,27 +49,23 @@ I was walking by the river. The sky was looking beautiful with clouds of differe
 
 _**“Let it go”**_.
 
-I opened my eyes. The world was on fire. No, not on literal fire but an abstract concept of fire known to mankind as COVID. Knowledge transfer became difficult, most of the time people were on mute. Pair programming was no longer sitting beside your colleagues and watching them code but it was highly dependent on your house’ internet connectivity. 
+I opened my eyes. The world was on fire. Knowledge transfer became more difficult. Pair programming was no longer sitting beside your colleagues and watching them code but it was highly dependent on your house’ internet connectivity. 
 
-Progress of the feature seemed like a hallucination. In pursuit of scalability and adaptability, the design had become complicated, to begin with. The initial team was slowly replaced by new team members as a result of inflow of new complicated projects to work upon. We had already crossed the deadlines. There was no escape from this “black hole”.
+The progress of the feature seemed like a hallucination. In pursuit of scalability and adaptability, the design had become complicated, to begin with. We had already crossed the deadlines. There was no escape from this “black hole”.
 
-I fetched myself a cup of coffee and sat on my desk and opened my laptop. My dream was still lingering in my mind and I was not sure what it meant. I looked at the code. A thought came to me. 
+I fetched myself a cup of coffee, sat on my desk and opened my laptop. My dream was still lingering in my mind and I was not sure what the dream meant. I looked at the code. A thought came to me. 
 
-"Why not rewrite the implementation code of this feature with a much simpler and leaner design ?."
+"Why not rewrite the implementation of this feature with a much simpler and leaner design !?."
 
-But another thought hit me which threw me into a dilemma.
+But another thought hit me, which threw me into a dilemma.
 
-“We invested so much time working on this for a couple of months. Even though the design is complicated, we should continue following it since we are already midway. It will anyway fulfil the requirement even if it takes longer. “
+“We have invested so much time working on this for a couple of months. Even though the design is complicated, we should continue following it since we are already midway. It will anyway fulfil the requirement even if it takes longer than undoing current implementation and rewriting a new one. “
 
-I figured that my team would come together to figure out a solution for this dilemma. I liked the opinion of one of the team members.
+After some thought process, I came to a conclusion,
 
-“The initial complicated design consisted of so many assumptions out of which some were revealed to be not true. We had to anyway rethink those parts of design again. This initial design also aimed to be inclusive of future milestones which we were never certain that they would get approved by the management. Let's rewrite this feature code with narrowed down to cover just the customer requirements and not think much of the non-deterministic future and milestones.”
+“The initial "complicated" design consisted of so many assumptions out of which some were revealed to be not incorrect. We had to anyway rethink those parts of design again. This initial design also aimed to be inclusive of future milestones which we were never certain that they would get approved by the management. It makes sense to rewrite this feature with narrowed down design to cover just the customer requirements and not think much of the future and milestones.”
 
-We chose to rewrite this feature code with a simple design. We were on the brink of burning up but we still had a ray of hope that we can revive this project.
-
-“We got this, man!”, one of them said.
-
-“We got this!”.
+I discussed this with the team and we chose to rewrite this feature code with a simple design.
 
 ## T + 7 - The end
 
@@ -91,11 +87,13 @@ It was time for my meeting. My manager was about to announce the completion of t
 
 “So finally we managed to complete this feature this release”. 
 
-We sighed with relief. We had just finished the most complicated and long-lasting feature project our team had ever faced. One of my team members even took a long holiday. We all were celebrating in our ways. 
+We sighed with relief. We had just finished the most complicated and long-lasting feature project our team had ever faced. One of my team members even took a long holiday once we were finished.
 
 I quickly glanced through my diary. It had scribbles of the lessons I had learnt. They were written as follows:
 
- - It is okay to let go of past costs if you think future investments are greater than the former. Don't assume things. Take note of “known unknowns” and find answers to them before making major decisions.
+- Use sunk cost fallacy whenever applicable.
+
+- Don't assume things. Take note of “known unknowns” and find answers to them before making major decisions.
 
 - Document everything.
 
@@ -107,4 +105,4 @@ I closed my diary. "It was a long adventure", I thought. Now it's time for anoth
 
 _“Blessed are the curious as they shall have adventures”_ – Lovelle Drachman
 
-Disclaimer: The sole aim of the article is to emphasize sunk cost fallacy but not to criticise anyone's decision making or code.
+Disclaimer: The sole aim of the article is to emphasize sunk cost fallacy and not to criticise anyone's decision making or code.
