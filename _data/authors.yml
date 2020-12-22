@@ -120,3 +120,10 @@ Aditya Gupta:
         icon: "fab fa-linkedin"
         url: "https://www.linkedin.com/in/aditya-gupta-437504a7/"
 
+Aniruddh Goteti:
+    name: "Aniruddh Goteti"
+    avatar: "assets/images/authors/aniruddh_goteti.png"
+    links:
+      - label: "LinkedIn"
+        icon: "fab fa-linkedin"
+        url: "https://www.linkedin.com/in/aniruddhgoteti/"
