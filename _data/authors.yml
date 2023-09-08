@@ -127,3 +127,11 @@ Aniruddh Goteti:
       - label: "LinkedIn"
         icon: "fab fa-linkedin"
         url: "https://www.linkedin.com/in/aniruddhgoteti/"
+
+Bob Simonoff:
+  name: "Bob Simonoff"
+  avatar: "assets/images/authors/bob_simonoff.png"  # optional
+  links:  # optional, you can also add a subset
+    - label: "LinkedIn"
+      icon: "fab fa-linkedin"
+      url: "www.linkedin.com/in/bob-simonoff"
