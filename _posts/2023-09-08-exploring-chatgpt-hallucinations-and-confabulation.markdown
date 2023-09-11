@@ -35,6 +35,7 @@ Let’s explore an example of the 6 Degrees of Kevin Bacon Game. The following s
 4. Matt Damon → “The Monuments Men ” → George Clooney 
 5. George Clooney → “Ocean’s Thirteen” → Brad Pitt
 6. Brad Pitt → “Sleepers” → Kevin Bacon
+   
 Here is the ChatGPT representation:
 
 <figure>
@@ -53,7 +54,7 @@ ChatGPT can tell you if it doesn't know about the actor. In the following, I ask
 
 ## ChatGPT and Minor Misspellings
 
-To a limited extent, ChatGPT can correct misspelled names. When I asked ChatGPT to connect Dakota pfenning to Kevin Bacon, it determined that I likely meant Dakota Fanning and connected her to Kevin Bacon.
+To a limited extent, ChatGPT can correct misspelled names. When I asked ChatGPT to connect Dakota Pfanning to Kevin Bacon, it determined that I likely meant Dakota Fanning and connected her to Kevin Bacon.
 
 <figure>
   <img src="{{site.url}}/assets/images/2023-09-08-exploring-chatgpt-hallucinations/1_4aocPx7VY-tjUpSaifmyYg.png"/>
@@ -119,17 +120,13 @@ Prompting techniques teach us that the way you ask the question makes a big diff
 
 OK assuming this list is correct, none of the actors had green eyes, however, Christopher Lee now has brown eyes. ChatGPT seems to be disagreeing with itself first green, then blue, and now brown.
 
-I would like to dig into the eye color question further to see if we can untangle this mess.
-
 I would like to dig into the eye color question further to see if we can untangle this mess. We’ve established that ChatGPT thinks it knows Lee’s eye color, but is inconsistent in returning it.
 
-According to the website [Horror Dot Land](https://medium.com/r/?url=https%3A%2F%2Fwww.horror.land%2Fhistory-freaky-vampire-eyes-p1%2F%23%3A~%3Atext%3DDracula%2520%25E2%2580%2593%25201958%2Ceyes%2520look%2520red%2520and%2520angry.). “Christopher Lee’s most famous look, using mini sclera contact lenses. Dark Brown iris with veined sclera that makes the eyes look red and angry.”
-
-The site also crops the image, focusing on the eyes to show the brown eyed Dracula.
+According to the website [Horror Dot Land](https://medium.com/r/?url=https%3A%2F%2Fwww.horror.land%2Fhistory-freaky-vampire-eyes-p1%2F%23%3A~%3Atext%3DDracula%2520%25E2%2580%2593%25201958%2Ceyes%2520look%2520red%2520and%2520angry.). “Christopher Lee’s most famous look, using mini sclera contact lenses. Dark Brown iris with veined sclera that makes the eyes look red and angry.” The site also crops the image, focusing on the eyes to show the brown eyed Dracula.
 
 If we go to a different website, [WC (WCelebrity.com)](https://medium.com/r/?url=https%3A%2F%2Fwcelebrity.com%2Fchristopher-lee-height-weight-age-biography-husband-more%2F), it tells us that Christopher Lee has brown eyes and a size 11 shoe, if you care.
 
-Another website describes another actor Luke Evans** **in** **“*Dracula Untold”**** ****(*2014) who was “... cut cheekbones. And unruly hair. A five o’clock shadow. **Piercing blue** eyes…”. This statement does appear on the same page as a separate description of Christopher Lee however Lee’s eye color is not mentioned.
+Another website [romance.com.au](https://www.romance.com.au/we-ranked-our-favourite-draculas-of-all-time/) describes another actor Luke Evans** in “Dracula Untold” (2014) who was “... cut cheekbones. And unruly hair. A five o’clock shadow. **Piercing blue** eyes…”. This statement does appear on the same page as a separate description of Christopher Lee, however Lee’s eye color is not mentioned.
 
 So, what color were Christopher Lee’s piercing blue/brown/green eyes? Simply looking at pictures online, it is apparent that his eyes are brown.
 
@@ -182,16 +179,16 @@ Nope, just like the eye color question, ChatGPT seems to have confused itself. I
 
 ## Conclusion
 
-ChatGPT represents an incredibly powerful technology, with new applications being uncovered daily as more explore its diverse capabilities — from law and medicine to standardized testing and wine expertise. However, as shown through examples of hallucination and confabulation, limitations exist in its knowledge and reasoning.
+ChatGPT represents an incredibly powerful technology, with new applications being uncovered daily as more explore its diverse capabilities — from law and medicine to wine expertise. However, as shown through examples of hallucination and confabulation, limitations exist in its knowledge and reasoning.
 
 While future versions may overcome current limitations, for now, users should approach ChatGPT’s responses with skepticism and fact-check against authoritative sources. Its answers cannot be taken as absolute truth without capabilities like reasoning, common sense, and self-consistency. Increased transparency into its training data and methodology could also help users gain confidence in ChatGPT’s responses. 
 
-When used diligently, ChatGPT can be a helpful assistant, but attribution should be provided if directly using its output. ChatGPT has enormous promise but still requires human discernment. By combining its strengths with the strengths of the human mind, we can leverage this very new and powerful tool.
+When used with care, ChatGPT can be a helpful assistant, but attribution should be provided if directly using its output. ChatGPT has enormous promise but still requires human discernment. By combining its strengths with the strengths of the human mind, we can leverage this very new and powerful tool.
 
 *Note: [claude.ai](https://medium.com/r/?url=http%3A%2F%2Fclaude.ai) from Anthropic was used for grammar and spelling corrections. It was also used for brainstorming ideas in the conclusion section, however all words are strictly my own.*
 
 Bob Simonoff is 
 
-* A Senior Principal Software Engineer at [Blue Yonder](https://medium.com/r/?url=http%3A%2F%2Fwww.blueyonder.com). 
+* A Senior Principal Software Engineer, Blue Yonder Fellow at [Blue Yonder](https://medium.com/r/?url=http%3A%2F%2Fwww.blueyonder.com). 
 * A founding member of the [OWASP Top 10 for Large Language Model Applications](https://medium.com/r/?url=http%3A%2F%2Fllmtop10.com%2F). 
 * on LinkedIn at [www.linkedin.com/in/bob-simonoff](https://medium.com/r/?url=http%3A%2F%2Fwww.linkedin.com%2Fin%2Fbob-simonoff) 
