@@ -146,3 +146,12 @@ h6
 {
 	font-size: 1em;
 }
+
+figure {
+  display: inline-block;
+  text-align: center;
+  margin: 5px; /* adjust as needed */
+}
+figure figcaption {
+    text-align: center;
+}
