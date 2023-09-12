@@ -84,7 +84,7 @@ Here, I ask ChatGPT to provide an example connecting an actor or actress to Kevi
 
 <figure>
   <img src="{{site.url}}/assets/images/2023-09-08-exploring-chatgpt-hallucinations/1_M179rPFHg5x8xIey8_8jrQ.png"/>
-  <figcaption>ChatGPT connects Tom Hanks to Kevin Bacon in 1 step via the movie "Appolo 13" rather than the requested 3 steps.</figcaption>
+  <figcaption>ChatGPT connects Tom Hanks to Kevin Bacon in 1 step via the movie "Apollo 13" rather than the requested 3 steps.</figcaption>
 </figure>
 
 ## ChatGPT Can Answer More Complex Questions
@@ -152,7 +152,7 @@ Max Schreck, interesting, is now Dracula. Even more interesting is that ChatGPT 
 
 <figure>
   <img src="{{site.url}}/assets/images/2023-09-08-exploring-chatgpt-hallucinations/1_OnLJ6pRyO2Ld6cCmvazJog.png"/>
-  <figcaption>ChatGPT shows that also thinks that Max Schreck lived his whole life in Germany</figcaption>
+  <figcaption>ChatGPT shows that it also thinks that Max Schreck lived his whole life in Germany</figcaption>
 </figure>
 
 Maybe a different tact will yield a Czech actor who played Dracula. Let’s ask for a list of all of the actors from Czechoslovakia who played Dracula. 
