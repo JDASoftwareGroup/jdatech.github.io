@@ -201,6 +201,6 @@ Potential next steps include trying more diverse text, comparing embedding model
 
 Bob Simonoff is 
 
-* A Senior Principal Software Engineer, Blue Yonder Fellow at [Blue Yonder](https://medium.com/r/?url=http%3A%2F%2Fwww.blueyonder.com). 
-* A founding member of the [OWASP Top 10 for Large Language Model Applications](https://llmtop10.com/). 
-* On [LinkedIn](www.linkedin.com/in/bob-simonoff)
+* A Senior Principal Software Engineer, Blue Yonder Fellow at [Blue Yonder](http://www.blueyonder.com). 
+* A founding member of the [OWASP Top 10 for Large Language Model Applications](https://llmtop10.com). 
+* on LinkedIn at [www.linkedin.com/in/bob-simonoff](https://www.linkedin.com/in/bob-simonoff/) 
