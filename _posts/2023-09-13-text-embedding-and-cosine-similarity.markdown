@@ -15,7 +15,7 @@ hidden: true
 
 ## Introduction
 
-Computational processing of natural languages has always been a difficult task for computers and programmers alike. A given concept has many representations in written text and a given written text can have many different interpretations. In addition, spelling, grammar, and punctuation are not consistent from person to person. Add in metaphors, sarcasm, tone, dialects, jargon, etc. all compound the problem. The numerous difficulties have created a situation where, until recently, computers have been very poor at working in natural language. Recall the desperation you feel to break out of a company's chatbot or voice-activated question-answering systems to get to a human being.
+Computational processing of natural languages has always been a difficult task for computers and programmers alike. A given concept has many representations in written text and a given written text can have many different interpretations. In addition, spelling, grammar, and punctuation are not consistent from person to person. Add in metaphors, sarcasm, tone, dialects, jargon, etc. and all compound the problem. The numerous difficulties have created a situation where, until recently, computers have been very poor at working in natural language. Recall the desperation you feel to break out of a company's chatbot or voice-activated question-answering systems to get to a human being.
 
 One specific problem that, if solved, would have many real-world applications, is the following: If we could confidently determine if two texts have the same conceptual meaning, regardless of the wording that is used, this could have a big impact on search engines. If we could also determine if text had similar or opposite meanings that would strengthen search capabilities even further. 
 
@@ -23,14 +23,14 @@ Word embeddings have become a fundamental technique for capturing the semantic m
 
 To solve our search problem, we also need a way to measure how similar or different the embeddings are from each other. There are multiple algorithms for this including Euclidean distance and cosine similarity. In this post, we will explore using cosine similarity to assess how different variations in phrasing impact semantic similarity between sentences. We will see how changes like synonyms only slightly alter vector orientations, while sentences having opposite meanings or are completely unrelated cause larger divergence.
 
-The following is a two-dimensional graph showing sample embedding vectors for car, cat, and dog. The cosine similarity between the cat and dog embedding vectors is failrly small but is larger between cat and car. 
+The following is a two-dimensional graph showing sample embedding vectors for car, cat, and dog. The cosine similarity between the cat and dog embedding vectors is fairly small but is larger between cat and car. 
 
 <figure>
   <img src="{{site.url}}/assets/images/2023-09-13-text-embedding-and-cosine-similarity/image-1.png"/>
   <figcaption>Example of Car, Cat and Dog embedding vectors and the cosine similarity between cat and dog as well as between cat and car.</figcaption>
 </figure>
 
-While cosine similarity has a range from -1.0 to 1.0, users of the OpenAI embedding API will typically not see values greater than 0.4. This is due to the embedding algorithm used. A thorough explanation of the reasons is beyond the scope of the article. If interested, fire up your favorite search engine and search for *neural network max pooling*.
+While cosine similarity has a range from -1.0 to 1.0, users of the OpenAI embedding API will typically not see values greater than 0.4. This is a side effect of max pooling, which is a technique often used with neural networks to reduce long input, such as text, down to the highlights, allowing the network to focus on the important parts of the data. In this case, it's an efficient compression technique for processing natural language in the embedding algorithm. A thorough explanation max pooling and the reason for the shift toward the positive is beyond the scope of the article. 
 
 ## Obtaining Embeddings and Cosine Similarity
 
@@ -174,9 +174,9 @@ A few possible anomalies we can see from the graph include:
 - "The automobile drove fast." Is particularly high among the other sentences in "Unrelated Concepts" and is closer to the "Opposites/Negatives". This may be because the word fast implies movement which is also, represented in the original sentence.
 - "Quickly ran the cat." looks like it could be in the "Conceptually Close" or the "Almost Identical" categories. It is not clear why the cosine similarity is marginally smaller than most other "Almost Identical" sentences, but the difference is small.
   
-This was a small experiment, but did highlight the potential of using cosine similarity of embedding vectors in language processing tasks. There does appear to be room for improvement through natural language processing techniques, such as lowercasing. However, blindly lowercasing may also negatively impact documents that are rich in acronyms, where capitalization carries meaning. So a more deliberate technique may be needed. 
+This was a small experiment but did highlight the potential of using cosine similarity of embedding vectors in language processing tasks. There does appear to be room for improvement through natural language processing techniques, such as lowercasing. However, blindly lowercasing may also negatively impact documents that are rich in acronyms, where capitalization carries meaning. As a result, a more deliberate technique may be needed. 
 
-Overall, we can conclude that
+Overall, we can conclude that:
 - The similar performance of simple averaging versus a visual categorization shows embeddings numerically capture intuitive human judgments of similarity.
 - Synonyms and minor variations like changes in punctuation did not drastically alter the embeddings. This suggests embeddings derive meaning from overall context rather than exact word choice.
 - The small gap between "Almost Identical" and "Conceptually Close" categories shows there's some subjectivity in assessing similarity. The embeddings reflect nuanced gradients of meaning.
@@ -202,5 +202,5 @@ Potential next steps include trying more diverse text, comparing embedding model
 Bob Simonoff is 
 
 * A Senior Principal Software Engineer, Blue Yonder Fellow at [Blue Yonder](https://medium.com/r/?url=http%3A%2F%2Fwww.blueyonder.com). 
-* A founding member of the [OWASP Top 10 for Large Language Model Applications](https://medium.com/r/?url=http%3A%2F%2Fllmtop10.com%2F). 
-* on LinkedIn at [www.linkedin.com/in/bob-simonoff](https://medium.com/r/?url=http%3A%2F%2Fwww.linkedin.com%2Fin%2Fbob-simonoff) 
+* A founding member of the [OWASP Top 10 for Large Language Model Applications](https://llmtop10.com/). 
+* On [LinkedIn](www.linkedin.com/in/bob-simonoff)
