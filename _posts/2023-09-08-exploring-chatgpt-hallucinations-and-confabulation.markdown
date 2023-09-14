@@ -190,6 +190,6 @@ When used with care, ChatGPT can be a helpful assistant, but attribution should 
 
 Bob Simonoff is 
 
-* A Senior Principal Software Engineer, Blue Yonder Fellow at [Blue Yonder](https://medium.com/r/?url=http%3A%2F%2Fwww.blueyonder.com). 
-* A founding member of the [OWASP Top 10 for Large Language Model Applications](https://medium.com/r/?url=http%3A%2F%2Fllmtop10.com%2F). 
-* on LinkedIn at [www.linkedin.com/in/bob-simonoff](https://medium.com/r/?url=http%3A%2F%2Fwww.linkedin.com%2Fin%2Fbob-simonoff) 
+* A Senior Principal Software Engineer, Blue Yonder Fellow at [Blue Yonder](http://www.blueyonder.com). 
+* A founding member of the [OWASP Top 10 for Large Language Model Applications](https://llmtop10.com). 
+* on LinkedIn at [www.linkedin.com/in/bob-simonoff](https://www.linkedin.com/in/bob-simonoff/) 
