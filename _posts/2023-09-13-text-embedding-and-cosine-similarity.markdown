@@ -30,7 +30,7 @@ The following is a two-dimensional graph showing sample embedding vectors for ca
   <figcaption>Example of Car, Cat and Dog embedding vectors and the cosine similarity between cat and dog as well as between cat and car.</figcaption>
 </figure>
 
-While cosine similarity has a range from -1.0 to 1.0, users of the OpenAI embedding API will typically not see values greater than 0.4. This is a side effect of max pooling, which is a technique often used with neural networks to reduce long input, such as text, down to the highlights, allowing the network to focus on the important parts of the data. In this case, it's an efficient compression technique for processing natural language in the embedding algorithm. A thorough explanation max pooling and the reason for the shift toward the positive is beyond the scope of the article. 
+While cosine similarity has a range from -1.0 to 1.0, users of the OpenAI embedding API will typically not see values less than 0.4. A thorough explanation of the reasons behind this are beyond the scope of this article, but you can learn more by searching for articles about text embedding pooling. 
 
 ## Obtaining Embeddings and Cosine Similarity
 
