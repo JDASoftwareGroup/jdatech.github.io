@@ -122,7 +122,7 @@ Aditya Gupta:
 
 Aniruddh Goteti:
     name: "Aniruddh Goteti"
-    avatar: "assets/images/authors/aniruddh_goteti.png"
+    avatar: "assets/images/authors/aniruddh_goteti.jpg"
     links:
       - label: "LinkedIn"
         icon: "fab fa-linkedin"
@@ -134,4 +134,12 @@ Bob Simonoff:
   links:  # optional, you can also add a subset
     - label: "LinkedIn"
       icon: "fab fa-linkedin"
-      url: "www.linkedin.com/in/bob-simonoff"
+      url: "https://www.linkedin.com/in/bob-simonoff"
+
+David Werner:
+  name: "David Werner"
+  avatar: "assets/images/authors/david_werner.jpg"
+  links:
+    - label: "LinkedIn"
+      icon: "fab fa-linkedin"
+      url: "https://www.linkedin.com/in/david-werner-1a403a153"
