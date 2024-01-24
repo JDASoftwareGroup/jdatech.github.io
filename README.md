@@ -1,7 +1,8 @@
 # Blue Yonder Tech Blog
 
+## Usage
 
-## Run jekyll build in docker
+### Run jekyll build in docker
 
 ```bash
 export JEKYLL_VERSION=3.8
@@ -15,7 +16,7 @@ docker run \
     jekyll build
 ```
 
-## Serving an existing site
+### Serving an existing site
 
 ```bash
 export JEKYLL_VERSION=3.8
@@ -31,7 +32,15 @@ docker run \
     jekyll serve --watch --drafts
 ```
 
-## How To: Add a new post
+## Contribution
+
+### Pre-requisites
+
+* Use your personal GitHub account instead of the manage BY enterprise user account 
+  (s. [Managing multiple accounts](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-your-personal-account/managing-multiple-accounts)).
+* Ask [Gabriel Kohen](https://github.com/gkohen) for write access to the repository.
+
+### How To: Add a new post
 
 Create a new markdown file `_posts/<YYYY>-<MM>-<DD>-<some-title>.markdown`:
 
@@ -61,18 +70,18 @@ Foo bar.
 Please test your post locally before publishing it. You can use the `jekyll serve` command shown in the
 "Serving an existing site" section to have the page hosted locally and automatically reload when you make changes.
 
-### Formatting
+#### Formatting
 See [GitHub Flavored Markdown Spec](https://github.github.com/gfm/).
 
-### Time
+#### Time
 Please make sure the post filename and the date in the [YAML](https://en.wikipedia.org/wiki/YAML) front matter are
 in-sync. For may choose your local time zone and some appropriate time (like 10AM).
 
-### Authors
+#### Authors
 Every author must be registered, see "How To: Add a new author". If the post is written by multiple authors, a
 "multi-author" must be registered there.
 
-### Assets
+#### Assets
 If you want to use pictures, add them to `assets/images/<YYYY>-<MM>-<DD>-<some-title>/` (or as
 `assets/images/<YYYY>-<MM>-<DD>-<some-title>.png` if you only have a single file). They can also be used as a header
 image.
@@ -81,7 +90,7 @@ In general, prefer vector images ([SVG](https://en.wikipedia.org/wiki/Scalable_V
 and uncompressed data ([PNG](https://en.wikipedia.org/wiki/Portable_Network_Graphics)) for compressed images. There are
 exceptions though (like photos).
 
-### Linking to Other Posts
+#### Linking to Other Posts
 Example:
 
 Global URL: http://0.0.0.0:4000/introducing-kartothek/
@@ -95,7 +104,7 @@ To link other posts (like above example) in your current post, please use the fo
 ```
 
 
-## How To: Add a new author
+### How To: Add a new author
 
 In `_data/authors.yml`, add a new author:
 
