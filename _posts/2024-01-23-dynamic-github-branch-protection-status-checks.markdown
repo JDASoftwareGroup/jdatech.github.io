@@ -57,7 +57,7 @@ jobs:
   check-if-relevant:
     runs-on: ubuntu-latest
     outputs:
-      is-relevant: ${{ steps.relevant-files-changed.outputs.any_changed }}
+      is-relevant: ${{ '{{' }} steps.relevant-files-changed.outputs.any_changed }}
     steps:
       # This step is needed by tj-actions/changed-files
       - uses: actions/checkout@v4
@@ -90,7 +90,6 @@ The approach works fine for standard workflows, where we can configure any of th
 However, it doesn't work for reusable workflows.
 
 **Example**
-
 ```yaml
 name: E2E Testing
 
@@ -101,7 +100,7 @@ jobs:
   check-if-relevant:
     runs-on: ubuntu-latest
     outputs:
-      is-relevant: ${{ steps.relevant-files-changed.outputs.any_changed }}
+      is-relevant: ${{ '{{' }} steps.relevant-files-changed.outputs.any_changed }}
     steps:
      [...]
  
@@ -112,13 +111,12 @@ jobs:
     secrets: inherit    
 
   e2e-test:
-    needs: ephemeral-portal-registration
+    needs: build-deploy
     uses: ./.github/workflows/e2e_test.execution.yml
     secrets: inherit
     with:
-      app-url: ${{ needs.build-deploy.outputs.app-url }}
+      app-url: ${{ '{{' }} needs.build-deploy.outputs.app-url }}
 ```
-
 The calling job `e2e-test` can't be set as status check because GitHub ignores its status even when it has run.<br>
 As shown in the below screenshot, GitHub doesn't realize that `e2e-test` ran in workflow `E2E Testing` although it shows
 that the reusable workflow called by `e2e-test` ran successfully (s. `E2E Testing/e2e-test/e2e-test-execution`).
@@ -139,12 +137,14 @@ The workaround is to configure an additional, standard job that concludes the wo
 **Example**
 
 ```yaml
+  [...]
+
   e2e-test:
-    needs: ephemeral-portal-registration
+    needs: build-deploy
     uses: ./.github/workflows/e2e_test.execution.yml
     secrets: inherit
     with:
-      mfe-namespace: ${{ needs.ephemeral-portal-registration.outputs.mfe-namespace }}
+      app-url: ${{ '{{' }} needs.build-deploy.outputs.app-url }}
 
   e2e-test-completed:
     needs: e2e-test
@@ -152,7 +152,7 @@ The workaround is to configure an additional, standard job that concludes the wo
     if: always()
     steps:
       - name: Check e2e-test job status
-        if: ${{ needs.e2e-test.result == 'failure' }}
+        if: needs.e2e-test.result == 'failure'
         run: exit 1
 
 ```
@@ -191,7 +191,7 @@ jobs:
     if: always()
     steps:
       - name: Check workflow status
-        if: ${{ needs.e2e-test.result != 'success' }}
+        if: needs.e2e-test.result != 'success'
         run: exit 1
 ```
 
@@ -243,7 +243,7 @@ in this workflow as well.
       check-if-relevant:
         runs-on: ubuntu-latest
         outputs:
-        is-relevant: ${{ (github.event_name == 'pull_request' && steps.relevant-files-changed.outputs.any_changed == 'true') || github.event_name != 'pull_request' }}
+        is-relevant: ${{ '{{' }} (github.event_name == 'pull_request' && steps.relevant-files-changed.outputs.any_changed == 'true') || github.event_name != 'pull_request' }}
         steps:
           # https://github.com/marketplace/actions/changed-files
           - uses: tj-actions/changed-files@v41.0.1

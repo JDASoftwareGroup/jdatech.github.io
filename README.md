@@ -2,7 +2,7 @@
 
 ## Usage
 
-### Run jekyll build in docker
+### Run Jekyll build in Docker
 
 ```bash
 export JEKYLL_VERSION=3.8
@@ -45,7 +45,6 @@ docker run \
 Create a new markdown file `_posts/<YYYY>-<MM>-<DD>-<some-title>.markdown`:
 
 ```markdown
-
 ---
 layout: single
 title: "<Some Title>"
@@ -90,7 +89,7 @@ In general, prefer vector images ([SVG](https://en.wikipedia.org/wiki/Scalable_V
 and uncompressed data ([PNG](https://en.wikipedia.org/wiki/Portable_Network_Graphics)) for compressed images. There are
 exceptions though (like photos).
 
-#### Linking to Other Posts
+#### Linking to other posts
 Example:
 
 Global URL: http://0.0.0.0:4000/introducing-kartothek/
@@ -140,4 +139,32 @@ Author1 Name1 & Author2 Name2:
       icon: "fab fa-fw fa-twitter-square"
       url: "https://twitter.com/<twitter_handle2>"
     # ...
+```
+
+## Hints
+
+### Escaping curly brackets
+
+Curly brackets in documented code snippets are conflicting with Jekyll's Liquid templating engine.\
+For instance, when you want to document GitHub Actions workflows.
+```yaml
+ e2e-test:
+    needs: build-deploy
+    uses: ./.github/workflows/e2e_test.execution.yml
+    secrets: inherit
+    with:
+      app-url: ${{ needs.build-deploy.outputs.app-url }}
+```
+The line `app-url: ${{ needs.build-deploy.outputs.app-url }}` will cause a Liquid syntax error because the curly 
+brackets are interpreted as Liquid syntax.
+
+To escape them, treat the opening brackets as a Liquid variable that outputs them as a string: `{{ '{{' }}`.\
+The closing brackets don't need to be escaped.
+```yaml
+ e2e-test:
+    needs: build-deploy
+    uses: ./.github/workflows/e2e_test.execution.yml
+    secrets: inherit
+    with:
+      app-url: ${{ '{{' }} needs.build-deploy.outputs.app-url }}
 ```
