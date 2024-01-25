@@ -176,7 +176,7 @@ The calling job `e2e-test` can't be set as status check because GitHub ignores i
 As shown in the below screenshot, GitHub doesn't realize that `e2e-test` ran in the E2E test workflow `E2E Testing` 
 although it is aware that the called reusable workflow ran successfully (s. `E2E Testing/e2e-test/e2e-test-execution`).
 
-![ci-cd.status-check-reusable-workflow-caller.png](..%2Fassets%2Fimages%2F2024-01-23-ensuring-code-quality-a-guide-to-dynamic-git-hub-pull-request-gates%2Fci-cd.status-check-reusable-workflow-caller.png)
+![2024-01-23-ensuring-code-quality-a-guide-to-dynamic-git-hub-pull-request-gates.png.png](..%2Fassets%2Fimages%2F2024-01-23-ensuring-code-quality-a-guide-to-dynamic-git-hub-pull-request-gates.png)
 
 (The status checks get configured by job name only. Specifying the workflow is not possible. That's why only `e2e-test` 
 is shown as expected status name in the screenshot.
@@ -226,10 +226,6 @@ jobs:
         if: needs.e2e-test.result == 'failure'
         run: exit 1
 ```
-
-So, in the end our status check setting looks like this:
-
-![ci-cd.status-check-setting.png](..%2Fassets%2Fimages%2F2024-01-23-ensuring-code-quality-a-guide-to-dynamic-git-hub-pull-request-gates%2Fci-cd.status-check-setting.png)
 
 ## Alternative Approach
 
