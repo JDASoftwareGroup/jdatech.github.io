@@ -1,17 +1,17 @@
 ---
 layout: single
-title: "Dynamic GitHub Branch Protection Status Checks"
+title: "Ensuring Code Quality: A Guide to Dynamic GitHub Pull Request Gates"
 tags: technology github devops
 date: 2024-01-23 00:00:00 +0100
-author: David Werner  # as used in `authors.yml`
+author: David Werner
 author_profile: true
 header:
-  overlay_image: assets/images/tech_gear_banner.jpg  # can also be a different asset
+  overlay_image: assets/images/tech_gear_banner.jpg
   overlay_filter: 0.2
   show_overlay_excerpt: false
 ---
 
-# Dynamic GitHub Branch Protection Status Checks
+# Ensuring Code Quality: A Guide to Dynamic GitHub Pull Request Gates
 
 In the branch protection rules of branch `main`, we want to configure the required status checks that need to be passed
 before a pull request can be merged to `main`.<br>
@@ -121,7 +121,8 @@ The calling job `e2e-test` can't be set as status check because GitHub ignores i
 As shown in the below screenshot, GitHub doesn't realize that `e2e-test` ran in workflow `E2E Testing` although it shows
 that the reusable workflow called by `e2e-test` ran successfully (s. `E2E Testing/e2e-test/e2e-test-execution`).
 
-![ci-cd.status-check-reusable-workflow-caller.png](..%2Fassets%2Fimages%2F2024-01-23-dynamic-github-branch-protection-status-checks%2Fci-cd.status-check-reusable-workflow-caller.png)
+![ci-cd.status-check-reusable-workflow-caller.png](..%2Fassets%2Fimages%2F2024-01-23-ensuring-code-quality-a-guide-to-dynamic-git-hub-pull-request-gates%2Fci-cd.status-check-reusable-workflow-caller.png)
+
 
 (The status checks get configured by job name. Specifying the workflow is not possible. That's why only `e2e-test` is
 shown as expected status name in the screenshot.
@@ -159,7 +160,7 @@ The workaround is to configure an additional, standard job that concludes the wo
 
 So, in the end our status check setting looks like this:
 
-![ci-cd.status-check-setting.png](..%2Fassets%2Fimages%2F2024-01-23-dynamic-github-branch-protection-status-checks%2Fci-cd.status-check-setting.png)
+![ci-cd.status-check-setting.png](..%2Fassets%2Fimages%2F2024-01-23-ensuring-code-quality-a-guide-to-dynamic-git-hub-pull-request-gates%2Fci-cd.status-check-setting.png)
 
 ## Alternative Approach
 
