@@ -338,10 +338,10 @@ this.
 ## Conclusion
 
 GitHub's branch protection rules with required status checks are a powerful tool to ensure quality and security.
-They are only missing the ability to configure dynamic status checks that are only required if the relevant files have changed.
+They are only missing the ability to configure dynamic status checks that are only required if relevant changed had been
+committed.
 
 However, we have two workarounds to solve this problem:
-1. Check for the relevant file changes in a job of the workflow itself and execute the actual status check only if the 
-   relevant files have changed.
-2. Add a concluding job like `required-status-check` to all dynamically required workflows and configure it as required
-   status check in the branch protection rules of the main branch.
+1. Check for the relevant file changes in a job of the workflow itself and execute the actual status check only for 
+   relevant changes.
+2. Add a concluding job to all dynamically required workflows and configure it as required status check.
