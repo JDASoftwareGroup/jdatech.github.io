@@ -26,9 +26,6 @@ Great, let's dive into the realm of _dynamic_ status checks.
 They are not supported by GitHub out of the box. 
 But there are workarounds to achieve this goal.
 
-In this guide, we expect that you are already familiar with GitHub [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests),
-[GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows) and status checks.
-
 ## The Problem
 
 In the branch protection rules of the main branch, we want to configure the required status checks that need to be passed
