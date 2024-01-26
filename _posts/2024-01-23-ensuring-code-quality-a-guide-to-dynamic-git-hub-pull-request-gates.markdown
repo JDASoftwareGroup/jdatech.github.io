@@ -13,39 +13,28 @@ header:
 
 # Ensuring Code Quality: A Guide to Dynamic GitHub Pull Request Gates
 
-In the fast-paced world of software development, the integrity of your codebase is paramount.
-GitHub, as a collaborative coding platform, offers a robust set of tools to ensure the quality and security of your project.<br> 
-One of these essential features is [branch protection rules](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) 
-with required [status checks](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging).
-GitHub's branch protection rules ensure that contributions can only make their way into the main branch, once they 
-passed your quality and security gates.
+In the dynamic world of software development, maintaining the integrity of your codebase is paramount. 
+GitHub, a collaborative coding platform, provides a robust toolkit to uphold the quality and security of your projects.
 
-Oh, you are still reading? 
-You seem to be really interested in CI/CD, DevOps, and the intricate dance of collaboration in the world of software development!<br> 
-Great, let's dive into the realm of _dynamic_ status checks. 
-They are not supported by GitHub out of the box. 
-But there are workarounds to achieve this goal.
+GitHub's [branch protection rules](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) 
+with mandatory [status checks](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging) 
+stand as a bulwark, ensuring that contributions can only merge into the main branch after passing through quality and 
+security gates.
+
+But hey, you're still with us! 
+Your interest in CI/CD, DevOps, and the intricate dance of collaboration in the software development world is palpable. 
+Excellent!<br>
+Now, let's dive into the realm of _dynamic_ status checks — a feature not directly supported by GitHub out of the box, 
+but fear not, there are workarounds to achieve this goal.
 
 ## The Problem
 
-In the branch protection rules of the main branch, we want to configure the required status checks that need to be passed
-before a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) 
-can be merged to it.<br>
-You likely have a set of standard status checks that should be required for all pull requests, such as linting, unit 
-tests, and code coverage checks.
-And if you have [GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows) for these checks, you can
-configure specific jobs of these workflows as required status checks in the branch protection rules of the main branch.
+In the branch protection rules of the main branch, configuring the required status checks for a
+[pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) 
+is crucial. 
+Standard checks, such as linting, unit tests, and code coverage, are typically required for all pull requests.
 
-However, GitHub only allows checks to be configured in a static way. 
-They are required for all pull request changes.
-This is problematic for expensive checks or workflows that only need to be executed for specific changes.
-
-Workflows can be expensive in terms of time and resources.
-Examples are frontend end-to-end tests that need to be executed in different browsers, possibly on a remote testing 
-platform, against an API that might also have to be built and deployed.
-Or workflows that require a lot of resources, with third-party services that charge per usage.
-
-This is an example of a workflow to check source code change of an application.
+This is a workflow example to check the source code changes of an application.
 The tests are executed in job `test` after the application got built and deployed.
 Therefore, job `test` should be configured as required status check in the branch protection rules.
 
