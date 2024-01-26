@@ -20,44 +20,44 @@ with required [status checks](https://docs.github.com/en/repositories/configurin
 GitHub's branch protection rules ensure that contributions can only make their way into the main branch, once they 
 passed your quality and security gates.
 
+Oh, you are still reading? 
+You seem to be really interested in CI/CD, DevOps, and the intricate dance of collaboration in the world of software development!<br> 
+Great, let's dive into the realm of _dynamic_ status checks. 
+They are not supported by GitHub out of the box. 
+But there are workarounds to achieve this goal.
+
 In this guide, we expect that you are already familiar with GitHub [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests),
 [GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows) and status checks.
-
-We will dive into the realm of _dynamic_ status checks, that are not supported by GitHub out of the box, yet.
 
 ## The Problem
 
 In the branch protection rules of the main branch, we want to configure the required status checks that need to be passed
-before a pull request can be merged to it.<br>
-However, GitHub only allows checks to be configured in a static way. They are required for all pull request changes.
-This is problematic for expensive checks that only need to be executed for specific changes.
+before a [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) 
+can be merged to it.<br>
+You likely have a set of standard status checks that should be required for all pull requests, such as linting, unit 
+tests, and code coverage checks.
+And if you have [GitHub Actions workflows](https://docs.github.com/en/actions/using-workflows) for these checks, you can
+configure specific jobs of these workflows as required status checks in the branch protection rules of the main branch.
 
-Let's take the end-to-end (E2E) test GitHub Actions workflow of a frontend application as example.
+However, GitHub only allows checks to be configured in a static way. 
+They are required for all pull request changes.
+This is problematic for expensive checks or workflows that only need to be executed for specific changes.
 
-E2E testing simulates real user scenarios by interacting with the application just as a user would.
-Unlike unit tests that focus on isolated parts of the code, E2E tests navigate through the entire application, capturing
-potential issues that might arise from the integration of different components.
-Importantly, E2E tests also serve as a crucial checkpoint for the frontend application against the service layer.<br>
-In the realm of GitHub branch protection rules, you can leverage E2E tests as a required status check to guarantee that 
-not only does your code meet functional requirements but also maintains the expected user experience.
+Workflows can be expensive in terms of time and resources.
+Examples are frontend end-to-end tests that need to be executed in different browsers, possibly on a remote testing 
+platform, against an API that might also have to be built and deployed.
+Or workflows that require a lot of resources, with third-party services that charge per usage.
 
-This is an example of an E2E test workflow, where the tests are executed in job `e2e-test` after the application got 
-built and deployed.
-Therefore, job `e2e-test` should be configured as required status check in the branch protection rules.
+This is an example of a workflow to check source code change of an application.
+The tests are executed in job `test` after the application got built and deployed.
+Therefore, job `test` should be configured as required status check in the branch protection rules.
 
 ```yaml
-name: E2E Testing
-
 on:
   pull_request:
     paths:
-      - .github/workflows/e2e_*.yml
-      - e2e/**
-      - index.html
-      - manifest.json
-      - package-lock.json
-      - public/**
       - src/**
+      - tests/**
 
 jobs:
   build-deploy:
@@ -65,23 +65,25 @@ jobs:
     steps:
       [...]
     
-  e2e-test:
+  test:
     needs: build-deploy    
     runs-on: ubuntu-latest
     steps:
       [...]
 ```
 
-However, these tests are expensive and time-consuming because the frontend application needs to be built, deployed and 
-tested in different browsers, possibly on a remote testing platform, against an API that might also have to be deployed.
+However, running this workflow is expensive and time-consuming because the application first needs to be built and 
+deployed before the tests can be executed. 
+And the tests themselves can also take quite some time.
 
-Therefore, the E2E test workflow should only be triggered if the frontend application or the API has changed.
+Therefore, the test workflow should only be triggered if the source code or the tests themselves have changed.
 And for example not for documentation changes.<br>
-This is wyh the `pull_request` workflow trigger is limited to changes related to the E2E tests themselves and the actual
-source code, as specified by `paths`.
+This is why the `pull_request` workflow trigger is limited to changes in directories `src` and `tests`, as specified by
+`paths`.
 
-But what if the E2E test workflow is not triggered because the relevant files have not changed?
-Then, the pull request could not be merged because the required status check is not passing.<br>
+But what if the test workflow is not triggered because no files in those directories have changed?
+Then, the pull request could not be merged because the required status check is not passing, as it was not executed at 
+all.<br>
 This is where the problem lies and why we need dynamic status checks that are only required if the relevant files have 
 changed.
 
@@ -115,13 +117,8 @@ jobs:
         id: relevant-files-changed
         with:
           files: |
-            .github/workflows/e2e_*.yml
-            e2e/**
-            index.html
-            manifest.json
-            package-lock.json
-            public/**
             src/**
+            tests/**
  
   build-deploy:
     needs: check-if-relevant
@@ -130,7 +127,7 @@ jobs:
     steps:
       [...]
     
-  e2e-test:
+  test:
     needs: build-deploy
     runs-on: ubuntu-latest
     steps:
@@ -142,11 +139,9 @@ jobs:
 The approach works fine for standard workflows, where any job can be configured as status check.
 However, it doesn't work for [reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows).
 
-In this example the E2E test workflow utilizes reusable workflows for the build and deploy and the E2E test steps.
+In this example the test workflow utilizes reusable workflows for the build and deploy and the test steps.
 
 ```yaml
-name: E2E Testing
-
 on:
   pull_request:
     
@@ -164,35 +159,25 @@ jobs:
     uses: ./.github/workflows/release.build_deploy.yml
     secrets: inherit    
 
-  e2e-test:
+  test:
     needs: build-deploy
-    uses: ./.github/workflows/e2e_test.execution.yml
+    uses: ./.github/workflows/test.execution.yml
     secrets: inherit
     with:
       app-url: ${{ '{{' }} needs.build-deploy.outputs.app-url }}
 ```
 
-The calling job `e2e-test` can't be set as status check because GitHub ignores its status even when it has run.<br>
-As shown in the below screenshot, GitHub doesn't realize that `e2e-test` ran in the E2E test workflow `E2E Testing` 
-although it is aware that the called reusable workflow ran successfully (s. `E2E Testing/e2e-test/e2e-test-execution`).
+The calling job `test` can't be set as status check because GitHub ignores its status.
 
-![2024-01-23-ensuring-code-quality-a-guide-to-dynamic-git-hub-pull-request-gates.png.png](..%2Fassets%2Fimages%2F2024-01-23-ensuring-code-quality-a-guide-to-dynamic-git-hub-pull-request-gates.png)
+Configuring a job in the called reusable workflow `test.execution.yml` is not an option either.<br>
+If `test` in the calling workflow would be skipped, the pull request would wait forever for the status check in the 
+reusable workflow as the skipping happens on workflow parent level, not child level.
 
-(The status checks get configured by job name only. Specifying the workflow is not possible. That's why only `e2e-test` 
-is shown as expected status name in the screenshot.
-Once the job had ran, GitHub updates the check overview and prepends the workflow name.)
-
-Configuring job `e2e-test-execution` in the called reusable workflow is not an option either.<br>
-If `e2e-test` in the calling workflow would be skipped, the pull request would wait forever for `e2e-test-execution` as
-the skipping happens on the workflow parent level, not the child level.
-
-The workaround is to configure an additional, standard job `e2e-test-completed` that concludes the workflow as status 
-check and fails if the `e2e-test` failed before.<br>
-Setting `if: always()` ensures that the job is always executed, even if the `e2e-test` job failed.
+The workaround is to configure an additional, standard job `test-completed` that concludes the workflow as status 
+check and fails if the `test` failed before.<br>
+Setting `if: always()` ensures that the job is always executed, even if the `test` job failed.
 
 ```yaml
-name: E2E Testing
-
 on:
   pull_request:
     
@@ -210,20 +195,20 @@ jobs:
     uses: ./.github/workflows/release.build_deploy.yml
     secrets: inherit  
 
-  e2e-test:
+  test:
     needs: build-deploy
-    uses: ./.github/workflows/e2e_test.execution.yml
+    uses: ./.github/workflows/test.execution.yml
     secrets: inherit
     with:
       app-url: ${{ '{{' }} needs.build-deploy.outputs.app-url }}
 
-  e2e-test-completed:
-    needs: e2e-test
+  test-completed:
+    needs: test
     runs-on: 'ubuntu-latest'
     if: always()
     steps:
-      - name: Check e2e-test job status
-        if: needs.e2e-test.result == 'failure'
+      - name: Check test job status
+        if: needs.test.result == 'failure'
         run: exit 1
 ```
 
@@ -235,13 +220,8 @@ Another workaround is to add job like the `required-status-check` in the followi
 on:
   pull_request:
     paths:
-      - .github/workflows/e2e_*.yml
-      - e2e/**
-      - index.html
-      - manifest.json
-      - package-lock.json
-      - public/**
       - src/**
+      - tests/**
 
 jobs:  
   build-deploy:
@@ -249,23 +229,23 @@ jobs:
     steps:
       [...]
 
-  e2e-test:
+  test:
     needs: build-deploy
     runs-on: ubuntu-latest
     steps:
       [...]
     
   required-status-check:
-    needs: e2e-test
+    needs: test
     runs-on: 'ubuntu-latest'
     if: always()
     steps:
       - name: Check workflow status
-        if: needs.e2e-test.result != 'success'
+        if: needs.test.result != 'success'
         run: exit 1
 ```
 
-This job would return a failure state if the E2E tests of job `e2e-testing` failed.
+This job would return a failure state if the tests of job `test` failed.
 
 In the repo settings configure `required-status-check` as required status check in the branch protection
 rules of the main branch.<br>
