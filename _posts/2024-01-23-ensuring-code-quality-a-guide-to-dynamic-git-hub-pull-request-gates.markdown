@@ -73,7 +73,9 @@ all.<br>
 This is where the problem lies and why we need dynamic status checks that are only required if the relevant files have 
 changed.
 
-## The Workaround
+Fortunately, there are two workarounds!
+
+## Check for relevant Changes
 
 The workaround is to check for the relevant file changes in a job of the workflow itself and execute the actual status 
 check only if the relevant files have changed.<br>
@@ -120,7 +122,7 @@ jobs:
       [...]
 ```
 
-## Reusable Workflow as Status Check
+### Reusable Workflow as Status Check
 
 The approach works fine for standard workflows, where any job can be configured as status check.
 However, it doesn't work for [reusable workflows](https://docs.github.com/en/actions/using-workflows/reusing-workflows).
@@ -198,9 +200,10 @@ jobs:
         run: exit 1
 ```
 
-## Alternative Approach
+## Conclude with final Status Check
 
-Another workaround is to add job like the `required-status-check` in the following example to all dynamically required workflows.
+Another workaround is to add a concluding job like the `required-status-check` in the following example to all 
+dynamically required workflows.
 
 ```yaml
 on:
@@ -241,11 +244,20 @@ It gets unblocked if at least one `required-status-check` job is implemented and
 It's worth noting that at least one workflow needs to run in any case (e.g. a lint or source formatting check) and can be piggybacked to implement
 this.
 
-### Advantages
+## Comparison
 
-*   Only those workflows get executed that actually apply to the changed files, because the list of relevant files are declared at the
-    `pull_request` trigger.
-    As a result, the status check overview of the pull request is limited to the relevant checks and no workflow is run unnecessarily.
+### Pro relevant Changes Check
+
+*   This approach is less complex as the final status check workflow because its fallback workflow has to be kept in mind.
+*   It's transparent for a GitHub repo admin what status checks are actually executed by just taking a look at the
+    branch protection rules. Whereas it is not obvious with a general status check such as `required-status-check`.
+
+### Pro final Status Check
+
+*   Only those workflows get executed that actually apply to the changed files, because the list of relevant files are 
+    declared at the `pull_request` trigger.<br> 
+    As a result, the status check overview of the pull request is limited to the relevant checks and no workflow is run
+    unnecessarily.
 *   The triggers and specific trigger conditions can be configured declaratively.<br>
     Additional triggers besides the `pull_request` that have to run in any case (even without relevant file changes) can
     be configured in a clean way. And the files restriction of the `pull_request` trigger are also declared where you 
@@ -286,16 +298,6 @@ this.
             with:
               files: package-lock.json
     ```
-
-### Disadvantages
-
-*   Though this approach would reduce the number of workflow runs, it does run the additional `required-status-check`
-    job whenever the dynamically required workflow needs to be executed.
-    And everytime for the workflow that acts as a fallback.<br>
-    On the other hand, it executes very fast and doesn't cost much in terms of GitHub runner time. 
-*   This approach is a little bit more complex as the fallback workflow has to be kept in mind.
-*   It is not transparent for a GitHub repo admin what status checks are actually executed by just taking a look at the
-    branch protection rules, as `required-status-check` or a similar name will be quite generic.
 
 ## Conclusion
 
