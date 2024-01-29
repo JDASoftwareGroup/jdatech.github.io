@@ -243,9 +243,9 @@ this.
 
 ### Advantages
 
-*   Only those workflows get executed that are actually required, because the list of relevant files are declared at the
+*   Only those workflows get executed that actually apply to the changed files, because the list of relevant files are declared at the
     `pull_request` trigger.
-    So, the status check overview of the pull request is limited to the relevant checks and no workflow is run unnecessarily.
+    As a result, the status check overview of the pull request is limited to the relevant checks and no workflow is run unnecessarily.
 *   The triggers and specific trigger conditions can be configured declaratively.<br>
     Additional triggers besides the `pull_request` that have to run in any case (even without relevant file changes) can
     be configured in a clean way. And the files restriction of the `pull_request` trigger are also declared where you 
