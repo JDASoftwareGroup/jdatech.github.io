@@ -32,7 +32,7 @@ but fear not, there are workarounds to achieve this goal.
 In the branch protection rules of the main branch, configuring the required status checks for a
 [pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests) 
 is crucial. 
-Standard checks, such as linting, unit tests, and code coverage, are typically required for all pull requests.
+Standard checks, such as linting, unit tests, and code coverage, should be typically required for all pull requests.
 
 This is a workflow example to check the source code changes of an application.
 The tests are executed in job `test` after the application got built and deployed.
