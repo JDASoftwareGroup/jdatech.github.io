@@ -34,7 +34,7 @@ In the branch protection rules of the main branch, configuring the required stat
 is crucial. 
 Standard checks, such as linting, unit tests, and code coverage, should be typically required for all pull requests.
 
-This is a workflow example to check the source code changes of an application.
+The following is a workflow example to check the source code changes of an application.
 The tests are executed in job `test` after the application got built and deployed.
 Therefore, job `test` should be configured as required status check in the branch protection rules.
 
