@@ -63,7 +63,7 @@ deployed before the tests can be executed.
 And the tests themselves can also take quite some time.
 
 Therefore, the test workflow should only be triggered if the source code or the tests themselves have changed.
-And for example not for documentation changes.<br>
+In contrast, unrelated changes such as documentation changes should not trigger code related checks.<br>
 This is why the `pull_request` workflow trigger is limited to changes in directories `src` and `tests`, as specified by
 `paths`.
 
