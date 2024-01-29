@@ -19,7 +19,7 @@ GitHub, a collaborative coding platform, provides a robust toolkit to uphold the
 GitHub's [branch protection rules](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) 
 with mandatory [status checks](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches#require-status-checks-before-merging) 
 stand as a bulwark, ensuring that contributions can only merge into the main branch after passing through quality and 
-security gates.
+security checks.
 
 But hey, you're still with us! 
 Your interest in CI/CD, DevOps, and the intricate dance of collaboration in the software development world is palpable. 
