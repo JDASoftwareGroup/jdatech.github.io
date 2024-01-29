@@ -238,7 +238,7 @@ rules of the main branch.<br>
 The pull requests get blocked if none of the triggered workflows have implemented the `required-status-check` job or at
 least one of them is failing.<br>
 It gets unblocked if at least one `required-status-check` job is implemented and all of them are successful. 
-And usually, at least one workflow needs to run in any case (e.g. a lint or source formatting check) and can implement
+It's worth noting that at least one workflow needs to run in any case (e.g. a lint or source formatting check) and can be piggybacked to implement
 this.
 
 ### Advantages
